@@ -38,7 +38,7 @@ struct EvapotrackApp: App {
                 if showLaunch {
                     LaunchView()
                         .onAppear {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.8) {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2.6) {
                                 withAnimation(.easeInOut(duration: 0.3)) {
                                     showLaunch = false
                                 }

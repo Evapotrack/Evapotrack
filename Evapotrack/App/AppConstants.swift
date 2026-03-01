@@ -17,6 +17,8 @@ enum AppConstants {
 
     static let maxGrowNameLength = 50
     static let maxPlantNameLength = 50
+    static let maxDescriptionLength = 100
+    static let maxNumericInputLength = 10
     static let maxRetentionCapacityRange: ClosedRange<Double> = 0.001...100.0
     static let waterAddedRange: ClosedRange<Double> = 0.001...100.0
     static let humidityRange: ClosedRange<Double> = 0.0...100.0

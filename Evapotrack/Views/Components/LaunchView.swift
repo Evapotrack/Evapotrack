@@ -28,11 +28,11 @@ struct LaunchView: View {
         }
         .onAppear {
             // Fade in
-            withAnimation(.easeIn(duration: 0.6)) {
+            withAnimation(.easeIn(duration: 0.8)) {
                 iconOpacity = 1.0
             }
-            // Hold briefly, then fade out
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            // Hold longer, then fade out
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.8) {
                 withAnimation(.easeOut(duration: 0.5)) {
                     iconOpacity = 0
                 }

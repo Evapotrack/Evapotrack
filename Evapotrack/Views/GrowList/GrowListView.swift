@@ -54,6 +54,7 @@ struct GrowListView: View {
             .scrollContentBackground(.hidden)
             .background(Color.evBackground)
             .navigationTitle("My Grows")
+            .navigationBarTitleDisplayMode(.large)
             .navigationDestination(for: GrowNavID.self) { navID in
                 if let grow = grows.first(where: { $0.id == navID.id }) {
                     PlantListView(grow: grow)
@@ -77,6 +78,11 @@ struct GrowListView: View {
                             .font(.body)
                             .fontWeight(.bold)
                             .foregroundStyle(selectedGrowID != nil ? .red : .evSlateGray)
+                            .padding(6)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color.evInkBlack, lineWidth: 2)
+                            )
                     }
                     .disabled(selectedGrowID == nil)
                     .accessibilityLabel("Delete Grow")
@@ -119,11 +125,17 @@ struct GrowListView: View {
             }
             .overlay {
                 if grows.isEmpty {
-                    ContentUnavailableView(
-                        "No Grows Yet",
-                        systemImage: "leaf",
-                        description: Text("Tap + to create your first grow.")
-                    )
+                    ContentUnavailableView {
+                        Label("No Grows Yet", systemImage: "leaf")
+                    } description: {
+                        HStack(spacing: 4) {
+                            Text("Tap")
+                            Text("+")
+                                .font(.title2)
+                                .fontWeight(.black)
+                            Text("to create your first grow.")
+                        }
+                    }
                 }
             }
             .overlay {

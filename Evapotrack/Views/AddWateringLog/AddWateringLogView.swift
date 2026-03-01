@@ -11,7 +11,6 @@ struct AddWateringLogView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Environment(SettingsViewModel.self) private var settingsVM
-    @FocusState private var isFieldFocused: Bool
     @State private var vm: AddWateringLogViewModel
     @State private var isShowingHowTo = false
 
@@ -30,13 +29,14 @@ struct AddWateringLogView: View {
                     text: $vm.waterAddedText
                 )
                 .keyboardType(.decimalPad)
-                .focused($isFieldFocused)
+                .textLimit($vm.waterAddedText, maxLength: AppConstants.maxNumericInputLength)
 
                 TextField(
                     "Runoff Collected (\(DisplayFormatter.waterUnitHint(waterUnit)))",
                     text: $vm.runoffCollectedText
                 )
                 .keyboardType(.decimalPad)
+                .textLimit($vm.runoffCollectedText, maxLength: AppConstants.maxNumericInputLength)
             } header: {
                 Text("Water")
                     .font(.title2.weight(.bold))
@@ -60,9 +60,11 @@ struct AddWateringLogView: View {
                     text: $vm.temperatureText
                 )
                 .keyboardType(.decimalPad)
+                .textLimit($vm.temperatureText, maxLength: AppConstants.maxNumericInputLength)
 
                 TextField("Humidity (%, optional)", text: $vm.humidityText)
                     .keyboardType(.decimalPad)
+                    .textLimit($vm.humidityText, maxLength: AppConstants.maxNumericInputLength)
             } header: {
                 Text("Environment")
                     .font(.title2.weight(.bold))
@@ -117,11 +119,6 @@ struct AddWateringLogView: View {
                 }
                 .font(.body)
                 .fontWeight(.bold)
-            }
-            ToolbarItemGroup(placement: .keyboard) {
-                Spacer()
-                Button("Done") { isFieldFocused = false }
-                    .fontWeight(.semibold)
             }
         }
         .navigationDestination(isPresented: $isShowingHowTo) {

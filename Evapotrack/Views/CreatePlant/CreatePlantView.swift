@@ -13,7 +13,6 @@ struct CreatePlantView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Environment(SettingsViewModel.self) private var settingsVM
-    @FocusState private var isFieldFocused: Bool
     @State private var vm = CreatePlantViewModel()
     var grow: Grow? = nil
 
@@ -24,10 +23,13 @@ struct CreatePlantView: View {
             Section {
                 TextField("Plant Name", text: $vm.plantName)
                     .autocorrectionDisabled()
+                    .textLimit($vm.plantName, maxLength: AppConstants.maxPlantNameLength)
 
                 TextField("Pot Size (e.g. 6 inch, 1 gallon)", text: $vm.potSize)
+                    .textLimit($vm.potSize, maxLength: AppConstants.maxDescriptionLength)
 
                 TextField("Medium Type (e.g. soil, perlite)", text: $vm.mediumType)
+                    .textLimit($vm.mediumType, maxLength: AppConstants.maxDescriptionLength)
             } header: {
                 Text("Plant Info")
                     .font(.title2.weight(.bold))
@@ -41,7 +43,7 @@ struct CreatePlantView: View {
                     text: $vm.maxRetentionCapacityText
                 )
                 .keyboardType(.decimalPad)
-                .focused($isFieldFocused)
+                .textLimit($vm.maxRetentionCapacityText, maxLength: AppConstants.maxNumericInputLength)
 
                 Text("The maximum volume of water the medium can hold before runoff begins.")
                     .font(.callout)
@@ -60,12 +62,14 @@ struct CreatePlantView: View {
                         text: $vm.calculatorWaterAddedText
                     )
                     .keyboardType(.decimalPad)
+                    .textLimit($vm.calculatorWaterAddedText, maxLength: AppConstants.maxNumericInputLength)
 
                     TextField(
                         "Runoff Collected (\(DisplayFormatter.waterUnitHint(waterUnit)))",
                         text: $vm.calculatorRunoffText
                     )
                     .keyboardType(.decimalPad)
+                    .textLimit($vm.calculatorRunoffText, maxLength: AppConstants.maxNumericInputLength)
 
                     HStack(spacing: 12) {
                         Button("Calculate") {
@@ -106,6 +110,7 @@ struct CreatePlantView: View {
             Section {
                 TextField("Example: 15%", text: $vm.goalRunoffPercentText)
                     .keyboardType(.decimalPad)
+                    .textLimit($vm.goalRunoffPercentText, maxLength: AppConstants.maxNumericInputLength)
 
                 Text("The runoff percentage the Next algorithm will target. Defaults to 15% if left blank.")
                     .font(.callout)
@@ -145,11 +150,6 @@ struct CreatePlantView: View {
                 }
                 .fontWeight(.bold)
                 .disabled(vm.showSaveConfirmation)
-            }
-            ToolbarItemGroup(placement: .keyboard) {
-                Spacer()
-                Button("Done") { isFieldFocused = false }
-                    .fontWeight(.semibold)
             }
         }
         .onAppear {

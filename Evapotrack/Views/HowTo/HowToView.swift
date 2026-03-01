@@ -154,7 +154,8 @@ struct HowToView: View {
                 .foregroundStyle(Color.evSlateGray)
             Text(text)
                 .fontWeight(.medium)
-                .fixedSize(horizontal: false, vertical: true)
+                .lineLimit(nil)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
         .font(.body)
         .foregroundStyle(Color.evPrimaryText)

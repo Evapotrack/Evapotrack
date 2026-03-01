@@ -40,6 +40,21 @@ extension Date {
     }
 }
 
+// MARK: - View
+
+import SwiftUI
+
+extension View {
+    /// Limits a bound text field string to maxLength characters during typing.
+    func textLimit(_ text: Binding<String>, maxLength: Int) -> some View {
+        self.onChange(of: text.wrappedValue) { _, newValue in
+            if newValue.count > maxLength {
+                text.wrappedValue = String(newValue.prefix(maxLength))
+            }
+        }
+    }
+}
+
 // MARK: - Double
 
 extension Double {

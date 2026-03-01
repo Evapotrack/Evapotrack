@@ -23,6 +23,7 @@ struct CreateGrowView: View {
             Section {
                 TextField("Grow Name", text: $vm.growName)
                     .autocorrectionDisabled()
+                    .textLimit($vm.growName, maxLength: AppConstants.maxGrowNameLength)
             } header: {
                 Text("Grow Info")
                     .font(.title2.weight(.bold))

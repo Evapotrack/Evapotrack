@@ -1,8 +1,8 @@
 // SummaryPanelView.swift
 // Evapotrack
 //
-// Displays the most recent WateringLog's key metrics.
-// Shows: Last Event Date, Retained, Capacity %, Interval.
+// Displays the most recent WateringLog's key metrics in a compact grid.
+// Shows: Last Event, Retained, Max Capacity, Capacity %, Interval.
 // Empty state when no logs exist.
 
 import SwiftUI
@@ -12,31 +12,22 @@ struct SummaryPanelView: View {
     let maxRetentionCapacity: Double // liters
     let waterUnit: WaterUnit
 
+    private let columns = [
+        GridItem(.flexible(), spacing: 12),
+        GridItem(.flexible(), spacing: 12)
+    ]
+
     var body: some View {
         Section {
             if let log = lastLog {
-                LabeledContent("Last Event Date", value: log.dateTime.shortFormatted)
-
-                LabeledContent("Retained", value: DisplayFormatter.water(log.retained, unit: waterUnit))
-
-                LabeledContent("Max Retention Capacity", value: DisplayFormatter.water(maxRetentionCapacity, unit: waterUnit))
-
-                if maxRetentionCapacity > 0 {
-                    LabeledContent("Capacity %", value: DisplayFormatter.percent(
-                        WateringCalculationService.capacityPercent(
-                            retained: log.retained,
-                            maxRetentionCapacity: maxRetentionCapacity
-                        )
-                    ))
-                } else {
-                    LabeledContent("Capacity %", value: "—")
+                LazyVGrid(columns: columns, alignment: .leading, spacing: 12) {
+                    metricCell("Last Event", log.dateTime.shortFormatted)
+                    metricCell("Interval", intervalText(for: log))
+                    metricCell("Retained", DisplayFormatter.water(log.retained, unit: waterUnit))
+                    metricCell("Capacity", capacityText(for: log))
+                    metricCell("Max Capacity", DisplayFormatter.water(maxRetentionCapacity, unit: waterUnit))
                 }
-
-                if let hours = log.intervalHours {
-                    LabeledContent("Interval", value: DisplayFormatter.intervalAdaptive(hours))
-                } else {
-                    LabeledContent("Interval", value: "—")
-                }
+                .padding(.vertical, 4)
             } else {
                 Text("No watering logs yet.")
                     .foregroundStyle(Color.evSecondaryText)
@@ -47,6 +38,35 @@ struct SummaryPanelView: View {
                 .foregroundStyle(.evDeepNavy)
                 .textCase(nil)
         }
-        .fontWeight(.medium)
+    }
+
+    private func metricCell(_ label: String, _ value: String) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(label)
+                .font(.caption)
+                .fontWeight(.semibold)
+                .foregroundStyle(Color.evSecondaryText)
+            Text(value)
+                .font(.body)
+                .fontWeight(.semibold)
+                .foregroundStyle(Color.evPrimaryText)
+        }
+    }
+
+    private func capacityText(for log: WateringLog) -> String {
+        guard maxRetentionCapacity > 0 else { return "—" }
+        return DisplayFormatter.percent(
+            WateringCalculationService.capacityPercent(
+                retained: log.retained,
+                maxRetentionCapacity: maxRetentionCapacity
+            )
+        )
+    }
+
+    private func intervalText(for log: WateringLog) -> String {
+        if let hours = log.intervalHours {
+            return DisplayFormatter.intervalAdaptive(hours)
+        }
+        return "—"
     }
 }

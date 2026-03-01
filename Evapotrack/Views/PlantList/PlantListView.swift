@@ -97,6 +97,11 @@ struct PlantListView: View {
                         .font(.body)
                         .fontWeight(.bold)
                         .foregroundStyle(selectedPlantID != nil ? .red : .evSlateGray)
+                        .padding(6)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.evInkBlack, lineWidth: 2)
+                        )
                 }
                 .disabled(selectedPlantID == nil)
                 .accessibilityLabel("Delete Plant")
@@ -139,11 +144,17 @@ struct PlantListView: View {
         }
         .overlay {
             if plants.isEmpty {
-                ContentUnavailableView(
-                    "No Plants Yet",
-                    systemImage: "leaf",
-                    description: Text("Tap + to add your first plant.")
-                )
+                ContentUnavailableView {
+                    Label("No Plants Yet", systemImage: "leaf")
+                } description: {
+                    HStack(spacing: 4) {
+                        Text("Tap")
+                        Text("+")
+                            .font(.title2)
+                            .fontWeight(.black)
+                        Text("to add your first plant.")
+                    }
+                }
             }
         }
         .overlay {

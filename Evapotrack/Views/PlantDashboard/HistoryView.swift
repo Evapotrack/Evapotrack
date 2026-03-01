@@ -50,7 +50,7 @@ struct HistoryView: View {
         .scrollContentBackground(.hidden)
         .background(Color.evBackground)
         .navigationTitle("History")
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitleDisplayMode(.large)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
@@ -60,6 +60,11 @@ struct HistoryView: View {
                         .font(.body)
                         .fontWeight(.bold)
                         .foregroundStyle(selectedLogID != nil ? .red : .evSlateGray)
+                        .padding(6)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.evInkBlack, lineWidth: 2)
+                        )
                 }
                 .disabled(selectedLogID == nil)
                 .accessibilityLabel("Delete Log")
