@@ -46,7 +46,7 @@ struct AddWateringLogView: View {
 
             Section {
                 DatePicker("Date", selection: $vm.dateTime, in: ...Date.now, displayedComponents: .date)
-                DatePicker("Time", selection: $vm.dateTime, displayedComponents: .hourAndMinute)
+                DatePicker("Time", selection: $vm.dateTime, in: ...Date.now, displayedComponents: .hourAndMinute)
             } header: {
                 Text("Date & Time")
                     .font(.title2.weight(.bold))
