@@ -118,19 +118,7 @@ struct GrowListView: View {
                 selectedGrowID = nil
             }
             .overlay {
-                if grows.isEmpty {
-                    ContentUnavailableView {
-                        Label("No Grows Yet", systemImage: "leaf")
-                    } description: {
-                        HStack(spacing: 4) {
-                            Text("Tap")
-                            Text("+")
-                                .font(.title2)
-                                .fontWeight(.black)
-                            Text("to create your first grow.")
-                        }
-                    }
-                }
+                if grows.isEmpty { emptyStateView }
             }
             .overlay {
                 if isShowingDeleteAlert, let grow = selectedGrow {
@@ -152,6 +140,32 @@ struct GrowListView: View {
                 }
             }
             .animation(.easeInOut(duration: 0.2), value: isShowingDeleteAlert)
+        }
+    }
+
+    // MARK: - Subviews
+
+    @ViewBuilder
+    private var emptyStateView: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "leaf.circle.fill")
+                .font(.system(size: 56))
+                .foregroundStyle(Color.evPrimaryBlue)
+
+            Text("No Grows Yet")
+                .font(.title2.weight(.bold))
+                .foregroundStyle(Color.evDeepNavy)
+
+            HStack(spacing: 4) {
+                Text("Tap")
+                    .foregroundStyle(Color.evSecondaryText)
+                Image(systemName: "plus")
+                    .font(.body.weight(.black))
+                    .foregroundStyle(Color.evPrimaryBlue)
+                Text("to create your first grow.")
+                    .foregroundStyle(Color.evSecondaryText)
+            }
+            .font(.body)
         }
     }
 

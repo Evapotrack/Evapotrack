@@ -9,32 +9,45 @@ import SwiftUI
 
 struct LaunchView: View {
     @State private var iconOpacity: Double = 0
+    @State private var sloganOpacity: Double = 0
 
     var body: some View {
         ZStack {
             Color.evBackground
                 .ignoresSafeArea()
 
-            VStack(spacing: 24) {
+            VStack(spacing: 20) {
                 Image("LaunchIcon")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 120, height: 120)
-                    .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+                    .frame(width: 130, height: 130)
+                    .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
+                    .shadow(color: .evPrimaryBlue.opacity(0.2), radius: 16, y: 6)
 
                 Text("EVAPOTRACK")
                     .font(.system(size: 28, weight: .bold, design: .rounded))
                     .foregroundStyle(Color.evPrimaryText)
                     .kerning(2)
+
+                Text("Optimize plant watering")
+                    .font(.system(size: 16, weight: .medium, design: .rounded))
+                    .foregroundStyle(Color.evSecondaryText)
+                    .opacity(sloganOpacity)
             }
             .opacity(iconOpacity)
         }
         .onAppear {
-            // Fade in
+            // Fade in icon and title
             withAnimation(.easeIn(duration: 0.8)) {
                 iconOpacity = 1.0
             }
-            // Hold longer, then fade out
+            // Slogan fades in slightly after
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                withAnimation(.easeIn(duration: 0.6)) {
+                    sloganOpacity = 1.0
+                }
+            }
+            // Hold, then fade out
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.2) {
                 withAnimation(.easeOut(duration: 0.5)) {
                     iconOpacity = 0

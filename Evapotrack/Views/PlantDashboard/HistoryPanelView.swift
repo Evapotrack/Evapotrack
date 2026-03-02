@@ -39,7 +39,7 @@ struct HistoryPanelView: View {
         } header: {
             Text("History")
                 .font(.title2.weight(.bold))
-                .foregroundStyle(.evPrimaryBlue)
+                .foregroundStyle(.evDeepNavy)
                 .textCase(nil)
         }
     }

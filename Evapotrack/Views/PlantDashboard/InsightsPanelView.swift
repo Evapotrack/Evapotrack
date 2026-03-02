@@ -13,15 +13,15 @@ struct InsightsPanelView: View {
     let waterUnit: WaterUnit
 
     private let columns = [
-        GridItem(.flexible(), spacing: 8),
-        GridItem(.flexible(), spacing: 8),
-        GridItem(.flexible(), spacing: 8)
+        GridItem(.flexible(), spacing: 12),
+        GridItem(.flexible(), spacing: 12),
+        GridItem(.flexible(), spacing: 12)
     ]
 
     var body: some View {
         Section {
             if let retained = averageRetained, let recommendation = nextRecommendation {
-                LazyVGrid(columns: columns, alignment: .center, spacing: 8) {
+                LazyVGrid(columns: columns, alignment: .center, spacing: 12) {
                     metricCell("Average", DisplayFormatter.water(retained, unit: waterUnit))
                     metricCell("Next", DisplayFormatter.water(recommendation.next, unit: waterUnit))
                     metricCell(
