@@ -54,6 +54,7 @@ final class Plant {
         mediumType: String,
         maxRetentionCapacity: Double,
         goalRunoffPercent: Double = AppConstants.targetRunoffPercent,
+        createdAt: Date = Date(),
         grow: Grow? = nil
     ) {
         self.id = id
@@ -63,7 +64,7 @@ final class Plant {
         self.maxRetentionCapacity = maxRetentionCapacity
         // Clamp to valid range — prevents division by zero in recommendation algorithm
         self.goalRunoffPercent = min(max(goalRunoffPercent, 0.1), 99.9)
-        self.createdAt = Date()
+        self.createdAt = createdAt
         self.wateringLogs = []
         self.grow = grow
     }

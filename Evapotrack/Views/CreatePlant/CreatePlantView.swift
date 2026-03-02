@@ -39,7 +39,7 @@ struct CreatePlantView: View {
 
             Section {
                 TextField(
-                    "Max Retention Capacity (\(DisplayFormatter.waterUnitHint(waterUnit)))",
+                    "Max Retention Capacity (\(waterUnit.abbreviation))",
                     text: $vm.maxRetentionCapacityText
                 )
                 .keyboardType(.decimalPad)
@@ -58,14 +58,14 @@ struct CreatePlantView: View {
             Section {
                 DisclosureGroup("Calculator") {
                     TextField(
-                        "Water Added (\(DisplayFormatter.waterUnitHint(waterUnit)))",
+                        "Water Added (\(waterUnit.abbreviation))",
                         text: $vm.calculatorWaterAddedText
                     )
                     .keyboardType(.decimalPad)
                     .textLimit($vm.calculatorWaterAddedText, maxLength: AppConstants.maxNumericInputLength)
 
                     TextField(
-                        "Runoff Collected (\(DisplayFormatter.waterUnitHint(waterUnit)))",
+                        "Runoff Collected (\(waterUnit.abbreviation))",
                         text: $vm.calculatorRunoffText
                     )
                     .keyboardType(.decimalPad)
@@ -144,7 +144,8 @@ struct CreatePlantView: View {
                 Button("Save") {
                     if vm.save() {
                         HapticService.success()
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        Task {
+                            try? await Task.sleep(for: .seconds(1))
                             dismiss()
                         }
                     }

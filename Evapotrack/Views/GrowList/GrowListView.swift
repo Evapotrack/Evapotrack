@@ -67,7 +67,7 @@ struct GrowListView: View {
                             .frame(minWidth: 44, minHeight: 44)
                     }
                     .disabled(grows.count >= AppConstants.maxGrowCount)
-                    .accessibilityLabel("Add Grow")
+                    .accessibilityLabel(grows.count >= AppConstants.maxGrowCount ? "Maximum of \(AppConstants.maxGrowCount) grows reached" : "Add Grow")
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {

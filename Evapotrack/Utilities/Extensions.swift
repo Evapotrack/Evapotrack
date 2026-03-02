@@ -54,13 +54,3 @@ extension View {
         }
     }
 }
-
-// MARK: - Double
-
-extension Double {
-    /// Rounds to the specified number of decimal places (display only).
-    func rounded(toPlaces places: Int) -> Double {
-        let divisor = pow(10.0, Double(places))
-        return (self * divisor).rounded() / divisor
-    }
-}

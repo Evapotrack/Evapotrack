@@ -64,13 +64,9 @@ struct PlantDashboardView: View {
             )
 
             HistoryPanelView(
-                logCount: vm.wateringLogs.count,
-                logs: vm.wateringLogs,
+                vm: vm,
                 waterUnit: waterUnit,
-                maxRetentionCapacity: vm.plant.maxRetentionCapacity,
-                onDeleteLog: { log in
-                    vm.deleteLog(log)
-                }
+                maxRetentionCapacity: vm.plant.maxRetentionCapacity
             )
         }
         .listStyle(.insetGrouped)

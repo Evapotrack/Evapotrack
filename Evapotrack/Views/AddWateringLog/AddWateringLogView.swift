@@ -25,14 +25,14 @@ struct AddWateringLogView: View {
         Form {
             Section {
                 TextField(
-                    "Water Added (\(DisplayFormatter.waterUnitHint(waterUnit)))",
+                    "Water Added (\(waterUnit.abbreviation))",
                     text: $vm.waterAddedText
                 )
                 .keyboardType(.decimalPad)
                 .textLimit($vm.waterAddedText, maxLength: AppConstants.maxNumericInputLength)
 
                 TextField(
-                    "Runoff Collected (\(DisplayFormatter.waterUnitHint(waterUnit)))",
+                    "Runoff Collected (\(waterUnit.abbreviation))",
                     text: $vm.runoffCollectedText
                 )
                 .keyboardType(.decimalPad)
@@ -56,7 +56,7 @@ struct AddWateringLogView: View {
 
             Section {
                 TextField(
-                    "Temperature (\(DisplayFormatter.tempUnitHint(tempUnit)), optional)",
+                    "Temperature (\(tempUnit.abbreviation), optional)",
                     text: $vm.temperatureText
                 )
                 .keyboardType(.decimalPad)
@@ -117,7 +117,8 @@ struct AddWateringLogView: View {
                 Button("Save") {
                     if vm.save() {
                         HapticService.success()
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        Task {
+                            try? await Task.sleep(for: .seconds(1))
                             dismiss()
                         }
                     }

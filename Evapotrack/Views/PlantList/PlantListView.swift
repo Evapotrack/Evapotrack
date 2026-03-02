@@ -80,7 +80,7 @@ struct PlantListView: View {
                         .frame(minWidth: 44, minHeight: 44)
                 }
                 .disabled(plants.count >= AppConstants.maxPlantsPerGrow)
-                .accessibilityLabel("Add Plant")
+                .accessibilityLabel(plants.count >= AppConstants.maxPlantsPerGrow ? "Maximum of \(AppConstants.maxPlantsPerGrow) plants reached" : "Add Plant")
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {

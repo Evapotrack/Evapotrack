@@ -44,6 +44,7 @@ final class CreatePlantViewModel {
     var grow: Grow?
 
     func configure(modelContext: ModelContext, waterUnit: WaterUnit, grow: Grow? = nil) {
+        guard plantService == nil else { return }
         self.plantService = PlantService(modelContext: modelContext)
         self.waterUnit = waterUnit
         self.grow = grow
@@ -60,7 +61,7 @@ final class CreatePlantViewModel {
         // Prevent duplicate plant names within the same grow (case-insensitive)
         if let grow {
             let trimmed = plantName.trimmingCharacters(in: .whitespaces).lowercased()
-            if grow.plants.contains(where: { $0.plantName.lowercased() == trimmed }) {
+            if grow.plants.contains(where: { $0.plantName.trimmingCharacters(in: .whitespaces).lowercased() == trimmed }) {
                 validationError = "A plant with this name already exists in this grow."
                 return false
             }

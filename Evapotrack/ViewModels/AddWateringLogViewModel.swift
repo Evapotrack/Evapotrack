@@ -39,6 +39,7 @@ final class AddWateringLogViewModel {
     }
 
     func configure(modelContext: ModelContext, waterUnit: WaterUnit, temperatureUnit: TemperatureUnit) {
+        guard logService == nil else { return }
         self.logService = WateringLogService(modelContext: modelContext)
         self.waterUnit = waterUnit
         self.temperatureUnit = temperatureUnit

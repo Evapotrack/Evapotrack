@@ -63,22 +63,6 @@ enum DisplayFormatter {
         }
     }
 
-    // MARK: - Unit Label (for form placeholders)
-
-    /// Returns the water unit label string for form field hints.
-    static func waterUnitHint(_ unit: WaterUnit) -> String {
-        switch unit {
-        case .milliliters: return "mL"
-        case .liters:      return "L"
-        case .gallons:     return "gal"
-        }
-    }
-
-    /// Returns the temperature unit label string for form field hints.
-    static func tempUnitHint(_ unit: TemperatureUnit) -> String {
-        unit.abbreviation
-    }
-
     // MARK: - Private
 
     private static func formatNumber(_ value: Double, decimals: Int) -> String {

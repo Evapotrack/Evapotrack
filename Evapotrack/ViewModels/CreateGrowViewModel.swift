@@ -23,6 +23,7 @@ final class CreateGrowViewModel {
     private var growService: GrowService?
 
     func configure(modelContext: ModelContext) {
+        guard growService == nil else { return }
         self.growService = GrowService(modelContext: modelContext)
     }
 
@@ -41,7 +42,7 @@ final class CreateGrowViewModel {
         if let service = growService {
             let trimmed = growName.trimmingCharacters(in: .whitespaces).lowercased()
             let existingGrows = service.fetchAll()
-            if existingGrows.contains(where: { $0.growName.lowercased() == trimmed }) {
+            if existingGrows.contains(where: { $0.growName.trimmingCharacters(in: .whitespaces).lowercased() == trimmed }) {
                 validationError = "A grow with this name already exists."
                 return false
             }

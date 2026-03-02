@@ -75,16 +75,9 @@ enum WateringCalculationService {
         averageVolumeLiters: Double
     ) -> Double {
         let base = baseIntervals[plantType.lowercased()] ?? defaultBaseInterval
-
-        // Pot size modifier: larger pots retain more → longer intervals
         let potFactor = 1.0 + potSizeCoefficient * (potDiameterCm - referencePotDiameterCm)
-
-        // Indoor/outdoor modifier
         let envFactor = isIndoor ? indoorFactor : outdoorFactor
-
-        // Volume modifier: more water → longer intervals
         let volFactor = 1.0 + volumeCoefficient * log(max(averageVolumeLiters, 0.001) / referenceVolume)
-
         let result = base * potFactor * envFactor * volFactor
         return min(max(result, minimumIntervalDays), maximumIntervalDays)
     }
@@ -100,10 +93,8 @@ enum WateringCalculationService {
         guard let lastWatered = lastWateredDate else {
             return .neverWatered
         }
-
         let daysSince = Date.daysBetween(start: lastWatered, end: dateProvider.now)
         let remaining = Int(recommendedIntervalDays) - daysSince
-
         if remaining > 2 {
             return .healthy(daysRemaining: remaining)
         } else if remaining >= 0 {
@@ -163,7 +154,6 @@ enum WateringCalculationService {
             return formulaInterval
         }
 
-        // Compute actual average interval from sorted events
         let sorted = events.sorted { $0.date > $1.date }
         var intervals: [Double] = []
         for i in 0..<(sorted.count - 1) {
@@ -187,11 +177,9 @@ enum WateringCalculationService {
     /// Average volume from the most recent `limit` events.
     static func averageVolume(from events: [WateringEvent], limit: Int? = nil) -> Double {
         guard !events.isEmpty else { return 0 }
-
         let sorted = events.sorted { $0.date > $1.date }
         let subset = limit.map { Array(sorted.prefix($0)) } ?? sorted
         guard !subset.isEmpty else { return 0 }
-
         return subset.map(\.volumeLiters).reduce(0, +) / Double(subset.count)
     }
 
@@ -233,10 +221,8 @@ enum WateringCalculationService {
     /// 1. Estimate expected retention by averaging the most recent retained
     ///    amount with the historical average (50/50 blend).
     /// 2. Next = expectedRetained / (1 - goalRunoffPercent/100)
-    ///    — the exact water amount that, if the medium absorbs expectedRetained,
-    ///      produces goalRunoffPercent runoff.
     /// 3. Cap Next so it never exceeds what maxRetentionCapacity would require.
-    /// 4. GoalRunoff = Next × (goalRunoffPercent / 100)
+    /// 4. GoalRunoff = Next * (goalRunoffPercent / 100)
     static func computeNextWaterRecommendation(
         lastLog: WateringLog,
         averageRetained: Double,
@@ -244,29 +230,18 @@ enum WateringCalculationService {
         goalRunoffPercent: Double = AppConstants.targetRunoffPercent
     ) -> NextWaterRecommendation? {
         let retainedLast = lastLog.retained
-
-        // If retained_last <= 0, no recommendation
         guard retainedLast > 0 else { return nil }
 
         let retentionFactor = 1.0 - goalRunoffPercent / 100.0
-
-        // If goalRunoffPercent >= 100, retentionFactor <= 0 → division by zero
         guard retentionFactor > 0 else { return nil }
 
-        // Estimate how much the medium will absorb next time:
-        // blend recent observation with historical average.
         let expectedRetained = (retainedLast + averageRetained) / 2.0
-
-        // Water amount that produces exactly goalRunoffPercent runoff
-        // if the medium absorbs expectedRetained.
         var next = expectedRetained / retentionFactor
 
-        // Cap: never recommend more than what maxRetentionCapacity implies.
         let maxSafeWater = maxRetentionCapacity / retentionFactor
         next = min(next, maxSafeWater)
 
         let goalRunoff = next * (goalRunoffPercent / 100.0)
-
         return NextWaterRecommendation(next: next, goalRunoff: goalRunoff, goalRunoffPercent: goalRunoffPercent)
     }
 }

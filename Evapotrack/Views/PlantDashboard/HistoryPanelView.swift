@@ -7,20 +7,17 @@
 import SwiftUI
 
 struct HistoryPanelView: View {
-    let logCount: Int
-    let logs: [WateringLog]
+    @Bindable var vm: PlantDashboardViewModel
     let waterUnit: WaterUnit
     let maxRetentionCapacity: Double
-    let onDeleteLog: (WateringLog) -> Void
 
     var body: some View {
         Section {
             NavigationLink {
                 HistoryView(
-                    logs: logs,
+                    vm: vm,
                     waterUnit: waterUnit,
-                    maxRetentionCapacity: maxRetentionCapacity,
-                    onDeleteLog: onDeleteLog
+                    maxRetentionCapacity: maxRetentionCapacity
                 )
             } label: {
                 HStack {
@@ -31,7 +28,7 @@ struct HistoryPanelView: View {
                         .fontWeight(.semibold)
                         .foregroundStyle(.evPrimaryBlue)
                     Spacer()
-                    Text("\(logCount)")
+                    Text("\(vm.wateringLogs.count)")
                         .fontWeight(.semibold)
                         .foregroundStyle(.evPrimaryBlue)
                 }

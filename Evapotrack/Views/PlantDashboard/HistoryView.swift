@@ -9,10 +9,9 @@
 import SwiftUI
 
 struct HistoryView: View {
-    let logs: [WateringLog]
+    @Bindable var vm: PlantDashboardViewModel
     let waterUnit: WaterUnit
     let maxRetentionCapacity: Double
-    let onDeleteLog: (WateringLog) -> Void
 
     @State private var selectedLogID: UUID?
     @State private var expandedLogID: UUID?
@@ -20,12 +19,12 @@ struct HistoryView: View {
 
     private var selectedLog: WateringLog? {
         guard let id = selectedLogID else { return nil }
-        return logs.first(where: { $0.id == id })
+        return vm.wateringLogs.first(where: { $0.id == id })
     }
 
     /// Logs grouped by day, sorted most recent day first, logs within each day most recent first.
     private var groupedLogs: [(date: Date, logs: [WateringLog])] {
-        let sorted = logs.sorted { $0.dateTime > $1.dateTime }
+        let sorted = vm.wateringLogs.sorted { $0.dateTime > $1.dateTime }
         let grouped = Dictionary(grouping: sorted) { $0.dateTime.startOfDay }
         return grouped
             .map { (date: $0.key, logs: $0.value) }
@@ -46,7 +45,7 @@ struct HistoryView: View {
 
     var body: some View {
         List {
-            if logs.isEmpty {
+            if vm.wateringLogs.isEmpty {
                 Text("No watering logs yet.")
                     .foregroundStyle(Color.evSecondaryText)
             } else {
@@ -108,7 +107,7 @@ struct HistoryView: View {
                         withAnimation(.easeInOut(duration: 0.2)) {
                             isShowingDeleteAlert = false
                         }
-                        onDeleteLog(log)
+                        vm.deleteLog(log)
                         selectedLogID = nil
                         expandedLogID = nil
                     },
