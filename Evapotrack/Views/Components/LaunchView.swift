@@ -36,22 +36,20 @@ struct LaunchView: View {
             }
             .opacity(iconOpacity)
         }
-        .onAppear {
+        .task {
             // Fade in icon and title
             withAnimation(.easeIn(duration: 0.8)) {
                 iconOpacity = 1.0
             }
             // Slogan fades in slightly after
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-                withAnimation(.easeIn(duration: 0.6)) {
-                    sloganOpacity = 1.0
-                }
+            try? await Task.sleep(for: .seconds(0.6))
+            withAnimation(.easeIn(duration: 0.6)) {
+                sloganOpacity = 1.0
             }
             // Hold, then fade out
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.2) {
-                withAnimation(.easeOut(duration: 0.5)) {
-                    iconOpacity = 0
-                }
+            try? await Task.sleep(for: .seconds(1.6))
+            withAnimation(.easeOut(duration: 0.5)) {
+                iconOpacity = 0
             }
         }
     }

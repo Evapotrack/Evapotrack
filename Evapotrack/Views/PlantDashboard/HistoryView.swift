@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct HistoryView: View {
-    @Bindable var vm: PlantDashboardViewModel
+    var vm: PlantDashboardViewModel
     let waterUnit: WaterUnit
     let maxRetentionCapacity: Double
 

@@ -62,6 +62,7 @@ struct CreateGrowView: View {
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Cancel") { dismiss() }
+                    .font(.body)
                     .fontWeight(.bold)
             }
             ToolbarItem(placement: .confirmationAction) {
