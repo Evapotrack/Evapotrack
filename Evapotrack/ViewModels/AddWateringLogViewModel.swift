@@ -81,6 +81,17 @@ final class AddWateringLogViewModel {
         let dateResult = ValidationService.validateDate(dateTime, now: dateProvider.now)
         if !dateResult.isValid { validationError = dateResult.errorMessage; return false }
 
+        // Prevent duplicate timestamps (compared to the minute)
+        let calendar = Calendar.current
+        let newMinute = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: dateTime)
+        let hasDuplicate = plant.wateringLogs.contains { log in
+            calendar.dateComponents([.year, .month, .day, .hour, .minute], from: log.dateTime) == newMinute
+        }
+        if hasDuplicate {
+            validationError = "A watering log already exists at this date and time."
+            return false
+        }
+
         // Temperature is optional — only validate if the user entered a value
         if !temperatureText.trimmingCharacters(in: .whitespaces).isEmpty {
             guard let displayTemp = Double(temperatureText) else {

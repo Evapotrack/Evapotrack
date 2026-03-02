@@ -57,6 +57,15 @@ final class CreatePlantViewModel {
         let nameResult = ValidationService.validatePlantName(plantName)
         if !nameResult.isValid { validationError = nameResult.errorMessage; return false }
 
+        // Prevent duplicate plant names within the same grow (case-insensitive)
+        if let grow {
+            let trimmed = plantName.trimmingCharacters(in: .whitespaces).lowercased()
+            if grow.plants.contains(where: { $0.plantName.lowercased() == trimmed }) {
+                validationError = "A plant with this name already exists in this grow."
+                return false
+            }
+        }
+
         let potResult = ValidationService.validatePotSize(potSize)
         if !potResult.isValid { validationError = potResult.errorMessage; return false }
 

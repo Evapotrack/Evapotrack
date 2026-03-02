@@ -37,6 +37,16 @@ final class CreateGrowViewModel {
             return false
         }
 
+        // Prevent duplicate grow names (case-insensitive)
+        if let service = growService {
+            let trimmed = growName.trimmingCharacters(in: .whitespaces).lowercased()
+            let existingGrows = service.fetchAll()
+            if existingGrows.contains(where: { $0.growName.lowercased() == trimmed }) {
+                validationError = "A grow with this name already exists."
+                return false
+            }
+        }
+
         return true
     }
 
