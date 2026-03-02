@@ -33,10 +33,14 @@ struct SummaryPanelView: View {
                     .foregroundStyle(Color.evSecondaryText)
             }
         } header: {
-            Text("Summary")
-                .font(.title2.weight(.bold))
-                .foregroundStyle(.evDeepNavy)
-                .textCase(nil)
+            Label {
+                Text("Summary")
+            } icon: {
+                Image(systemName: "list.clipboard")
+            }
+            .font(.title2.weight(.bold))
+            .foregroundStyle(.evDeepNavy)
+            .textCase(nil)
         }
     }
 

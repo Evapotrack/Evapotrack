@@ -23,31 +23,60 @@ struct HistoryView: View {
         return logs.first(where: { $0.id == id })
     }
 
+    /// Logs grouped by day, sorted most recent day first, logs within each day most recent first.
+    private var groupedLogs: [(date: Date, logs: [WateringLog])] {
+        let sorted = logs.sorted { $0.dateTime > $1.dateTime }
+        let grouped = Dictionary(grouping: sorted) { $0.dateTime.startOfDay }
+        return grouped
+            .map { (date: $0.key, logs: $0.value) }
+            .sorted { $0.date > $1.date }
+    }
+
+    /// Human-friendly section header for a date.
+    private func sectionTitle(for date: Date) -> String {
+        let calendar = Calendar.current
+        if calendar.isDateInToday(date) {
+            return "Today"
+        } else if calendar.isDateInYesterday(date) {
+            return "Yesterday"
+        } else {
+            return date.shortFormatted
+        }
+    }
+
     var body: some View {
         List {
             if logs.isEmpty {
                 Text("No watering logs yet.")
                     .foregroundStyle(Color.evSecondaryText)
             } else {
-                ForEach(logs, id: \.id) { log in
-                    WateringLogRowView(
-                        log: log,
-                        waterUnit: waterUnit,
-                        maxRetentionCapacity: maxRetentionCapacity,
-                        isSelected: selectedLogID == log.id,
-                        isExpanded: expandedLogID == log.id,
-                        onToggleSelection: {
-                            toggleSelection(for: log)
-                        },
-                        onToggleExpansion: {
-                            toggleExpansion(for: log)
+                ForEach(groupedLogs, id: \.date) { group in
+                    Section(header: Text(sectionTitle(for: group.date))
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Color.evDeepNavy)
+                        .textCase(nil)
+                    ) {
+                        ForEach(group.logs, id: \.id) { log in
+                            WateringLogRowView(
+                                log: log,
+                                waterUnit: waterUnit,
+                                maxRetentionCapacity: maxRetentionCapacity,
+                                isSelected: selectedLogID == log.id,
+                                isExpanded: expandedLogID == log.id,
+                                onToggleSelection: {
+                                    toggleSelection(for: log)
+                                },
+                                onToggleExpansion: {
+                                    toggleExpansion(for: log)
+                                }
+                            )
+                            .listRowBackground(
+                                expandedLogID == log.id
+                                    ? Color.evFrostBlue.opacity(0.15)
+                                    : nil
+                            )
                         }
-                    )
-                    .listRowBackground(
-                        expandedLogID == log.id
-                            ? Color.evFrostBlue.opacity(0.15)
-                            : nil
-                    )
+                    }
                 }
             }
         }

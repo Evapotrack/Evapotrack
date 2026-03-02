@@ -34,7 +34,7 @@ struct GrowRowView: View {
 
                 HStack(spacing: 16) {
                     Label {
-                        Text("\(grow.plants.count)")
+                        Text("\(grow.plants.count) \(grow.plants.count == 1 ? "plant" : "plants")")
                             .fontWeight(.semibold)
                             .foregroundStyle(Color.evPrimaryBlue)
                     } icon: {

@@ -35,10 +35,14 @@ struct InsightsPanelView: View {
                     .foregroundStyle(Color.evSecondaryText)
             }
         } header: {
-            Text("Insights")
-                .font(.title2.weight(.bold))
-                .foregroundStyle(.evDeepNavy)
-                .textCase(nil)
+            Label {
+                Text("Insights")
+            } icon: {
+                Image(systemName: "lightbulb")
+            }
+            .font(.title2.weight(.bold))
+            .foregroundStyle(.evDeepNavy)
+            .textCase(nil)
         }
     }
 

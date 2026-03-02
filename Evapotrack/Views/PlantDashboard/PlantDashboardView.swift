@@ -41,10 +41,14 @@ struct PlantDashboardView: View {
                     plantInfoCell("Goal Runoff", DisplayFormatter.percent(vm.plant.goalRunoffPercent))
                 }
             } header: {
-                Text("Plant Info")
-                    .font(.title2.weight(.bold))
-                    .foregroundStyle(.evDeepNavy)
-                    .textCase(nil)
+                Label {
+                    Text("Plant Info")
+                } icon: {
+                    Image(systemName: "leaf")
+                }
+                .font(.title2.weight(.bold))
+                .foregroundStyle(.evDeepNavy)
+                .textCase(nil)
             }
 
             SummaryPanelView(

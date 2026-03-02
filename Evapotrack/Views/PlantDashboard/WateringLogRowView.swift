@@ -2,7 +2,7 @@
 // Evapotrack
 //
 // A single row in the watering history list with selection indicator.
-// Collapsed: shows Date, Time, Water Added, Retained (scannable).
+// Collapsed: shows Time, Water Added, Retained, Capacity % (scannable).
 // Expanded: reveals Runoff Collected, Runoff %, Capacity %, Interval.
 // Tap row content to expand/collapse. Tap circle to select.
 // Expansion state managed by parent — only one row expanded at a time.
@@ -48,15 +48,12 @@ struct WateringLogRowView: View {
 
             // Tappable content area
             VStack(alignment: .leading, spacing: 6) {
-                // Date, Time, and expand chevron
+                // Time and expand chevron
                 HStack {
-                    Text(log.dateTime.shortFormatted)
+                    Text(log.dateTime.timeFormatted)
                         .fontWeight(.semibold)
                         .foregroundStyle(Color.evDeepNavy)
                     Spacer()
-                    Text(log.dateTime.timeFormatted)
-                        .fontWeight(.medium)
-                        .foregroundStyle(Color.evPrimaryText)
                     Image(systemName: "chevron.right")
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(Color.evSlateGray)
@@ -66,9 +63,14 @@ struct WateringLogRowView: View {
                 .font(.body)
 
                 // Collapsed summary: key metrics at a glance
-                HStack(spacing: 16) {
+                HStack(spacing: 12) {
                     compactMetric(DisplayFormatter.water(log.waterAdded, unit: waterUnit), label: "added")
                     compactMetric(DisplayFormatter.water(log.retained, unit: waterUnit), label: "retained")
+                    Spacer()
+                    Text(DisplayFormatter.percent(capacityPercent))
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(Color.evPrimaryBlue)
                 }
 
                 // Expanded detail fields

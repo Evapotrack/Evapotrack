@@ -37,10 +37,14 @@ struct HistoryPanelView: View {
                 }
             }
         } header: {
-            Text("History")
-                .font(.title2.weight(.bold))
-                .foregroundStyle(.evDeepNavy)
-                .textCase(nil)
+            Label {
+                Text("History")
+            } icon: {
+                Image(systemName: "clock")
+            }
+            .font(.title2.weight(.bold))
+            .foregroundStyle(.evDeepNavy)
+            .textCase(nil)
         }
     }
 }
