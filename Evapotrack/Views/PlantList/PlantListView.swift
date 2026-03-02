@@ -27,11 +27,9 @@ struct PlantListView: View {
     @State private var isShowingSettings = false
     @State private var isShowingDeleteAlert = false
 
-    /// Plants sorted by name, derived from the grow relationship.
+    /// Plants sorted by most recently created first.
     private var plants: [Plant] {
-        grow.plants.sorted {
-            $0.plantName.localizedCaseInsensitiveCompare($1.plantName) == .orderedAscending
-        }
+        grow.plants.sorted { $0.createdAt > $1.createdAt }
     }
 
     /// The plant currently selected for deletion.

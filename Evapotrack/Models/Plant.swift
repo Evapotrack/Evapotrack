@@ -34,6 +34,9 @@ final class Plant {
     /// Defaults to 15.0 if not specified during plant creation.
     var goalRunoffPercent: Double = 15.0
 
+    /// Date the plant was created.
+    var createdAt: Date
+
     // MARK: - Relationships
 
     @Relationship(deleteRule: .cascade, inverse: \WateringLog.plant)
@@ -60,6 +63,7 @@ final class Plant {
         self.maxRetentionCapacity = maxRetentionCapacity
         // Clamp to valid range — prevents division by zero in recommendation algorithm
         self.goalRunoffPercent = min(max(goalRunoffPercent, 0.1), 99.9)
+        self.createdAt = Date()
         self.wateringLogs = []
         self.grow = grow
     }

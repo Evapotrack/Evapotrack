@@ -18,7 +18,7 @@ struct GrowNavID: Hashable {
 struct GrowListView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(SettingsViewModel.self) private var settingsVM
-    @Query(sort: \Grow.growName) private var grows: [Grow]
+    @Query(sort: \Grow.createdAt, order: .reverse) private var grows: [Grow]
 
     @State private var selectedGrowID: UUID?
     @State private var isShowingCreateGrow = false
