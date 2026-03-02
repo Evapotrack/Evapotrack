@@ -42,16 +42,6 @@ struct PlantListView: View {
 
     var body: some View {
         List {
-            // Grow name centered below toolbar, above plant rows
-            Section {
-                Text(grow.growName)
-                    .font(.title.weight(.bold))
-                    .foregroundStyle(Color.evPrimaryText)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .listRowBackground(Color.clear)
-                    .listRowInsets(EdgeInsets())
-            }
-
             ForEach(plants, id: \.id) { plant in
                 NavigationLink(value: PlantNavID(id: plant.id)) {
                     PlantRowView(
@@ -68,8 +58,8 @@ struct PlantListView: View {
         .listStyle(.insetGrouped)
         .scrollContentBackground(.hidden)
         .background(Color.evBackground)
-        .navigationTitle("")
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(grow.growName)
+        .navigationBarTitleDisplayMode(.large)
         .navigationDestination(for: PlantNavID.self) { navID in
             if let plant = plants.first(where: { $0.id == navID.id }) {
                 PlantDashboardView(plant: plant)

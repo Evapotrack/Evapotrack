@@ -27,26 +27,33 @@ struct GrowRowView: View {
             .accessibilityLabel(isSelected ? "Deselect \(grow.growName)" : "Select \(grow.growName)")
 
             // Grow info
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 6) {
                 Text(grow.growName)
                     .font(.title3.weight(.bold))
-                    .foregroundStyle(Color.evPrimaryText)
-                HStack(spacing: 12) {
-                    Text(grow.createdAt.shortFormatted)
-                        .font(.callout)
-                        .foregroundStyle(Color.evSecondaryText)
-                    Text("\(grow.plants.count) plant\(grow.plants.count == 1 ? "" : "s")")
-                        .font(.callout)
-                        .foregroundStyle(Color.evDeepNavy)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 2)
-                        .background(
-                            Capsule()
-                                .fill(Color.evFrostBlue.opacity(0.3))
-                        )
+                    .foregroundStyle(Color.evDeepNavy)
+
+                HStack(spacing: 16) {
+                    Label {
+                        Text("\(grow.plants.count)")
+                            .fontWeight(.semibold)
+                            .foregroundStyle(Color.evPrimaryBlue)
+                    } icon: {
+                        Image(systemName: "leaf.fill")
+                            .foregroundStyle(Color.evPrimaryBlue)
+                    }
+                    .font(.subheadline)
+
+                    Label {
+                        Text(grow.createdAt.shortFormatted)
+                            .foregroundStyle(Color.evSecondaryText)
+                    } icon: {
+                        Image(systemName: "calendar")
+                            .foregroundStyle(Color.evSecondaryText)
+                    }
+                    .font(.subheadline)
                 }
             }
         }
-        .padding(.vertical, 6)
+        .padding(.vertical, 8)
     }
 }

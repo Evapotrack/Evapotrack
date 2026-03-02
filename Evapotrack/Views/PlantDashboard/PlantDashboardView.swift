@@ -38,7 +38,7 @@ struct PlantDashboardView: View {
                     Spacer()
                     plantInfoCell("Medium", vm.plant.mediumType.isEmpty ? "—" : vm.plant.mediumType)
                     Spacer()
-                    plantInfoCell("Goal", DisplayFormatter.percent(vm.plant.goalRunoffPercent))
+                    plantInfoCell("Goal Runoff", DisplayFormatter.percent(vm.plant.goalRunoffPercent))
                 }
             } header: {
                 Text("Plant Info")
