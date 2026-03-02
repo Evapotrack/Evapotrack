@@ -42,6 +42,11 @@ struct PlantListView: View {
 
     var body: some View {
         List {
+            Section(header: Text("Plant list")
+                .font(.subheadline.weight(.medium))
+                .foregroundStyle(Color.evSecondaryText)
+                .textCase(nil)
+            ) {
             ForEach(plants, id: \.id) { plant in
                 NavigationLink(value: PlantNavID(id: plant.id)) {
                     PlantRowView(
@@ -53,6 +58,7 @@ struct PlantListView: View {
                     )
                 }
                 .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+            }
             }
         }
         .listStyle(.insetGrouped)
