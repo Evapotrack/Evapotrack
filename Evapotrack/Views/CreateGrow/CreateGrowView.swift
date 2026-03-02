@@ -4,15 +4,12 @@
 // Form for creating a new grow. Grows are immutable after creation.
 
 import SwiftUI
-import Combine
 
 struct CreateGrowView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @State private var vm = CreateGrowViewModel()
     @State private var currentTime = Date()
-
-    private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     private var timestampText: String {
         currentTime.formatted(date: .abbreviated, time: .shortened)
@@ -82,9 +79,7 @@ struct CreateGrowView: View {
         }
         .onAppear {
             vm.configure(modelContext: modelContext)
-        }
-        .onReceive(timer) { time in
-            currentTime = time
+            currentTime = Date()
         }
         .overlay {
             if vm.showSaveConfirmation {

@@ -132,7 +132,7 @@ struct PlantDashboardView: View {
             Text(value)
                 .font(.subheadline)
                 .fontWeight(.semibold)
-                .foregroundStyle(Color.evPrimaryText)
+                .foregroundStyle(Color.evPrimaryBlue)
         }
     }
 }
