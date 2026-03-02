@@ -70,6 +70,7 @@ struct CreateGrowView: View {
             ToolbarItem(placement: .confirmationAction) {
                 Button("Save") {
                     if vm.save() {
+                        HapticService.success()
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                             dismiss()
                         }
@@ -87,13 +88,24 @@ struct CreateGrowView: View {
         }
         .overlay {
             if vm.showSaveConfirmation {
-                Color.evInkBlack.opacity(0.3)
+                Color.evInkBlack.opacity(0.2)
                     .ignoresSafeArea()
                     .overlay {
-                        Image(systemName: "checkmark.circle.fill")
-                            .font(.system(size: 72))
-                            .foregroundStyle(.evPrimaryBlue)
-                            .transition(.scale.combined(with: .opacity))
+                        VStack(spacing: 12) {
+                            Image(systemName: "checkmark.circle.fill")
+                                .font(.system(size: 56))
+                                .foregroundStyle(.evPrimaryBlue)
+                            Text("Saved")
+                                .font(.headline.weight(.bold))
+                                .foregroundStyle(Color.evPrimaryText)
+                        }
+                        .padding(28)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                .fill(Color.evBackground)
+                                .shadow(color: .black.opacity(0.1), radius: 12, y: 4)
+                        )
+                        .transition(.scale.combined(with: .opacity))
                     }
                     .allowsHitTesting(false)
             }

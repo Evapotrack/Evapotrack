@@ -23,6 +23,7 @@ final class AddWateringLogViewModel {
     var temperatureText = ""
     var humidityText = ""
     var validationError: String?
+    var showSaveConfirmation = false
 
     // MARK: - Dependencies
 
@@ -105,9 +106,14 @@ final class AddWateringLogViewModel {
     }
 
     func save() -> Bool {
+        guard !showSaveConfirmation else { return false }
         guard validate() else { return false }
         guard let displayWater = Double(waterAddedText),
               let displayRunoff = Double(runoffCollectedText) else { return false }
+        guard let service = logService else {
+            validationError = "Unable to save. Please try again."
+            return false
+        }
 
         // Convert to internal units — store unrounded
         let waterLiters = UnitConversionService.toLiters(displayWater, from: waterUnit)
@@ -128,7 +134,8 @@ final class AddWateringLogViewModel {
             humidityPercent: humidity
         )
 
-        logService?.addLog(log, to: plant)
+        service.addLog(log, to: plant)
+        showSaveConfirmation = true
         return true
     }
 }

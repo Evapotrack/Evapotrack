@@ -21,8 +21,13 @@ final class WateringLogService {
     /// Add a new watering log to a plant and recalculate intervals.
     func addLog(_ log: WateringLog, to plant: Plant) {
         log.plant = plant
-        plant.wateringLogs.append(log)
         modelContext.insert(log)
+        // SwiftData wires the inverse relationship automatically.
+        // Explicitly append to ensure the in-memory array is current
+        // before recalculation (SwiftData may defer the update).
+        if !plant.wateringLogs.contains(where: { $0.id == log.id }) {
+            plant.wateringLogs.append(log)
+        }
         recalculateIntervals(for: plant)
         save()
         Logger.services.info("Added watering log to \(plant.plantName)")
@@ -39,7 +44,8 @@ final class WateringLogService {
         modelContext.delete(log)
 
         if let plant = plant {
-            // Remove from array before recalculating
+            // Eagerly remove from relationship array — SwiftData may not
+            // reflect the delete in-memory until the next save/fetch cycle.
             plant.wateringLogs.removeAll { $0.id == log.id }
             recalculateIntervals(for: plant)
         }
@@ -56,11 +62,10 @@ final class WateringLogService {
     // MARK: - Private
 
     private func recalculateIntervals(for plant: Plant) {
-        var logs = plant.wateringLogs
-        WateringCalculationService.recalculateIntervalHours(for: &logs)
+        WateringCalculationService.recalculateIntervalHours(for: plant.wateringLogs)
     }
 
-    func save() {
+    private func save() {
         do {
             try modelContext.save()
         } catch {

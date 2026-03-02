@@ -35,12 +35,13 @@ final class PlantService {
     }
 
     func deletePlant(_ plant: Plant) {
+        let name = plant.plantName
         modelContext.delete(plant)
         save()
-        Logger.services.info("Deleted plant: \(plant.plantName)")
+        Logger.services.info("Deleted plant: \(name)")
     }
 
-    func save() {
+    private func save() {
         do {
             try modelContext.save()
         } catch {

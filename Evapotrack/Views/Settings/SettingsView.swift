@@ -24,7 +24,7 @@ struct SettingsView: View {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Water Unit")
-                        .font(.callout)
+                        .font(.body)
                         .fontWeight(.semibold)
                         .foregroundStyle(Color.evPrimaryText)
                     Picker("Water Unit", selection: $settingsVM.settings.waterUnit) {
@@ -38,7 +38,7 @@ struct SettingsView: View {
 
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Temperature Unit")
-                        .font(.callout)
+                        .font(.body)
                         .fontWeight(.semibold)
                         .foregroundStyle(Color.evPrimaryText)
                     Picker("Temperature Unit", selection: $settingsVM.settings.temperatureUnit) {
@@ -62,7 +62,7 @@ struct SettingsView: View {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Appearance")
-                        .font(.callout)
+                        .font(.body)
                         .fontWeight(.semibold)
                         .foregroundStyle(Color.evPrimaryText)
                     Picker("Appearance", selection: $settingsVM.settings.appearanceMode) {
@@ -118,7 +118,7 @@ struct SettingsView: View {
         .scrollContentBackground(.hidden)
         .background(Color.evBackground)
         .navigationTitle("Settings")
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitleDisplayMode(.large)
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 Button("Done") { dismiss() }

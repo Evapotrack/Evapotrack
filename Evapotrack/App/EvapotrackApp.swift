@@ -14,10 +14,6 @@ struct EvapotrackApp: App {
     @State private var settingsVM = SettingsViewModel()
     @State private var showLaunch = true
 
-    private var preferredColorScheme: ColorScheme {
-        settingsVM.settings.appearanceMode == .dark ? .dark : .light
-    }
-
     var body: some Scene {
         WindowGroup {
             ZStack {
@@ -38,7 +34,7 @@ struct EvapotrackApp: App {
                 if showLaunch {
                     LaunchView()
                         .onAppear {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2.6) {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
                                 withAnimation(.easeInOut(duration: 0.3)) {
                                     showLaunch = false
                                 }
@@ -46,7 +42,7 @@ struct EvapotrackApp: App {
                         }
                 }
             }
-            .preferredColorScheme(preferredColorScheme)
+            .preferredColorScheme(settingsVM.colorScheme)
         }
         .modelContainer(for: [Grow.self, Plant.self, WateringLog.self])
     }

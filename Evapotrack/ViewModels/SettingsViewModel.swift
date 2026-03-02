@@ -6,6 +6,7 @@
 // the app but never modifies any stored internal values.
 
 import Foundation
+import SwiftUI
 import Observation
 
 @Observable
@@ -13,6 +14,11 @@ import Observation
 final class SettingsViewModel {
 
     var settings: UserSettings = .default
+
+    /// Single source of truth for the app's color scheme.
+    var colorScheme: ColorScheme {
+        settings.appearanceMode == .dark ? .dark : .light
+    }
 
     init() {
         load()

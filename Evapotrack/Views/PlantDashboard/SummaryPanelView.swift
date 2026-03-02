@@ -20,7 +20,7 @@ struct SummaryPanelView: View {
     var body: some View {
         Section {
             if let log = lastLog {
-                LazyVGrid(columns: columns, alignment: .leading, spacing: 12) {
+                LazyVGrid(columns: columns, alignment: .center, spacing: 12) {
                     metricCell("Last Event", log.dateTime.shortFormatted)
                     metricCell("Interval", intervalText(for: log))
                     metricCell("Retained", DisplayFormatter.water(log.retained, unit: waterUnit))
@@ -41,15 +41,15 @@ struct SummaryPanelView: View {
     }
 
     private func metricCell(_ label: String, _ value: String) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
+        VStack(spacing: 2) {
             Text(label)
-                .font(.caption)
+                .font(.subheadline)
                 .fontWeight(.semibold)
                 .foregroundStyle(Color.evSecondaryText)
             Text(value)
-                .font(.body)
+                .font(.title3)
                 .fontWeight(.semibold)
-                .foregroundStyle(Color.evPrimaryText)
+                .foregroundStyle(Color.evPrimaryBlue)
         }
     }
 

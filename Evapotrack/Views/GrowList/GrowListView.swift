@@ -25,10 +25,6 @@ struct GrowListView: View {
     @State private var isShowingSettings = false
     @State private var isShowingDeleteAlert = false
 
-    private var preferredColorScheme: ColorScheme {
-        settingsVM.settings.appearanceMode == .dark ? .dark : .light
-    }
-
     private var selectedGrow: Grow? {
         guard let id = selectedGrowID else { return nil }
         return grows.first(where: { $0.id == id })
@@ -58,6 +54,8 @@ struct GrowListView: View {
             .navigationDestination(for: GrowNavID.self) { navID in
                 if let grow = grows.first(where: { $0.id == navID.id }) {
                     PlantListView(grow: grow)
+                } else {
+                    ContentUnavailableView("Grow Not Found", systemImage: "exclamationmark.triangle")
                 }
             }
             .toolbar {
@@ -68,6 +66,7 @@ struct GrowListView: View {
                             .fontWeight(.bold)
                             .frame(minWidth: 44, minHeight: 44)
                     }
+                    .disabled(grows.count >= AppConstants.maxGrowCount)
                     .accessibilityLabel("Add Grow")
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -75,14 +74,9 @@ struct GrowListView: View {
                         isShowingDeleteAlert = true
                     } label: {
                         Image(systemName: "trash")
-                            .font(.body)
+                            .font(.title3)
                             .fontWeight(.bold)
                             .foregroundStyle(selectedGrowID != nil ? .red : .evSlateGray)
-                            .padding(6)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 8)
-                                    .stroke(Color.evInkBlack, lineWidth: 2)
-                            )
                     }
                     .disabled(selectedGrowID == nil)
                     .accessibilityLabel("Delete Grow")
@@ -90,7 +84,7 @@ struct GrowListView: View {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button { isShowingSettings = true } label: {
                         Image(systemName: "gear")
-                            .font(.body)
+                            .font(.title3)
                             .fontWeight(.bold)
                             .foregroundStyle(.evPrimaryBlue)
                     }
@@ -101,7 +95,7 @@ struct GrowListView: View {
                         HowToView(context: .general)
                     } label: {
                         Image(systemName: "questionmark.circle")
-                            .font(.body)
+                            .font(.title3)
                             .fontWeight(.bold)
                             .foregroundStyle(.evPrimaryBlue)
                     }
@@ -112,13 +106,13 @@ struct GrowListView: View {
                 NavigationStack {
                     CreateGrowView()
                 }
-                .preferredColorScheme(preferredColorScheme)
+                .preferredColorScheme(settingsVM.colorScheme)
             }
             .sheet(isPresented: $isShowingSettings) {
                 NavigationStack {
                     SettingsView()
                 }
-                .preferredColorScheme(preferredColorScheme)
+                .preferredColorScheme(settingsVM.colorScheme)
             }
             .onAppear {
                 selectedGrowID = nil
@@ -164,6 +158,7 @@ struct GrowListView: View {
     // MARK: - Actions
 
     private func toggleSelection(for grow: Grow) {
+        HapticService.light()
         if selectedGrowID == grow.id {
             selectedGrowID = nil
         } else {

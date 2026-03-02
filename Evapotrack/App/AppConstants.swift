@@ -18,6 +18,8 @@ enum AppConstants {
     static let maxGrowNameLength = 50
     static let maxPlantNameLength = 50
     static let maxDescriptionLength = 100
+    static let maxGrowCount = 30
+    static let maxPlantsPerGrow = 25
     static let maxNumericInputLength = 10
     static let maxRetentionCapacityRange: ClosedRange<Double> = 0.001...100.0
     static let waterAddedRange: ClosedRange<Double> = 0.001...100.0
@@ -33,6 +35,9 @@ enum AppConstants {
 
     /// History weight when blending with actual history.
     static let historyWeight = 0.6
+
+    /// Blending weights must sum to 1.0 — verified at the call site.
+    static let blendingWeightSum = formulaWeight + historyWeight
 
     /// Target runoff percentage used by the Next water recommendation algorithm.
     static let targetRunoffPercent = 15.0

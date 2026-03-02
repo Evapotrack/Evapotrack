@@ -37,7 +37,13 @@ struct GrowRowView: View {
                         .foregroundStyle(Color.evSecondaryText)
                     Text("\(grow.plants.count) plant\(grow.plants.count == 1 ? "" : "s")")
                         .font(.callout)
-                        .foregroundStyle(Color.evSecondaryText)
+                        .foregroundStyle(Color.evDeepNavy)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 2)
+                        .background(
+                            Capsule()
+                                .fill(Color.evFrostBlue.opacity(0.3))
+                        )
                 }
             }
         }

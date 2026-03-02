@@ -80,8 +80,8 @@ final class CreatePlantViewModel {
                 validationError = "Goal Runoff % must be a number."
                 return false
             }
-            guard goalPercent > 0, goalPercent < 100 else {
-                validationError = "Goal Runoff % must be between 0 and 100."
+            guard goalPercent >= 0.1, goalPercent <= 99.9 else {
+                validationError = "Goal Runoff % must be between 0.1 and 99.9."
                 return false
             }
         }
@@ -92,6 +92,10 @@ final class CreatePlantViewModel {
     func save() -> Bool {
         guard validate() else { return false }
         guard let displayValue = Double(maxRetentionCapacityText) else { return false }
+        guard let service = plantService else {
+            validationError = "Unable to save. Please try again."
+            return false
+        }
 
         // Convert to internal unit (liters) — store unrounded
         let liters = UnitConversionService.toLiters(displayValue, from: waterUnit)
@@ -107,7 +111,7 @@ final class CreatePlantViewModel {
             grow: grow
         )
 
-        plantService?.addPlant(plant)
+        service.addPlant(plant)
         showSaveConfirmation = true
         return true
     }
@@ -172,6 +176,5 @@ final class CreatePlantViewModel {
         calculatorWaterAddedText = ""
         calculatorRunoffText = ""
         calculatorError = nil
-        maxRetentionCapacityText = ""
     }
 }

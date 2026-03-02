@@ -42,12 +42,16 @@ final class CreateGrowViewModel {
 
     func save() -> Bool {
         guard validate() else { return false }
+        guard let service = growService else {
+            validationError = "Unable to save. Please try again."
+            return false
+        }
 
         let grow = Grow(
             growName: growName.trimmingCharacters(in: .whitespaces)
         )
 
-        growService?.addGrow(grow)
+        service.addGrow(grow)
         showSaveConfirmation = true
         return true
     }

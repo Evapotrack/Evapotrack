@@ -27,10 +27,6 @@ struct PlantListView: View {
     @State private var isShowingSettings = false
     @State private var isShowingDeleteAlert = false
 
-    private var preferredColorScheme: ColorScheme {
-        settingsVM.settings.appearanceMode == .dark ? .dark : .light
-    }
-
     /// Plants sorted by name, derived from the grow relationship.
     private var plants: [Plant] {
         grow.plants.sorted {
@@ -77,6 +73,8 @@ struct PlantListView: View {
         .navigationDestination(for: PlantNavID.self) { navID in
             if let plant = plants.first(where: { $0.id == navID.id }) {
                 PlantDashboardView(plant: plant)
+            } else {
+                ContentUnavailableView("Plant Not Found", systemImage: "exclamationmark.triangle")
             }
         }
         .toolbar {
@@ -87,6 +85,7 @@ struct PlantListView: View {
                         .fontWeight(.bold)
                         .frame(minWidth: 44, minHeight: 44)
                 }
+                .disabled(plants.count >= AppConstants.maxPlantsPerGrow)
                 .accessibilityLabel("Add Plant")
             }
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -94,14 +93,9 @@ struct PlantListView: View {
                     isShowingDeleteAlert = true
                 } label: {
                     Image(systemName: "trash")
-                        .font(.body)
+                        .font(.title3)
                         .fontWeight(.bold)
                         .foregroundStyle(selectedPlantID != nil ? .red : .evSlateGray)
-                        .padding(6)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(Color.evInkBlack, lineWidth: 2)
-                        )
                 }
                 .disabled(selectedPlantID == nil)
                 .accessibilityLabel("Delete Plant")
@@ -109,7 +103,7 @@ struct PlantListView: View {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button { isShowingSettings = true } label: {
                     Image(systemName: "gear")
-                        .font(.body)
+                        .font(.title3)
                         .fontWeight(.bold)
                         .foregroundStyle(.evPrimaryBlue)
                 }
@@ -120,7 +114,7 @@ struct PlantListView: View {
                     HowToView(context: .general)
                 } label: {
                     Image(systemName: "questionmark.circle")
-                        .font(.body)
+                        .font(.title3)
                         .fontWeight(.bold)
                         .foregroundStyle(.evPrimaryBlue)
                 }
@@ -131,13 +125,13 @@ struct PlantListView: View {
             NavigationStack {
                 CreatePlantView(grow: grow)
             }
-            .preferredColorScheme(preferredColorScheme)
+            .preferredColorScheme(settingsVM.colorScheme)
         }
         .sheet(isPresented: $isShowingSettings) {
             NavigationStack {
                 SettingsView()
             }
-            .preferredColorScheme(preferredColorScheme)
+            .preferredColorScheme(settingsVM.colorScheme)
         }
         .onAppear {
             selectedPlantID = nil
@@ -182,6 +176,7 @@ struct PlantListView: View {
     // MARK: - Actions
 
     private func toggleSelection(for plant: Plant) {
+        HapticService.light()
         if selectedPlantID == plant.id {
             selectedPlantID = nil
         } else {

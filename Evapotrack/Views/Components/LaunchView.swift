@@ -15,14 +15,17 @@ struct LaunchView: View {
             Color.evBackground
                 .ignoresSafeArea()
 
-            VStack(spacing: 16) {
-                Image(systemName: "drop.fill")
-                    .font(.system(size: 64))
-                    .foregroundStyle(.evPrimaryBlue)
+            VStack(spacing: 24) {
+                Image("LaunchIcon")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 120, height: 120)
+                    .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
 
-                Text("Evapotrack")
-                    .font(.title.weight(.bold))
+                Text("EVAPOTRACK")
+                    .font(.system(size: 28, weight: .bold, design: .rounded))
                     .foregroundStyle(Color.evPrimaryText)
+                    .kerning(2)
             }
             .opacity(iconOpacity)
         }
@@ -32,7 +35,7 @@ struct LaunchView: View {
                 iconOpacity = 1.0
             }
             // Hold longer, then fade out
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.8) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.2) {
                 withAnimation(.easeOut(duration: 0.5)) {
                     iconOpacity = 0
                 }

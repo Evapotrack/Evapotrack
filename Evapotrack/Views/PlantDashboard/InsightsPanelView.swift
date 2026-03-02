@@ -13,18 +13,19 @@ struct InsightsPanelView: View {
     let waterUnit: WaterUnit
 
     private let columns = [
-        GridItem(.flexible(), spacing: 12),
-        GridItem(.flexible(), spacing: 12)
+        GridItem(.flexible(), spacing: 8),
+        GridItem(.flexible(), spacing: 8),
+        GridItem(.flexible(), spacing: 8)
     ]
 
     var body: some View {
         Section {
             if let retained = averageRetained, let recommendation = nextRecommendation {
-                LazyVGrid(columns: columns, alignment: .leading, spacing: 12) {
+                LazyVGrid(columns: columns, alignment: .center, spacing: 8) {
                     metricCell("Average", DisplayFormatter.water(retained, unit: waterUnit))
-                    metricCell("Next Amount", DisplayFormatter.water(recommendation.next, unit: waterUnit))
+                    metricCell("Next", DisplayFormatter.water(recommendation.next, unit: waterUnit))
                     metricCell(
-                        "Goal Runoff (\(DisplayFormatter.percent(recommendation.goalRunoffPercent)))",
+                        "Goal (\(DisplayFormatter.percent(recommendation.goalRunoffPercent)))",
                         DisplayFormatter.water(recommendation.goalRunoff, unit: waterUnit)
                     )
                 }
@@ -42,15 +43,15 @@ struct InsightsPanelView: View {
     }
 
     private func metricCell(_ label: String, _ value: String) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
+        VStack(spacing: 4) {
             Text(label)
-                .font(.caption)
+                .font(.subheadline)
                 .fontWeight(.semibold)
                 .foregroundStyle(Color.evSecondaryText)
             Text(value)
-                .font(.body)
+                .font(.callout)
                 .fontWeight(.semibold)
-                .foregroundStyle(Color.evPrimaryText)
+                .foregroundStyle(Color.evPrimaryBlue)
         }
     }
 }

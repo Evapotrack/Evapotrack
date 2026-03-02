@@ -35,12 +35,13 @@ final class GrowService {
     }
 
     func deleteGrow(_ grow: Grow) {
+        let name = grow.growName
         modelContext.delete(grow)
         save()
-        Logger.services.info("Deleted grow: \(grow.growName)")
+        Logger.services.info("Deleted grow: \(name)")
     }
 
-    func save() {
+    private func save() {
         do {
             try modelContext.save()
         } catch {

@@ -29,7 +29,7 @@ struct PlantRowView: View {
             // Plant name — navigation target (handled by parent)
             Text(plant.plantName)
                 .font(.title3.weight(.bold))
-                .foregroundStyle(Color.evPrimaryText)
+                .foregroundStyle(Color.evDeepNavy)
         }
         .padding(.vertical, 6)
     }

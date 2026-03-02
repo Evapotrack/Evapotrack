@@ -58,7 +58,8 @@ final class Plant {
         self.potSize = potSize
         self.mediumType = mediumType
         self.maxRetentionCapacity = maxRetentionCapacity
-        self.goalRunoffPercent = goalRunoffPercent
+        // Clamp to valid range — prevents division by zero in recommendation algorithm
+        self.goalRunoffPercent = min(max(goalRunoffPercent, 0.1), 99.9)
         self.wateringLogs = []
         self.grow = grow
     }

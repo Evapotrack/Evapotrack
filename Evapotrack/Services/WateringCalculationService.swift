@@ -176,6 +176,8 @@ enum WateringCalculationService {
         guard !intervals.isEmpty else { return formulaInterval }
 
         let actualAvg = intervals.reduce(0, +) / Double(intervals.count)
+        assert(abs(AppConstants.blendingWeightSum - 1.0) < 0.001,
+               "formulaWeight + historyWeight must equal 1.0")
         let blended = formulaInterval * AppConstants.formulaWeight + actualAvg * AppConstants.historyWeight
         return min(max(blended, minimumIntervalDays), maximumIntervalDays)
     }
@@ -196,9 +198,9 @@ enum WateringCalculationService {
     // MARK: - Interval Hours Recalculation
 
     /// Recalculate intervalHours for all logs belonging to a plant.
-    /// Logs must be sorted chronologically (oldest first).
     /// The oldest log gets nil; each subsequent log gets the hours since the previous.
-    static func recalculateIntervalHours(for logs: inout [WateringLog]) {
+    /// WateringLog is a reference type, so mutations apply to the originals.
+    static func recalculateIntervalHours(for logs: [WateringLog]) {
         let sorted = logs.sorted { $0.dateTime < $1.dateTime }
         for (index, log) in sorted.enumerated() {
             if index == 0 {
@@ -247,6 +249,9 @@ enum WateringCalculationService {
         guard retainedLast > 0 else { return nil }
 
         let retentionFactor = 1.0 - goalRunoffPercent / 100.0
+
+        // If goalRunoffPercent >= 100, retentionFactor <= 0 → division by zero
+        guard retentionFactor > 0 else { return nil }
 
         // Estimate how much the medium will absorb next time:
         // blend recent observation with historical average.

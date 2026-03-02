@@ -115,10 +115,16 @@ struct AddWateringLogView: View {
             }
             ToolbarItem(placement: .confirmationAction) {
                 Button("Save") {
-                    if vm.save() { dismiss() }
+                    if vm.save() {
+                        HapticService.success()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                            dismiss()
+                        }
+                    }
                 }
                 .font(.body)
                 .fontWeight(.bold)
+                .disabled(vm.showSaveConfirmation)
             }
         }
         .navigationDestination(isPresented: $isShowingHowTo) {
@@ -131,5 +137,30 @@ struct AddWateringLogView: View {
                 temperatureUnit: tempUnit
             )
         }
+        .overlay {
+            if vm.showSaveConfirmation {
+                Color.evInkBlack.opacity(0.2)
+                    .ignoresSafeArea()
+                    .overlay {
+                        VStack(spacing: 12) {
+                            Image(systemName: "checkmark.circle.fill")
+                                .font(.system(size: 56))
+                                .foregroundStyle(.evPrimaryBlue)
+                            Text("Saved")
+                                .font(.headline.weight(.bold))
+                                .foregroundStyle(Color.evPrimaryText)
+                        }
+                        .padding(28)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                .fill(Color.evBackground)
+                                .shadow(color: .black.opacity(0.1), radius: 12, y: 4)
+                        )
+                        .transition(.scale.combined(with: .opacity))
+                    }
+                    .allowsHitTesting(false)
+            }
+        }
+        .animation(.easeInOut(duration: 0.3), value: vm.showSaveConfirmation)
     }
 }

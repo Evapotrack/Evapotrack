@@ -14,6 +14,16 @@ struct DeleteConfirmationView: View {
     let onDelete: () -> Void
     let onCancel: () -> Void
 
+    private var styledMessage: Text {
+        let keyword = "permanently"
+        guard let range = message.range(of: keyword) else {
+            return Text(message)
+        }
+        let before = String(message[message.startIndex..<range.lowerBound])
+        let after = String(message[range.upperBound..<message.endIndex])
+        return Text(before) + Text(keyword).bold() + Text(after)
+    }
+
     var body: some View {
         ZStack {
             // Dimmed background
@@ -32,7 +42,7 @@ struct DeleteConfirmationView: View {
                     .multilineTextAlignment(.center)
 
                 // Body message
-                Text(message)
+                styledMessage
                     .font(.body.weight(.medium))
                     .foregroundStyle(Color.evSecondaryText)
                     .multilineTextAlignment(.center)
@@ -45,10 +55,10 @@ struct DeleteConfirmationView: View {
                         onCancel()
                     } label: {
                         Text("Cancel")
-                            .font(.body.weight(.bold))
+                            .font(.title3.weight(.bold))
                             .foregroundStyle(Color.evSlateGray)
                             .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
+                            .padding(.vertical, 16)
                             .background(
                                 RoundedRectangle(cornerRadius: 12)
                                     .stroke(Color.evSlateGray, lineWidth: 1.5)
@@ -57,13 +67,14 @@ struct DeleteConfirmationView: View {
 
                     // Delete button
                     Button {
+                        HapticService.medium()
                         onDelete()
                     } label: {
                         Text("Delete")
-                            .font(.body.weight(.bold))
+                            .font(.title3.weight(.bold))
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
+                            .padding(.vertical, 16)
                             .background(
                                 RoundedRectangle(cornerRadius: 12)
                                     .fill(Color.red)

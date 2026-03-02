@@ -43,6 +43,11 @@ struct HistoryView: View {
                             toggleExpansion(for: log)
                         }
                     )
+                    .listRowBackground(
+                        expandedLogID == log.id
+                            ? Color.evFrostBlue.opacity(0.15)
+                            : nil
+                    )
                 }
             }
         }
@@ -57,14 +62,9 @@ struct HistoryView: View {
                     isShowingDeleteAlert = true
                 } label: {
                     Image(systemName: "trash")
-                        .font(.body)
+                        .font(.title3)
                         .fontWeight(.bold)
                         .foregroundStyle(selectedLogID != nil ? .red : .evSlateGray)
-                        .padding(6)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(Color.evInkBlack, lineWidth: 2)
-                        )
                 }
                 .disabled(selectedLogID == nil)
                 .accessibilityLabel("Delete Log")
@@ -95,6 +95,7 @@ struct HistoryView: View {
     }
 
     private func toggleSelection(for log: WateringLog) {
+        HapticService.light()
         if selectedLogID == log.id {
             selectedLogID = nil
         } else {

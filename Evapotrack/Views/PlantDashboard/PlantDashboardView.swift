@@ -19,10 +19,6 @@ struct PlantDashboardView: View {
 
     private var waterUnit: WaterUnit { settingsVM.settings.waterUnit }
 
-    private var preferredColorScheme: ColorScheme {
-        settingsVM.settings.appearanceMode == .dark ? .dark : .light
-    }
-
     var body: some View {
         List {
             // Plant name centered below toolbar, above panels
@@ -33,6 +29,22 @@ struct PlantDashboardView: View {
                     .frame(maxWidth: .infinity, alignment: .center)
                     .listRowBackground(Color.clear)
                     .listRowInsets(EdgeInsets())
+            }
+
+            // Plant details
+            Section {
+                HStack {
+                    plantInfoCell("Pot", vm.plant.potSize.isEmpty ? "—" : vm.plant.potSize)
+                    Spacer()
+                    plantInfoCell("Medium", vm.plant.mediumType.isEmpty ? "—" : vm.plant.mediumType)
+                    Spacer()
+                    plantInfoCell("Goal", DisplayFormatter.percent(vm.plant.goalRunoffPercent))
+                }
+            } header: {
+                Text("Plant Info")
+                    .font(.title2.weight(.bold))
+                    .foregroundStyle(.evDeepNavy)
+                    .textCase(nil)
             }
 
             SummaryPanelView(
@@ -75,7 +87,7 @@ struct PlantDashboardView: View {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button { vm.isShowingSettings = true } label: {
                     Image(systemName: "gear")
-                        .font(.body)
+                        .font(.title3)
                         .fontWeight(.bold)
                         .foregroundStyle(.evPrimaryBlue)
                 }
@@ -86,7 +98,7 @@ struct PlantDashboardView: View {
                     HowToView(context: .addWatering)
                 } label: {
                     Image(systemName: "questionmark.circle")
-                        .font(.body)
+                        .font(.title3)
                         .fontWeight(.bold)
                         .foregroundStyle(.evPrimaryBlue)
                 }
@@ -97,17 +109,30 @@ struct PlantDashboardView: View {
             NavigationStack {
                 AddWateringLogView(plant: vm.plant)
             }
-            .preferredColorScheme(preferredColorScheme)
+            .preferredColorScheme(settingsVM.colorScheme)
         }
         .sheet(isPresented: $vm.isShowingSettings) {
             NavigationStack {
                 SettingsView()
             }
-            .preferredColorScheme(preferredColorScheme)
+            .preferredColorScheme(settingsVM.colorScheme)
         }
         .onAppear {
             vm.configure(modelContext: modelContext)
             vm.loadData()
+        }
+    }
+
+    private func plantInfoCell(_ label: String, _ value: String) -> some View {
+        VStack(spacing: 2) {
+            Text(label)
+                .font(.footnote)
+                .fontWeight(.semibold)
+                .foregroundStyle(Color.evSecondaryText)
+            Text(value)
+                .font(.subheadline)
+                .fontWeight(.semibold)
+                .foregroundStyle(Color.evPrimaryText)
         }
     }
 }

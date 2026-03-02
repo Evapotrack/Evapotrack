@@ -32,6 +32,7 @@ final class PlantDashboardViewModel {
     }
 
     func configure(modelContext: ModelContext) {
+        guard logService == nil else { return }
         self.logService = WateringLogService(modelContext: modelContext)
     }
 
@@ -69,7 +70,8 @@ final class PlantDashboardViewModel {
     }
 
     func deleteLog(_ log: WateringLog) {
-        logService?.deleteLog(log)
+        guard let service = logService else { return }
+        service.deleteLog(log)
         loadData()
     }
 }

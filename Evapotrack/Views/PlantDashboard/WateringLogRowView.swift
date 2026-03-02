@@ -52,9 +52,11 @@ struct WateringLogRowView: View {
                 HStack {
                     Text(log.dateTime.shortFormatted)
                         .fontWeight(.semibold)
+                        .foregroundStyle(Color.evDeepNavy)
                     Spacer()
                     Text(log.dateTime.timeFormatted)
                         .fontWeight(.medium)
+                        .foregroundStyle(Color.evPrimaryText)
                     Image(systemName: "chevron.right")
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(Color.evSlateGray)
@@ -62,7 +64,6 @@ struct WateringLogRowView: View {
                         .accessibilityLabel(isExpanded ? "Collapse" : "Expand")
                 }
                 .font(.body)
-                .foregroundStyle(Color.evPrimaryText)
 
                 // Collapsed summary: key metrics at a glance
                 HStack(spacing: 16) {
@@ -72,15 +73,15 @@ struct WateringLogRowView: View {
 
                 // Expanded detail fields
                 if isExpanded {
-                    VStack(alignment: .leading, spacing: 4) {
+                    VStack(alignment: .leading, spacing: 0) {
                         Divider()
                             .padding(.vertical, 2)
-                        fieldRow("Water Added", DisplayFormatter.water(log.waterAdded, unit: waterUnit))
-                        fieldRow("Runoff Collected", DisplayFormatter.water(log.runoffCollected, unit: waterUnit))
-                        fieldRow("Retained", DisplayFormatter.water(log.retained, unit: waterUnit))
-                        fieldRow("Runoff %", DisplayFormatter.percent(log.runoffPercent))
-                        fieldRow("Capacity %", DisplayFormatter.percent(capacityPercent))
-                        fieldRow("Interval", intervalText)
+                        fieldRow("Water Added", DisplayFormatter.water(log.waterAdded, unit: waterUnit), shaded: true)
+                        fieldRow("Runoff Collected", DisplayFormatter.water(log.runoffCollected, unit: waterUnit), shaded: false)
+                        fieldRow("Retained", DisplayFormatter.water(log.retained, unit: waterUnit), shaded: true)
+                        fieldRow("Runoff %", DisplayFormatter.percent(log.runoffPercent), shaded: false)
+                        fieldRow("Capacity %", DisplayFormatter.percent(capacityPercent), shaded: true)
+                        fieldRow("Interval", intervalText, shaded: false)
                     }
                     .transition(.opacity)
                 }
@@ -106,7 +107,7 @@ struct WateringLogRowView: View {
         .font(.body)
     }
 
-    private func fieldRow(_ label: String, _ value: String) -> some View {
+    private func fieldRow(_ label: String, _ value: String, shaded: Bool = false) -> some View {
         HStack {
             Text(label)
                 .fontWeight(.medium)
@@ -117,5 +118,11 @@ struct WateringLogRowView: View {
                 .foregroundStyle(Color.evPrimaryText)
         }
         .font(.body)
+        .padding(.vertical, 5)
+        .padding(.horizontal, 6)
+        .background(
+            RoundedRectangle(cornerRadius: 4)
+                .fill(shaded ? Color.evFrostBlue.opacity(0.12) : Color.clear)
+        )
     }
 }

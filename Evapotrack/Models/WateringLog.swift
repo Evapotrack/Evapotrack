@@ -75,7 +75,9 @@ final class WateringLog {
 
         // Compute derived fields — stored unrounded
         self.retained = max(0, waterAdded - runoffCollected)
-        self.runoffPercent = min((runoffCollected / waterAdded) * 100.0, 100.0)
+        self.runoffPercent = waterAdded > 0
+            ? min((runoffCollected / waterAdded) * 100.0, 100.0)
+            : 0
         self.intervalHours = intervalHours
     }
 }

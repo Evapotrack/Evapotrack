@@ -33,7 +33,7 @@ struct HistoryPanelView: View {
                     Spacer()
                     Text("\(logCount)")
                         .fontWeight(.semibold)
-                        .foregroundStyle(Color.evSecondaryText)
+                        .foregroundStyle(.evPrimaryBlue)
                 }
             }
         } header: {
