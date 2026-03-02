@@ -27,29 +27,9 @@ struct PlantRowView: View {
             .accessibilityLabel(isSelected ? "Deselect \(plant.plantName)" : "Select \(plant.plantName)")
 
             // Plant info
-            VStack(alignment: .leading, spacing: 4) {
-                Text(plant.plantName)
-                    .font(.title3.weight(.bold))
-                    .foregroundStyle(Color.evDeepNavy)
-
-                HStack(spacing: 4) {
-                    if !plant.potSize.isEmpty {
-                        Text(plant.potSize)
-                    }
-                    if !plant.potSize.isEmpty && !plant.mediumType.isEmpty {
-                        Text("·")
-                    }
-                    if !plant.mediumType.isEmpty {
-                        Text(plant.mediumType)
-                    }
-                    if !plant.potSize.isEmpty || !plant.mediumType.isEmpty {
-                        Text("·")
-                    }
-                    Text("\(plant.wateringLogs.count) \(plant.wateringLogs.count == 1 ? "log" : "logs")")
-                }
-                .font(.subheadline)
-                .foregroundStyle(Color.evSecondaryText)
-            }
+            Text(plant.plantName)
+                .font(.title3.weight(.bold))
+                .foregroundStyle(Color.evDeepNavy)
         }
         .padding(.vertical, 6)
     }
