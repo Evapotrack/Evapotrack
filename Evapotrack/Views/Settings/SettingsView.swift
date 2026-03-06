@@ -2,18 +2,22 @@
 // Evapotrack
 //
 // Settings screen for water and temperature display units,
-// appearance mode, and per-grow data export.
+// appearance mode, and optional per-grow data export.
+// When opened from PlantListView with a grow, shows a
+// Download Data section for that grow. When opened from
+// GrowListView (no grow), the export section is hidden.
 // Changes persist immediately via auto-save — no stored
 // SwiftData values are ever modified.
 
 import SwiftUI
-import SwiftData
 import UniformTypeIdentifiers
 
 struct SettingsView: View {
     @Environment(SettingsViewModel.self) private var settingsVM
     @Environment(\.dismiss) private var dismiss
-    @Query(sort: \Grow.createdAt, order: .reverse) private var grows: [Grow]
+
+    /// The grow to offer data export for. Nil when opened from GrowListView.
+    var grow: Grow?
 
     @State private var isShowingExport = false
     @State private var exportDocument: GrowExportDocument?
@@ -90,50 +94,45 @@ struct SettingsView: View {
                     .foregroundStyle(Color.evSecondaryText)
             }
 
-            Section {
-                if grows.isEmpty {
-                    Text("No grows to export.")
-                        .foregroundStyle(Color.evSecondaryText)
-                } else {
-                    ForEach(grows, id: \.id) { grow in
-                        Button {
-                            let text = DataExportService.exportGrow(
-                                grow,
-                                waterUnit: settingsVM.settings.waterUnit,
-                                temperatureUnit: settingsVM.settings.temperatureUnit
-                            )
-                            let safeName = grow.growName
-                                .replacingOccurrences(of: " ", with: "_")
-                                .replacingOccurrences(of: "/", with: "_")
-                            exportFilename = "\(safeName)_data"
-                            exportDocument = GrowExportDocument(text: text)
-                            isShowingExport = true
-                        } label: {
-                            HStack {
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text(grow.growName)
-                                        .font(.body.weight(.semibold))
-                                        .foregroundStyle(Color.evPrimaryText)
-                                    Text("\(grow.plants.count) plant\(grow.plants.count == 1 ? "" : "s")")
-                                        .font(.caption)
-                                        .foregroundStyle(Color.evSecondaryText)
-                                }
-                                Spacer()
-                                Image(systemName: "square.and.arrow.up")
+            if let grow {
+                Section {
+                    Button {
+                        let text = DataExportService.exportGrow(
+                            grow,
+                            waterUnit: settingsVM.settings.waterUnit,
+                            temperatureUnit: settingsVM.settings.temperatureUnit
+                        )
+                        let safeName = grow.growName
+                            .replacingOccurrences(of: " ", with: "_")
+                            .replacingOccurrences(of: "/", with: "_")
+                        exportFilename = "\(safeName)_data"
+                        exportDocument = GrowExportDocument(text: text)
+                        isShowingExport = true
+                    } label: {
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(grow.growName)
                                     .font(.body.weight(.semibold))
-                                    .foregroundStyle(.evPrimaryBlue)
+                                    .foregroundStyle(Color.evPrimaryText)
+                                Text("\(grow.plants.count) plant\(grow.plants.count == 1 ? "" : "s")")
+                                    .font(.caption)
+                                    .foregroundStyle(Color.evSecondaryText)
                             }
+                            Spacer()
+                            Image(systemName: "square.and.arrow.up")
+                                .font(.body.weight(.semibold))
+                                .foregroundStyle(.evPrimaryBlue)
                         }
                     }
+                } header: {
+                    Text("Download Data")
+                        .font(.title2.weight(.bold))
+                        .foregroundStyle(.evDeepNavy)
+                        .textCase(nil)
+                } footer: {
+                    Text("Export grow data as a text file.")
+                        .foregroundStyle(Color.evSecondaryText)
                 }
-            } header: {
-                Text("Download Data")
-                    .font(.title2.weight(.bold))
-                    .foregroundStyle(.evDeepNavy)
-                    .textCase(nil)
-            } footer: {
-                Text("Export grow data as a text file.")
-                    .foregroundStyle(Color.evSecondaryText)
             }
 
             Section {

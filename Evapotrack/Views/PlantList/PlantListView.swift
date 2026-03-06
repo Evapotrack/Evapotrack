@@ -143,7 +143,7 @@ struct PlantListView: View {
         }
         .sheet(isPresented: $isShowingSettings) {
             NavigationStack {
-                SettingsView()
+                SettingsView(grow: grow)
             }
             .preferredColorScheme(settingsVM.colorScheme)
         }

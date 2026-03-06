@@ -80,4 +80,4 @@ Counters are displayed in list section headers (e.g., "2/30" for grows, "5/25" f
 
 ## Data Export
 
-SettingsView provides per-grow data export via `.fileExporter`. DataExportService generates a plain-text report containing grow metadata, all plants, and their watering log history in a tabular format. Values are formatted in the user's display units. The export file is saved as `.txt`.
+SettingsView accepts an optional `Grow` parameter. When opened from PlantListView (with a grow), a "Download Data" section appears for that grow. When opened from GrowListView (no grow), the export section is hidden. DataExportService generates a plain-text report containing grow metadata, all plants, and their watering log history in a tabular format. Temp/Humidity columns appear dynamically if any log has that data. Values are formatted in the user's display units. The export file is saved as `.txt` via `.fileExporter`.

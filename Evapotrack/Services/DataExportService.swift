@@ -29,6 +29,8 @@ enum DataExportService {
 
         let sortedPlants = grow.plants.sorted { $0.plantName.localizedCompare($1.plantName) == .orderedAscending }
 
+        var totalLogs = 0
+
         for plant in sortedPlants {
             lines.append("")
             lines.append("Plant: \(plant.plantName)")
@@ -40,11 +42,27 @@ enum DataExportService {
             lines.append("  Watering Logs: \(plant.wateringLogs.count)")
 
             let sortedLogs = plant.wateringLogs.sorted { $0.dateTime > $1.dateTime }
+            totalLogs += sortedLogs.count
 
             if !sortedLogs.isEmpty {
+                // Check if any log has env data to include those columns
+                let hasTemp = sortedLogs.contains { $0.temperatureCelsius != nil }
+                let hasHumidity = sortedLogs.contains { $0.humidityPercent != nil }
+
                 lines.append("")
-                lines.append("  Date                  Water Added   Runoff      Retained    Runoff%   Interval")
-                lines.append("  " + String(repeating: "─", count: 85))
+                var header = "  "
+                header += "Date".padding(toLength: 22, withPad: " ", startingAt: 0)
+                header += "Water Added".padding(toLength: 14, withPad: " ", startingAt: 0)
+                header += "Runoff".padding(toLength: 12, withPad: " ", startingAt: 0)
+                header += "Retained".padding(toLength: 12, withPad: " ", startingAt: 0)
+                header += "Runoff%".padding(toLength: 10, withPad: " ", startingAt: 0)
+                header += "Interval".padding(toLength: 10, withPad: " ", startingAt: 0)
+                if hasTemp { header += "Temp".padding(toLength: 10, withPad: " ", startingAt: 0) }
+                if hasHumidity { header += "Humidity" }
+                lines.append(header)
+
+                let headerWidth = hasTemp || hasHumidity ? 95 : 80
+                lines.append("  " + String(repeating: "─", count: headerWidth))
 
                 for log in sortedLogs {
                     let date = log.dateTime.formatted(date: .abbreviated, time: .shortened)
@@ -60,13 +78,19 @@ enum DataExportService {
                     line += runoff.padding(toLength: 12, withPad: " ", startingAt: 0)
                     line += retained.padding(toLength: 12, withPad: " ", startingAt: 0)
                     line += runoffPct.padding(toLength: 10, withPad: " ", startingAt: 0)
-                    line += interval
+                    line += interval.padding(toLength: 10, withPad: " ", startingAt: 0)
 
-                    if let temp = log.temperatureCelsius {
-                        line += "  \(DisplayFormatter.temperature(temp, unit: temperatureUnit))"
+                    if hasTemp {
+                        let temp = log.temperatureCelsius.map {
+                            DisplayFormatter.temperature($0, unit: temperatureUnit)
+                        } ?? "—"
+                        line += temp.padding(toLength: 10, withPad: " ", startingAt: 0)
                     }
-                    if let humidity = log.humidityPercent {
-                        line += "  \(DisplayFormatter.percent(humidity)) RH"
+                    if hasHumidity {
+                        let humidity = log.humidityPercent.map {
+                            DisplayFormatter.percent($0)
+                        } ?? "—"
+                        line += humidity
                     }
 
                     lines.append(line)
@@ -83,6 +107,10 @@ enum DataExportService {
             lines.append("")
             lines.append(divider)
         }
+
+        // Summary
+        lines.append("")
+        lines.append("Total: \(sortedPlants.count) plant\(sortedPlants.count == 1 ? "" : "s"), \(totalLogs) watering log\(totalLogs == 1 ? "" : "s")")
 
         return lines.joined(separator: "\n")
     }
