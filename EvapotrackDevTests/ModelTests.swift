@@ -202,11 +202,11 @@ final class ModelTests: XCTestCase {
         let decoded = try JSONDecoder().decode(UserSettings.self, from: legacyJSON)
         XCTAssertEqual(decoded.waterUnit, .gallons)
         XCTAssertEqual(decoded.temperatureUnit, .fahrenheit)
-        XCTAssertEqual(decoded.appearanceMode, .light, "Missing appearanceMode should default to .light")
+        XCTAssertEqual(decoded.appearanceMode, .dark, "Missing appearanceMode should default to .dark")
     }
 
     /// Existing UserDefaults data saved with the removed "System" value
-    /// must decode gracefully, falling back to .light.
+    /// must decode gracefully, falling back to .dark.
     func test_userSettings_codable_backwardCompatibility_systemAppearanceMode() throws {
         let legacyJSON = """
         {"waterUnit":"L","temperatureUnit":"°C","appearanceMode":"System"}
@@ -215,6 +215,6 @@ final class ModelTests: XCTestCase {
         let decoded = try JSONDecoder().decode(UserSettings.self, from: legacyJSON)
         XCTAssertEqual(decoded.waterUnit, .liters)
         XCTAssertEqual(decoded.temperatureUnit, .celsius)
-        XCTAssertEqual(decoded.appearanceMode, .light, "Removed 'System' value should fall back to .light")
+        XCTAssertEqual(decoded.appearanceMode, .dark, "Removed 'System' value should fall back to .dark")
     }
 }

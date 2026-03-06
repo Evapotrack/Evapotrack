@@ -106,6 +106,7 @@ struct WateringLogRowView: View {
                 .fontWeight(.medium)
                 .foregroundStyle(Color.evPrimaryText)
             Text(label)
+                .fixedSize()
                 .foregroundStyle(Color.evSlateGray)
         }
         .font(.body)

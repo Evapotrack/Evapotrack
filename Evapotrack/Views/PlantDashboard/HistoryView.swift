@@ -14,6 +14,7 @@ struct HistoryView: View {
     let maxRetentionCapacity: Double
 
     @Environment(\.dismiss) private var dismiss
+    @Environment(SettingsViewModel.self) private var settingsVM
     @State private var selectedLogID: UUID?
     @State private var expandedLogID: UUID?
     @State private var isShowingDeleteAlert = false
@@ -45,6 +46,7 @@ struct HistoryView: View {
     }
 
     var body: some View {
+        @Bindable var vm = vm
         List {
             if vm.wateringLogs.isEmpty {
                 Text("No watering logs yet.")
@@ -87,6 +89,15 @@ struct HistoryView: View {
         .navigationBarTitleDisplayMode(.large)
         .navigationBarBackButtonHidden(true)
         .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button { vm.isShowingAddWatering = true } label: {
+                    Image(systemName: "plus")
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .frame(minWidth: 44, minHeight: 44)
+                }
+                .accessibilityLabel("Add Watering")
+            }
             ToolbarItem(placement: .navigationBarLeading) {
                 Button { dismiss() } label: {
                     Image(systemName: "chevron.left")
@@ -108,6 +119,12 @@ struct HistoryView: View {
                 .disabled(selectedLogID == nil)
                 .accessibilityLabel("Delete Log")
             }
+        }
+        .sheet(isPresented: $vm.isShowingAddWatering, onDismiss: { vm.loadData() }) {
+            NavigationStack {
+                AddWateringLogView(plant: vm.plant)
+            }
+            .preferredColorScheme(settingsVM.colorScheme)
         }
         .overlay {
             if isShowingDeleteAlert, let log = selectedLog {

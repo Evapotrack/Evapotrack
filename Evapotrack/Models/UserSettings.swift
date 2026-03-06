@@ -11,17 +11,17 @@ import Foundation
 struct UserSettings: Codable, Equatable {
     var waterUnit: WaterUnit
     var temperatureUnit: TemperatureUnit
-    var appearanceMode: AppearanceMode = .light
+    var appearanceMode: AppearanceMode = .dark
 
     static let `default` = UserSettings(
         waterUnit: .liters,
         temperatureUnit: .fahrenheit,
-        appearanceMode: .light
+        appearanceMode: .dark
     )
 
     // Custom decoder for backward compatibility:
-    // - Missing key (pre-appearance data) → .light
-    // - Old "System" value (removed) → .light
+    // - Missing key (pre-appearance data) → .dark
+    // - Old "System" value (removed) → .dark
     // - "Light" / "Dark" → decode normally
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -31,11 +31,11 @@ struct UserSettings: Codable, Equatable {
            let mode = AppearanceMode(rawValue: raw) {
             appearanceMode = mode
         } else {
-            appearanceMode = .light
+            appearanceMode = .dark
         }
     }
 
-    init(waterUnit: WaterUnit = .liters, temperatureUnit: TemperatureUnit = .fahrenheit, appearanceMode: AppearanceMode = .light) {
+    init(waterUnit: WaterUnit = .liters, temperatureUnit: TemperatureUnit = .fahrenheit, appearanceMode: AppearanceMode = .dark) {
         self.waterUnit = waterUnit
         self.temperatureUnit = temperatureUnit
         self.appearanceMode = appearanceMode
