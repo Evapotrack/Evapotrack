@@ -13,6 +13,7 @@ struct AddWateringLogView: View {
     @Environment(SettingsViewModel.self) private var settingsVM
     @State private var vm: AddWateringLogViewModel
     @State private var isShowingHowTo = false
+    @State private var dismissTask: Task<Void, Never>?
 
     init(plant: Plant) {
         _vm = State(wrappedValue: AddWateringLogViewModel(plant: plant))
@@ -117,7 +118,7 @@ struct AddWateringLogView: View {
                 Button("Save") {
                     if vm.save() {
                         HapticService.success()
-                        Task {
+                        dismissTask = Task {
                             try? await Task.sleep(for: .seconds(1))
                             dismiss()
                         }
@@ -163,5 +164,6 @@ struct AddWateringLogView: View {
             }
         }
         .animation(.easeInOut(duration: 0.3), value: vm.showSaveConfirmation)
+        .onDisappear { dismissTask?.cancel() }
     }
 }

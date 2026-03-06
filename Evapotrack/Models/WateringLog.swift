@@ -51,7 +51,7 @@ final class WateringLog {
 
     // MARK: - Relationships
 
-    var plant: Plant?
+    @Relationship var plant: Plant?
 
     // MARK: - Init
 

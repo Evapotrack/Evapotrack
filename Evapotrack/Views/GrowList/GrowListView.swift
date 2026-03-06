@@ -24,6 +24,7 @@ struct GrowListView: View {
     @State private var isShowingCreateGrow = false
     @State private var isShowingSettings = false
     @State private var isShowingDeleteAlert = false
+    @State private var saveError: String?
 
     private var selectedGrow: Grow? {
         guard let id = selectedGrowID else { return nil }
@@ -140,6 +141,14 @@ struct GrowListView: View {
                 }
             }
             .animation(.easeInOut(duration: 0.2), value: isShowingDeleteAlert)
+            .alert("Error", isPresented: Binding(
+                get: { saveError != nil },
+                set: { if !$0 { saveError = nil } }
+            )) {
+                Button("OK") { saveError = nil }
+            } message: {
+                Text(saveError ?? "")
+            }
         }
     }
 
@@ -182,7 +191,11 @@ struct GrowListView: View {
 
     private func deleteGrow(_ grow: Grow) {
         let service = GrowService(modelContext: modelContext)
-        service.deleteGrow(grow)
+        do {
+            try service.deleteGrow(grow)
+        } catch {
+            saveError = "Failed to delete grow. Please try again."
+        }
         selectedGrowID = nil
     }
 }

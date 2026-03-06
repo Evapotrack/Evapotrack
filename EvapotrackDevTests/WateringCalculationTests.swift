@@ -305,14 +305,14 @@ final class WateringCalculationTests: XCTestCase {
 
     func test_recalculateIntervalHours_emptyArray_noOp() {
         var logs: [WateringLog] = []
-        WateringCalculationService.recalculateIntervalHours(for: &logs)
+        WateringCalculationService.recalculateIntervalHours(for: logs)
         XCTAssertTrue(logs.isEmpty)
     }
 
     func test_recalculateIntervalHours_singleLog_nilInterval() {
         let log = WateringLog(waterAdded: 1.0, runoffCollected: 0.2, dateTime: fixedNow)
         var logs = [log]
-        WateringCalculationService.recalculateIntervalHours(for: &logs)
+        WateringCalculationService.recalculateIntervalHours(for: logs)
         XCTAssertNil(log.intervalHours)
     }
 
@@ -321,7 +321,7 @@ final class WateringCalculationTests: XCTestCase {
         let log0 = WateringLog(waterAdded: 1.0, runoffCollected: 0.2, dateTime: date0)
         let log1 = WateringLog(waterAdded: 1.0, runoffCollected: 0.2, dateTime: fixedNow)
         var logs = [log0, log1]
-        WateringCalculationService.recalculateIntervalHours(for: &logs)
+        WateringCalculationService.recalculateIntervalHours(for: logs)
         XCTAssertNil(log0.intervalHours)
         XCTAssertEqual(log1.intervalHours!, 24.0, accuracy: 0.001)
     }
@@ -333,7 +333,7 @@ final class WateringCalculationTests: XCTestCase {
         let log1 = WateringLog(waterAdded: 1.0, runoffCollected: 0.2, dateTime: date1)
         let log2 = WateringLog(waterAdded: 1.0, runoffCollected: 0.2, dateTime: fixedNow)
         var logs = [log0, log1, log2]
-        WateringCalculationService.recalculateIntervalHours(for: &logs)
+        WateringCalculationService.recalculateIntervalHours(for: logs)
         XCTAssertNil(log0.intervalHours)
         XCTAssertEqual(log1.intervalHours!, 24.0, accuracy: 0.001)
         XCTAssertEqual(log2.intervalHours!, 24.0, accuracy: 0.001)
@@ -347,7 +347,7 @@ final class WateringCalculationTests: XCTestCase {
         let log2 = WateringLog(waterAdded: 1.0, runoffCollected: 0.2, dateTime: fixedNow)
         // Pass in scrambled order
         var logs = [log2, log0, log1]
-        WateringCalculationService.recalculateIntervalHours(for: &logs)
+        WateringCalculationService.recalculateIntervalHours(for: logs)
         XCTAssertNil(log0.intervalHours)
         XCTAssertEqual(log1.intervalHours!, 24.0, accuracy: 0.001)
         XCTAssertEqual(log2.intervalHours!, 24.0, accuracy: 0.001)
@@ -360,7 +360,7 @@ final class WateringCalculationTests: XCTestCase {
         let log1 = WateringLog(waterAdded: 1.0, runoffCollected: 0.2, dateTime: date1)
         let log2 = WateringLog(waterAdded: 1.0, runoffCollected: 0.2, dateTime: fixedNow)
         var logs = [log0, log1, log2]
-        WateringCalculationService.recalculateIntervalHours(for: &logs)
+        WateringCalculationService.recalculateIntervalHours(for: logs)
         XCTAssertNil(log0.intervalHours)
         XCTAssertEqual(log1.intervalHours!, 48.0, accuracy: 0.001)
         XCTAssertEqual(log2.intervalHours!, 24.0, accuracy: 0.001)
@@ -370,7 +370,7 @@ final class WateringCalculationTests: XCTestCase {
         let log0 = WateringLog(waterAdded: 1.0, runoffCollected: 0.2, dateTime: fixedNow)
         let log1 = WateringLog(waterAdded: 1.0, runoffCollected: 0.2, dateTime: fixedNow)
         var logs = [log0, log1]
-        WateringCalculationService.recalculateIntervalHours(for: &logs)
+        WateringCalculationService.recalculateIntervalHours(for: logs)
         // One gets nil (first in sort), other gets 0.0
         let sorted = [log0, log1].sorted { $0.dateTime < $1.dateTime }
         XCTAssertNil(sorted[0].intervalHours)
@@ -385,7 +385,7 @@ final class WateringCalculationTests: XCTestCase {
         let log2 = WateringLog(waterAdded: 1.0, runoffCollected: 0.2, dateTime: fixedNow)
         // Remove middle log (simulate deletion)
         var logs = [log0, log2]
-        WateringCalculationService.recalculateIntervalHours(for: &logs)
+        WateringCalculationService.recalculateIntervalHours(for: logs)
         XCTAssertNil(log0.intervalHours)
         XCTAssertEqual(log2.intervalHours!, 48.0, accuracy: 0.001)
     }
@@ -395,7 +395,7 @@ final class WateringCalculationTests: XCTestCase {
         let log0 = WateringLog(waterAdded: 1.0, runoffCollected: 0.2, dateTime: date0, intervalHours: 999.0)
         let log1 = WateringLog(waterAdded: 1.0, runoffCollected: 0.2, dateTime: fixedNow, intervalHours: 999.0)
         var logs = [log0, log1]
-        WateringCalculationService.recalculateIntervalHours(for: &logs)
+        WateringCalculationService.recalculateIntervalHours(for: logs)
         XCTAssertNil(log0.intervalHours)
         XCTAssertEqual(log1.intervalHours!, 24.0, accuracy: 0.001)
     }
@@ -405,7 +405,7 @@ final class WateringCalculationTests: XCTestCase {
         let log0 = WateringLog(waterAdded: 1.0, runoffCollected: 0.2, dateTime: date0)
         let log1 = WateringLog(waterAdded: 1.0, runoffCollected: 0.2, dateTime: fixedNow)
         var logs = [log0, log1]
-        WateringCalculationService.recalculateIntervalHours(for: &logs)
+        WateringCalculationService.recalculateIntervalHours(for: logs)
         XCTAssertNil(log0.intervalHours)
         XCTAssertEqual(log1.intervalHours!, 36.0, accuracy: 0.001)
     }
@@ -416,7 +416,7 @@ final class WateringCalculationTests: XCTestCase {
         let log2 = WateringLog(waterAdded: 1.0, runoffCollected: 0.2, dateTime: fixedNow.addingTimeInterval(-24 * 3600))
         let log3 = WateringLog(waterAdded: 1.0, runoffCollected: 0.2, dateTime: fixedNow)
         var logs = [log0, log1, log2, log3]
-        WateringCalculationService.recalculateIntervalHours(for: &logs)
+        WateringCalculationService.recalculateIntervalHours(for: logs)
         XCTAssertNil(log0.intervalHours)
         XCTAssertEqual(log1.intervalHours!, 24.0, accuracy: 0.001)
         XCTAssertEqual(log2.intervalHours!, 24.0, accuracy: 0.001)

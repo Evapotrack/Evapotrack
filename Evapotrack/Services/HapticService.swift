@@ -13,14 +13,17 @@ enum HapticService {
     private static let notificationGenerator = UINotificationFeedbackGenerator()
 
     static func light() {
+        lightGenerator.prepare()
         lightGenerator.impactOccurred()
     }
 
     static func medium() {
+        mediumGenerator.prepare()
         mediumGenerator.impactOccurred()
     }
 
     static func success() {
+        notificationGenerator.prepare()
         notificationGenerator.notificationOccurred(.success)
     }
 }

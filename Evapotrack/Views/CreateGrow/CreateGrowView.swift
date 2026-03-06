@@ -10,6 +10,7 @@ struct CreateGrowView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var vm = CreateGrowViewModel()
     @State private var currentTime = Date()
+    @State private var dismissTask: Task<Void, Never>?
 
     private var timestampText: String {
         currentTime.formatted(date: .abbreviated, time: .shortened)
@@ -69,7 +70,7 @@ struct CreateGrowView: View {
                 Button("Save") {
                     if vm.save() {
                         HapticService.success()
-                        Task {
+                        dismissTask = Task {
                             try? await Task.sleep(for: .seconds(1))
                             dismiss()
                         }
@@ -108,5 +109,6 @@ struct CreateGrowView: View {
             }
         }
         .animation(.easeInOut(duration: 0.3), value: vm.showSaveConfirmation)
+        .onDisappear { dismissTask?.cancel() }
     }
 }

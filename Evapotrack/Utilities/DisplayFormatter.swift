@@ -66,6 +66,7 @@ enum DisplayFormatter {
     // MARK: - Private
 
     private static func formatNumber(_ value: Double, decimals: Int) -> String {
-        String(format: "%.\(decimals)f", value)
+        let clamped = max(0, min(decimals, 10))
+        return String(format: "%.\(clamped)f", value)
     }
 }

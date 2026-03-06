@@ -19,7 +19,7 @@ final class WateringLogService {
     }
 
     /// Add a new watering log to a plant and recalculate intervals.
-    func addLog(_ log: WateringLog, to plant: Plant) {
+    func addLog(_ log: WateringLog, to plant: Plant) throws {
         log.plant = plant
         modelContext.insert(log)
         // SwiftData wires the inverse relationship automatically.
@@ -29,7 +29,7 @@ final class WateringLogService {
             plant.wateringLogs.append(log)
         }
         recalculateIntervals(for: plant)
-        save()
+        try modelContext.save()
         Logger.services.info("Added watering log to \(plant.plantName)")
     }
 
@@ -39,7 +39,7 @@ final class WateringLogService {
     }
 
     /// Delete a log and recalculate intervals for its plant.
-    func deleteLog(_ log: WateringLog) {
+    func deleteLog(_ log: WateringLog) throws {
         let plant = log.plant
         modelContext.delete(log)
 
@@ -50,7 +50,7 @@ final class WateringLogService {
             recalculateIntervals(for: plant)
         }
 
-        save()
+        try modelContext.save()
         Logger.services.info("Deleted watering log")
     }
 
@@ -63,13 +63,5 @@ final class WateringLogService {
 
     private func recalculateIntervals(for plant: Plant) {
         WateringCalculationService.recalculateIntervalHours(for: plant.wateringLogs)
-    }
-
-    private func save() {
-        do {
-            try modelContext.save()
-        } catch {
-            Logger.data.error("Failed to save context: \(error.localizedDescription)")
-        }
     }
 }

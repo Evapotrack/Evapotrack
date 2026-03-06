@@ -146,7 +146,12 @@ final class AddWateringLogViewModel {
             humidityPercent: humidity
         )
 
-        service.addLog(log, to: plant)
+        do {
+            try service.addLog(log, to: plant)
+        } catch {
+            validationError = "Failed to save. Please try again."
+            return false
+        }
         showSaveConfirmation = true
         return true
     }

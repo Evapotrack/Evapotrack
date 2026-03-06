@@ -121,7 +121,12 @@ final class CreatePlantViewModel {
             grow: grow
         )
 
-        service.addPlant(plant)
+        do {
+            try service.addPlant(plant)
+        } catch {
+            validationError = "Failed to save. Please try again."
+            return false
+        }
         showSaveConfirmation = true
         return true
     }

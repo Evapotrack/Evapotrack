@@ -14,6 +14,7 @@ struct CreatePlantView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(SettingsViewModel.self) private var settingsVM
     @State private var vm = CreatePlantViewModel()
+    @State private var dismissTask: Task<Void, Never>?
     var grow: Grow? = nil
 
     private var waterUnit: WaterUnit { settingsVM.settings.waterUnit }
@@ -145,7 +146,7 @@ struct CreatePlantView: View {
                 Button("Save") {
                     if vm.save() {
                         HapticService.success()
-                        Task {
+                        dismissTask = Task {
                             try? await Task.sleep(for: .seconds(1))
                             dismiss()
                         }
@@ -183,5 +184,6 @@ struct CreatePlantView: View {
             }
         }
         .animation(.easeInOut(duration: 0.3), value: vm.showSaveConfirmation)
+        .onDisappear { dismissTask?.cancel() }
     }
 }

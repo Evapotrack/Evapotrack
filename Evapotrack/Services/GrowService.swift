@@ -16,9 +16,9 @@ final class GrowService {
         self.modelContext = modelContext
     }
 
-    func addGrow(_ grow: Grow) {
+    func addGrow(_ grow: Grow) throws {
         modelContext.insert(grow)
-        save()
+        try modelContext.save()
         Logger.services.info("Added grow: \(grow.growName)")
     }
 
@@ -34,18 +34,10 @@ final class GrowService {
         }
     }
 
-    func deleteGrow(_ grow: Grow) {
+    func deleteGrow(_ grow: Grow) throws {
         let name = grow.growName
         modelContext.delete(grow)
-        save()
+        try modelContext.save()
         Logger.services.info("Deleted grow: \(name)")
-    }
-
-    private func save() {
-        do {
-            try modelContext.save()
-        } catch {
-            Logger.data.error("Failed to save context: \(error.localizedDescription)")
-        }
     }
 }

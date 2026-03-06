@@ -121,6 +121,14 @@ struct PlantDashboardView: View {
             vm.configure(modelContext: modelContext)
             vm.loadData()
         }
+        .alert("Error", isPresented: Binding(
+            get: { vm.deleteError != nil },
+            set: { if !$0 { vm.deleteError = nil } }
+        )) {
+            Button("OK") { vm.deleteError = nil }
+        } message: {
+            Text(vm.deleteError ?? "")
+        }
     }
 
     private func plantInfoCell(_ label: String, _ value: String) -> some View {

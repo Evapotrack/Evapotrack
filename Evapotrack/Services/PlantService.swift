@@ -16,9 +16,9 @@ final class PlantService {
         self.modelContext = modelContext
     }
 
-    func addPlant(_ plant: Plant) {
+    func addPlant(_ plant: Plant) throws {
         modelContext.insert(plant)
-        save()
+        try modelContext.save()
         Logger.services.info("Added plant: \(plant.plantName)")
     }
 
@@ -34,18 +34,10 @@ final class PlantService {
         }
     }
 
-    func deletePlant(_ plant: Plant) {
+    func deletePlant(_ plant: Plant) throws {
         let name = plant.plantName
         modelContext.delete(plant)
-        save()
+        try modelContext.save()
         Logger.services.info("Deleted plant: \(name)")
-    }
-
-    private func save() {
-        do {
-            try modelContext.save()
-        } catch {
-            Logger.data.error("Failed to save context: \(error.localizedDescription)")
-        }
     }
 }

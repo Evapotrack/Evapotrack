@@ -26,6 +26,7 @@ struct PlantListView: View {
     @State private var isShowingCreatePlant = false
     @State private var isShowingSettings = false
     @State private var isShowingDeleteAlert = false
+    @State private var saveError: String?
 
     /// Plants sorted by most recently created first.
     private var plants: [Plant] {
@@ -153,6 +154,14 @@ struct PlantListView: View {
             }
         }
         .animation(.easeInOut(duration: 0.2), value: isShowingDeleteAlert)
+        .alert("Error", isPresented: Binding(
+            get: { saveError != nil },
+            set: { if !$0 { saveError = nil } }
+        )) {
+            Button("OK") { saveError = nil }
+        } message: {
+            Text(saveError ?? "")
+        }
     }
 
     // MARK: - Subviews
@@ -194,7 +203,11 @@ struct PlantListView: View {
 
     private func deletePlant(_ plant: Plant) {
         let service = PlantService(modelContext: modelContext)
-        service.deletePlant(plant)
+        do {
+            try service.deletePlant(plant)
+        } catch {
+            saveError = "Failed to delete plant. Please try again."
+        }
         selectedPlantID = nil
     }
 }

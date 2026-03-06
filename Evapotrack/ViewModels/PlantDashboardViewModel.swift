@@ -20,6 +20,7 @@ final class PlantDashboardViewModel {
     var wateringLogs: [WateringLog] = []
     var isShowingAddWatering = false
     var isShowingSettings = false
+    var deleteError: String?
 
     // MARK: - Dependencies
 
@@ -71,7 +72,11 @@ final class PlantDashboardViewModel {
 
     func deleteLog(_ log: WateringLog) {
         guard let service = logService else { return }
-        service.deleteLog(log)
+        do {
+            try service.deleteLog(log)
+        } catch {
+            deleteError = "Failed to delete log. Please try again."
+        }
         loadData()
     }
 }

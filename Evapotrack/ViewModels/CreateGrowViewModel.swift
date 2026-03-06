@@ -62,7 +62,12 @@ final class CreateGrowViewModel {
             growName: growName.trimmingCharacters(in: .whitespaces)
         )
 
-        service.addGrow(grow)
+        do {
+            try service.addGrow(grow)
+        } catch {
+            validationError = "Failed to save. Please try again."
+            return false
+        }
         showSaveConfirmation = true
         return true
     }

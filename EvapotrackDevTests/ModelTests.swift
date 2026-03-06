@@ -131,7 +131,7 @@ final class ModelTests: XCTestCase {
         XCTAssertNotNil(before)
 
         // Delete the plant
-        service.deletePlant(plant)
+        try service.deletePlant(plant)
 
         // After deletion, the selectedID no longer resolves
         let after = service.fetchAll().first(where: { $0.id == selectedID })
@@ -162,7 +162,7 @@ final class ModelTests: XCTestCase {
         XCTAssertNotNil(before)
 
         // Delete the log
-        service.deleteLog(log)
+        try service.deleteLog(log)
 
         // After deletion, the selectedLogID no longer resolves
         let after = service.fetchLogs(for: plant).first(where: { $0.id == selectedLogID })
