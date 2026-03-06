@@ -11,6 +11,7 @@ import SwiftUI
 struct PlantDashboardView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(SettingsViewModel.self) private var settingsVM
+    @Environment(\.dismiss) private var dismiss
     @State private var vm: PlantDashboardViewModel
 
     init(plant: Plant) {
@@ -26,6 +27,8 @@ struct PlantDashboardView: View {
                 Text(vm.plant.plantName)
                     .font(.title.weight(.bold))
                     .foregroundStyle(Color.evPrimaryText)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .listRowBackground(Color.clear)
                     .listRowInsets(EdgeInsets())
@@ -74,6 +77,7 @@ struct PlantDashboardView: View {
         .background(Color.evBackground)
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Button { vm.isShowingAddWatering = true } label: {
@@ -83,6 +87,15 @@ struct PlantDashboardView: View {
                         .frame(minWidth: 44, minHeight: 44)
                 }
                 .accessibilityLabel("Add Watering")
+            }
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button { dismiss() } label: {
+                    Image(systemName: "chevron.left")
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .foregroundStyle(.evPrimaryBlue)
+                }
+                .accessibilityLabel("Back")
             }
             ToolbarItem(placement: .navigationBarLeading) {
                 Button { vm.isShowingSettings = true } label: {
@@ -141,6 +154,8 @@ struct PlantDashboardView: View {
                 .font(.subheadline)
                 .fontWeight(.semibold)
                 .foregroundStyle(Color.evPrimaryBlue)
+                .lineLimit(1)
+                .truncationMode(.tail)
         }
     }
 }

@@ -29,6 +29,7 @@ struct PlantListView: View {
     @State private var isShowingLimitExceeded = false
     @State private var limitExceededMessage = ""
     @State private var saveError: String?
+    @Environment(\.dismiss) private var dismiss
 
     /// Plants sorted by most recently created first.
     private var plants: [Plant] {
@@ -75,6 +76,7 @@ struct PlantListView: View {
         .background(Color.evBackground)
         .navigationTitle(grow.growName)
         .navigationBarTitleDisplayMode(.large)
+        .navigationBarBackButtonHidden(true)
         .navigationDestination(for: PlantNavID.self) { navID in
             if let plant = plants.first(where: { $0.id == navID.id }) {
                 PlantDashboardView(plant: plant)
@@ -113,6 +115,15 @@ struct PlantListView: View {
                 }
                 .disabled(selectedPlantID == nil)
                 .accessibilityLabel("Delete Plant")
+            }
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button { dismiss() } label: {
+                    Image(systemName: "chevron.left")
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .foregroundStyle(.evPrimaryBlue)
+                }
+                .accessibilityLabel("Back")
             }
             ToolbarItem(placement: .navigationBarLeading) {
                 Button { isShowingSettings = true } label: {

@@ -31,6 +31,8 @@ struct GrowRowView: View {
                 Text(grow.growName)
                     .font(.title3.weight(.bold))
                     .foregroundStyle(Color.evDeepNavy)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
 
                 HStack(spacing: 16) {
                     Label {

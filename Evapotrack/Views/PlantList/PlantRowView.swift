@@ -30,6 +30,8 @@ struct PlantRowView: View {
             Text(plant.plantName)
                 .font(.title3.weight(.bold))
                 .foregroundStyle(Color.evDeepNavy)
+                .lineLimit(1)
+                .truncationMode(.tail)
         }
         .padding(.vertical, 6)
     }

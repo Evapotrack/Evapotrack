@@ -171,10 +171,10 @@ final class ModelTests: XCTestCase {
 
     // MARK: - UserSettings
 
-    func test_userSettings_default_isLitersAndCelsius() {
+    func test_userSettings_default_isLitersAndFahrenheit() {
         let settings = UserSettings.default
         XCTAssertEqual(settings.waterUnit, .liters)
-        XCTAssertEqual(settings.temperatureUnit, .celsius)
+        XCTAssertEqual(settings.temperatureUnit, .fahrenheit)
     }
 
     func test_userSettings_codable_roundTrip() throws {

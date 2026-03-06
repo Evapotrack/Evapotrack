@@ -13,6 +13,7 @@ struct HistoryView: View {
     let waterUnit: WaterUnit
     let maxRetentionCapacity: Double
 
+    @Environment(\.dismiss) private var dismiss
     @State private var selectedLogID: UUID?
     @State private var expandedLogID: UUID?
     @State private var isShowingDeleteAlert = false
@@ -84,7 +85,17 @@ struct HistoryView: View {
         .background(Color.evBackground)
         .navigationTitle("History")
         .navigationBarTitleDisplayMode(.large)
+        .navigationBarBackButtonHidden(true)
         .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button { dismiss() } label: {
+                    Image(systemName: "chevron.left")
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .foregroundStyle(.evPrimaryBlue)
+                }
+                .accessibilityLabel("Back")
+            }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
                     isShowingDeleteAlert = true

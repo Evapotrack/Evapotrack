@@ -27,10 +27,10 @@ struct CreatePlantView: View {
                     .textLimit($vm.plantName, maxLength: AppConstants.maxPlantNameLength)
 
                 TextField("Pot Size (e.g. 6 inch, 1 gallon)", text: $vm.potSize)
-                    .textLimit($vm.potSize, maxLength: AppConstants.maxDescriptionLength)
+                    .textLimit($vm.potSize, maxLength: AppConstants.maxPotSizeLength)
 
                 TextField("Medium Type (e.g. soil, perlite)", text: $vm.mediumType)
-                    .textLimit($vm.mediumType, maxLength: AppConstants.maxDescriptionLength)
+                    .textLimit($vm.mediumType, maxLength: AppConstants.maxMediumTypeLength)
             } header: {
                 Text("Plant Info")
                     .font(.title2.weight(.bold))

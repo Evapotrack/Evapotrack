@@ -114,6 +114,8 @@ struct SettingsView: View {
                                 Text(grow.growName)
                                     .font(.body.weight(.semibold))
                                     .foregroundStyle(Color.evPrimaryText)
+                                    .lineLimit(1)
+                                    .truncationMode(.tail)
                                 Text("\(grow.plants.count) plant\(grow.plants.count == 1 ? "" : "s")")
                                     .font(.caption)
                                     .foregroundStyle(Color.evSecondaryText)
@@ -124,6 +126,7 @@ struct SettingsView: View {
                                 .foregroundStyle(.evPrimaryBlue)
                         }
                     }
+                    .accessibilityLabel("Export \(grow.growName) data")
                 } header: {
                     Text("Download Data")
                         .font(.title2.weight(.bold))

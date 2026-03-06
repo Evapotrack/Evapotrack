@@ -113,8 +113,8 @@ final class UnitConversionTests: XCTestCase {
         XCTAssertEqual(WaterUnit.liters.displayPrecision, 2)
     }
 
-    func test_waterUnit_gallons_precision3() {
-        XCTAssertEqual(WaterUnit.gallons.displayPrecision, 3)
+    func test_waterUnit_gallons_precision2() {
+        XCTAssertEqual(WaterUnit.gallons.displayPrecision, 2)
     }
 
     func test_temperatureUnit_precision1() {
@@ -137,10 +137,10 @@ final class UnitConversionTests: XCTestCase {
     }
 
     func test_displayFormatter_water_gallons() {
-        // 1.0 L → ~0.264 gal, 3 decimals
+        // 1.0 L → ~0.26 gal, 2 decimals
         let result = DisplayFormatter.water(1.0, unit: .gallons)
         XCTAssertTrue(result.hasSuffix("gal"))
-        XCTAssertTrue(result.contains("0.264"))
+        XCTAssertTrue(result.contains("0.26"))
     }
 
     func test_displayFormatter_temperature_celsius() {

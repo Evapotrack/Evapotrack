@@ -94,6 +94,8 @@ struct WateringLogRowView: View {
                     onToggleExpansion()
                 }
             }
+            .accessibilityLabel(isExpanded ? "Collapse log details" : "Expand log details")
+            .accessibilityAddTraits(.isButton)
         }
         .padding(.vertical, 6)
     }

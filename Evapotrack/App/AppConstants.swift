@@ -17,7 +17,8 @@ enum AppConstants {
 
     static let maxGrowNameLength = 50
     static let maxPlantNameLength = 50
-    static let maxDescriptionLength = 100
+    static let maxPotSizeLength = 30
+    static let maxMediumTypeLength = 30
     /// Maximum grows a user can create. Keeps SwiftData performant
     /// on older devices while being generous for serious growers
     /// (30 grows × 25 plants = 750 plants max).

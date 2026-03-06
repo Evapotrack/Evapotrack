@@ -14,19 +14,11 @@
 			remoteGlobalIDString = B981AD862F548A4900B0B89D;
 			remoteInfo = EvapotrackDev;
 		};
-		B981ADA42F548A4900B0B89D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B981AD7F2F548A4900B0B89D /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = B981AD862F548A4900B0B89D;
-			remoteInfo = EvapotrackDev;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		B981AD872F548A4900B0B89D /* EvapotrackDev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EvapotrackDev.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B981AD992F548A4900B0B89D /* EvapotrackDevTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EvapotrackDevTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		B981ADA32F548A4900B0B89D /* EvapotrackDevUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EvapotrackDevUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -57,13 +49,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B981ADA02F548A4900B0B89D /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -81,7 +66,6 @@
 			children = (
 				B981AD872F548A4900B0B89D /* EvapotrackDev.app */,
 				B981AD992F548A4900B0B89D /* EvapotrackDevTests.xctest */,
-				B981ADA32F548A4900B0B89D /* EvapotrackDevUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -134,26 +118,6 @@
 			productReference = B981AD992F548A4900B0B89D /* EvapotrackDevTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		B981ADA22F548A4900B0B89D /* EvapotrackDevUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = B981ADB32F548A4900B0B89D /* Build configuration list for PBXNativeTarget "EvapotrackDevUITests" */;
-			buildPhases = (
-				B981AD9F2F548A4900B0B89D /* Sources */,
-				B981ADA02F548A4900B0B89D /* Frameworks */,
-				B981ADA12F548A4900B0B89D /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				B981ADA52F548A4900B0B89D /* PBXTargetDependency */,
-			);
-			name = EvapotrackDevUITests;
-			packageProductDependencies = (
-			);
-			productName = EvapotrackDevUITests;
-			productReference = B981ADA32F548A4900B0B89D /* EvapotrackDevUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -171,11 +135,7 @@
 						CreatedOnToolsVersion = 26.2;
 						TestTargetID = B981AD862F548A4900B0B89D;
 					};
-					B981ADA22F548A4900B0B89D = {
-						CreatedOnToolsVersion = 26.2;
-						TestTargetID = B981AD862F548A4900B0B89D;
 					};
-				};
 			};
 			buildConfigurationList = B981AD822F548A4900B0B89D /* Build configuration list for PBXProject "EvapotrackDev" */;
 			developmentRegion = en;
@@ -193,7 +153,6 @@
 			targets = (
 				B981AD862F548A4900B0B89D /* EvapotrackDev */,
 				B981AD982F548A4900B0B89D /* EvapotrackDevTests */,
-				B981ADA22F548A4900B0B89D /* EvapotrackDevUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -207,13 +166,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		B981AD972F548A4900B0B89D /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B981ADA12F548A4900B0B89D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -237,13 +189,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B981AD9F2F548A4900B0B89D /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -251,11 +196,6 @@
 			isa = PBXTargetDependency;
 			target = B981AD862F548A4900B0B89D /* EvapotrackDev */;
 			targetProxy = B981AD9A2F548A4900B0B89D /* PBXContainerItemProxy */;
-		};
-		B981ADA52F548A4900B0B89D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = B981AD862F548A4900B0B89D /* EvapotrackDev */;
-			targetProxy = B981ADA42F548A4900B0B89D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -483,44 +423,6 @@
 			};
 			name = Release;
 		};
-		B981ADB42F548A4900B0B89D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = Evapotrack.EvapotrackDevUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = EvapotrackDev;
-			};
-			name = Debug;
-		};
-		B981ADB52F548A4900B0B89D /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = Evapotrack.EvapotrackDevUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				STRING_CATALOG_GENERATE_SYMBOLS = NO;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = EvapotrackDev;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -547,15 +449,6 @@
 			buildConfigurations = (
 				B981ADB12F548A4900B0B89D /* Debug */,
 				B981ADB22F548A4900B0B89D /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		B981ADB32F548A4900B0B89D /* Build configuration list for PBXNativeTarget "EvapotrackDevUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				B981ADB42F548A4900B0B89D /* Debug */,
-				B981ADB52F548A4900B0B89D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

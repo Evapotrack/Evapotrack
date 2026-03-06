@@ -18,7 +18,7 @@ final class NavigationTests: XCTestCase {
 
         let vm = SettingsViewModel()
         XCTAssertEqual(vm.settings.waterUnit, .liters)
-        XCTAssertEqual(vm.settings.temperatureUnit, .celsius)
+        XCTAssertEqual(vm.settings.temperatureUnit, .fahrenheit)
     }
 
     // MARK: - Save / Load
@@ -70,7 +70,7 @@ final class NavigationTests: XCTestCase {
 
         vm.reset()
         XCTAssertEqual(vm.settings.waterUnit, .liters)
-        XCTAssertEqual(vm.settings.temperatureUnit, .celsius)
+        XCTAssertEqual(vm.settings.temperatureUnit, .fahrenheit)
 
         // Verify persisted too
         let vm2 = SettingsViewModel()

@@ -19,6 +19,7 @@ enum HowToContext {
 struct HowToView: View {
     let context: HowToContext
 
+    @Environment(\.dismiss) private var dismiss
     @State private var expandedSection: String?
 
     var body: some View {
@@ -35,6 +36,18 @@ struct HowToView: View {
         .background(Color.evBackground)
         .navigationTitle("How To")
         .navigationBarTitleDisplayMode(.large)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button { dismiss() } label: {
+                    Image(systemName: "chevron.left")
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .foregroundStyle(.evPrimaryBlue)
+                }
+                .accessibilityLabel("Back")
+            }
+        }
     }
 
     // MARK: - General Context (Grow / Plant List)
