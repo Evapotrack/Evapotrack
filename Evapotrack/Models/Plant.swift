@@ -35,7 +35,7 @@ final class Plant {
     var goalRunoffPercent: Double = 15.0
 
     /// Date the plant was created.
-    var createdAt: Date
+    var createdAt: Date = Date()
 
     // MARK: - Relationships
 
