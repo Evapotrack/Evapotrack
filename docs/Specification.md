@@ -40,6 +40,9 @@ ViewModels use a `configure(modelContext:)` method called from `.onAppear` rathe
 
 | Field | Rule | Constant |
 |-------|------|----------|
+| Total grows | Max 30 | maxGrowCount |
+| Plants per grow | Max 25 | maxPlantsPerGrow |
+| Total plants | Max 750 (across all grows) | maxTotalPlants |
 | Grow name | 1-50 chars, not blank, unique (case-insensitive) | maxGrowNameLength |
 | Plant name | 1-50 chars, not blank, unique within grow | maxPlantNameLength |
 | Pot size | Not blank | - |
@@ -64,3 +67,17 @@ ViewModels use a `configure(modelContext:)` method called from `.onAppear` rathe
 ## Interval Recalculation
 
 When logs are added or deleted, WateringCalculationService.recalculateIntervalHours sorts all logs chronologically and computes hours between consecutive entries. The first log gets nil interval.
+
+## Entity Limits & Enforcement
+
+Counters are displayed in list section headers (e.g., "2/30" for grows, "5/25" for plants). When a user taps + and a limit is reached, a LimitExceededView modal is shown instead of opening the creation form. The modal explains the constraint and has a Close button.
+
+| Limit | Value | Enforcement |
+|-------|-------|-------------|
+| Grows | 30 | GrowListView + button shows modal |
+| Plants per grow | 25 | PlantListView + button shows modal |
+| Total plants | 750 | PlantListView checks fetchCount before opening form |
+
+## Data Export
+
+SettingsView provides per-grow data export via `.fileExporter`. DataExportService generates a plain-text report containing grow metadata, all plants, and their watering log history in a tabular format. Values are formatted in the user's display units. The export file is saved as `.txt`.

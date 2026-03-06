@@ -1,16 +1,23 @@
 // SettingsView.swift
 // Evapotrack
 //
-// Settings screen for water and temperature display units.
-// Uses segmented pickers with exact terminology.
+// Settings screen for water and temperature display units,
+// appearance mode, and per-grow data export.
 // Changes persist immediately via auto-save — no stored
 // SwiftData values are ever modified.
 
 import SwiftUI
+import SwiftData
+import UniformTypeIdentifiers
 
 struct SettingsView: View {
     @Environment(SettingsViewModel.self) private var settingsVM
     @Environment(\.dismiss) private var dismiss
+    @Query(sort: \Grow.createdAt, order: .reverse) private var grows: [Grow]
+
+    @State private var isShowingExport = false
+    @State private var exportDocument: GrowExportDocument?
+    @State private var exportFilename = "data"
 
     private var appVersionText: String {
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
@@ -84,9 +91,55 @@ struct SettingsView: View {
             }
 
             Section {
+                if grows.isEmpty {
+                    Text("No grows to export.")
+                        .foregroundStyle(Color.evSecondaryText)
+                } else {
+                    ForEach(grows, id: \.id) { grow in
+                        Button {
+                            let text = DataExportService.exportGrow(
+                                grow,
+                                waterUnit: settingsVM.settings.waterUnit,
+                                temperatureUnit: settingsVM.settings.temperatureUnit
+                            )
+                            let safeName = grow.growName
+                                .replacingOccurrences(of: " ", with: "_")
+                                .replacingOccurrences(of: "/", with: "_")
+                            exportFilename = "\(safeName)_data"
+                            exportDocument = GrowExportDocument(text: text)
+                            isShowingExport = true
+                        } label: {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(grow.growName)
+                                        .font(.body.weight(.semibold))
+                                        .foregroundStyle(Color.evPrimaryText)
+                                    Text("\(grow.plants.count) plant\(grow.plants.count == 1 ? "" : "s")")
+                                        .font(.caption)
+                                        .foregroundStyle(Color.evSecondaryText)
+                                }
+                                Spacer()
+                                Image(systemName: "square.and.arrow.up")
+                                    .font(.body.weight(.semibold))
+                                    .foregroundStyle(.evPrimaryBlue)
+                            }
+                        }
+                    }
+                }
+            } header: {
+                Text("Download Data")
+                    .font(.title2.weight(.bold))
+                    .foregroundStyle(.evDeepNavy)
+                    .textCase(nil)
+            } footer: {
+                Text("Export grow data as a text file.")
+                    .foregroundStyle(Color.evSecondaryText)
+            }
+
+            Section {
                 HStack {
                     Spacer()
-                    Button("Reset") {
+                    Button("Reset Settings") {
                         settingsVM.reset()
                     }
                     .font(.body)
@@ -127,6 +180,14 @@ struct SettingsView: View {
         }
         .onChange(of: settingsVM.settings) { _, _ in
             settingsVM.save()
+        }
+        .fileExporter(
+            isPresented: $isShowingExport,
+            document: exportDocument,
+            contentType: .plainText,
+            defaultFilename: exportFilename
+        ) { _ in
+            exportDocument = nil
         }
     }
 }

@@ -1,7 +1,7 @@
 // PlantListView.swift
 // Evapotrack
 //
-// Shows all plants in a grow, sorted by name.
+// Shows all plants in a grow, sorted by most recently created first.
 // Each row shows plantName only with a left-side circular selection indicator.
 // Selection is single-select and resets on appear.
 // Delete requires exactly one selected plant and shows a confirmation overlay.
@@ -26,6 +26,8 @@ struct PlantListView: View {
     @State private var isShowingCreatePlant = false
     @State private var isShowingSettings = false
     @State private var isShowingDeleteAlert = false
+    @State private var isShowingLimitExceeded = false
+    @State private var limitExceededMessage = ""
     @State private var saveError: String?
 
     /// Plants sorted by most recently created first.
@@ -41,11 +43,7 @@ struct PlantListView: View {
 
     var body: some View {
         List {
-            Section(header: Text("Plant list")
-                .font(.subheadline.weight(.medium))
-                .foregroundStyle(Color.evSecondaryText)
-                .textCase(nil)
-            ) {
+            Section {
             ForEach(plants, id: \.id) { plant in
                 NavigationLink(value: PlantNavID(id: plant.id)) {
                     PlantRowView(
@@ -58,6 +56,18 @@ struct PlantListView: View {
                 }
                 .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
             }
+            } header: {
+                HStack {
+                    Text("Plant list")
+                        .font(.subheadline.weight(.medium))
+                        .foregroundStyle(Color.evSecondaryText)
+                        .textCase(nil)
+                    Spacer()
+                    Text("\(plants.count)/\(AppConstants.maxPlantsPerGrow)")
+                        .font(.caption.weight(.medium))
+                        .foregroundStyle(Color.evSlateGray)
+                        .textCase(nil)
+                }
             }
         }
         .listStyle(.insetGrouped)
@@ -74,13 +84,22 @@ struct PlantListView: View {
         }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                Button { isShowingCreatePlant = true } label: {
+                Button {
+                    if plants.count >= AppConstants.maxPlantsPerGrow {
+                        limitExceededMessage = "You've reached the maximum of \(AppConstants.maxPlantsPerGrow) plants per grow. Delete a plant to create a new one."
+                        isShowingLimitExceeded = true
+                    } else if totalPlantCount() >= AppConstants.maxTotalPlants {
+                        limitExceededMessage = "You've reached the maximum of \(AppConstants.maxTotalPlants) total plants. Delete a plant from any grow to create a new one."
+                        isShowingLimitExceeded = true
+                    } else {
+                        isShowingCreatePlant = true
+                    }
+                } label: {
                     Image(systemName: "plus")
                         .font(.title3)
                         .fontWeight(.bold)
                         .frame(minWidth: 44, minHeight: 44)
                 }
-                .disabled(plants.count >= AppConstants.maxPlantsPerGrow)
                 .accessibilityLabel(plants.count >= AppConstants.maxPlantsPerGrow ? "Maximum of \(AppConstants.maxPlantsPerGrow) plants reached" : "Add Plant")
             }
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -154,6 +173,20 @@ struct PlantListView: View {
             }
         }
         .animation(.easeInOut(duration: 0.2), value: isShowingDeleteAlert)
+        .overlay {
+            if isShowingLimitExceeded {
+                LimitExceededView(
+                    title: "Plant Limit Reached",
+                    message: limitExceededMessage,
+                    onClose: {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            isShowingLimitExceeded = false
+                        }
+                    }
+                )
+            }
+        }
+        .animation(.easeInOut(duration: 0.2), value: isShowingLimitExceeded)
         .alert("Error", isPresented: Binding(
             get: { saveError != nil },
             set: { if !$0 { saveError = nil } }
@@ -199,6 +232,11 @@ struct PlantListView: View {
         } else {
             selectedPlantID = plant.id
         }
+    }
+
+    private func totalPlantCount() -> Int {
+        let descriptor = FetchDescriptor<Plant>()
+        return (try? modelContext.fetchCount(descriptor)) ?? 0
     }
 
     private func deletePlant(_ plant: Plant) {

@@ -20,6 +20,7 @@ Evapotrack/
     ValidationService.swift       # Human-readable validation results
     UnitConversionService.swift   # Liters/Celsius to/from display units
     HapticService.swift           # UIFeedbackGenerator wrappers
+    DataExportService.swift       # Plain-text grow data export + FileDocument
   ViewModels/
     SettingsViewModel.swift       # UserDefaults-backed settings
     CreateGrowViewModel.swift     # Form state for grow creation
@@ -47,12 +48,13 @@ Evapotrack/
     AddWateringLog/
       AddWateringLogView.swift    # Watering log entry form
     Settings/
-      SettingsView.swift          # Unit pickers, theme toggle, reset
+      SettingsView.swift          # Unit pickers, theme toggle, data export, reset
     HowTo/
       HowToView.swift             # Context-aware help sections
     Components/
       LaunchView.swift            # Animated launch screen
       DeleteConfirmationView.swift # Reusable delete modal overlay
+      LimitExceededView.swift     # Reusable limit-exceeded modal overlay
       StatusBadgeView.swift       # Color-coded watering status capsule
   Utilities/
     Validators.swift              # Pure validation functions

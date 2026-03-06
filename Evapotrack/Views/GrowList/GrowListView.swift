@@ -24,6 +24,7 @@ struct GrowListView: View {
     @State private var isShowingCreateGrow = false
     @State private var isShowingSettings = false
     @State private var isShowingDeleteAlert = false
+    @State private var isShowingLimitExceeded = false
     @State private var saveError: String?
 
     private var selectedGrow: Grow? {
@@ -34,6 +35,7 @@ struct GrowListView: View {
     var body: some View {
         NavigationStack {
             List {
+                Section {
                 ForEach(grows, id: \.id) { grow in
                     NavigationLink(value: GrowNavID(id: grow.id)) {
                         GrowRowView(
@@ -45,6 +47,19 @@ struct GrowListView: View {
                         )
                     }
                     .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                }
+                } header: {
+                    HStack {
+                        Text("Grows")
+                            .font(.subheadline.weight(.medium))
+                            .foregroundStyle(Color.evSecondaryText)
+                            .textCase(nil)
+                        Spacer()
+                        Text("\(grows.count)/\(AppConstants.maxGrowCount)")
+                            .font(.caption.weight(.medium))
+                            .foregroundStyle(Color.evSlateGray)
+                            .textCase(nil)
+                    }
                 }
             }
             .listStyle(.insetGrouped)
@@ -61,13 +76,18 @@ struct GrowListView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    Button { isShowingCreateGrow = true } label: {
+                    Button {
+                        if grows.count >= AppConstants.maxGrowCount {
+                            isShowingLimitExceeded = true
+                        } else {
+                            isShowingCreateGrow = true
+                        }
+                    } label: {
                         Image(systemName: "plus")
                             .font(.title3)
                             .fontWeight(.bold)
                             .frame(minWidth: 44, minHeight: 44)
                     }
-                    .disabled(grows.count >= AppConstants.maxGrowCount)
                     .accessibilityLabel(grows.count >= AppConstants.maxGrowCount ? "Maximum of \(AppConstants.maxGrowCount) grows reached" : "Add Grow")
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -141,6 +161,20 @@ struct GrowListView: View {
                 }
             }
             .animation(.easeInOut(duration: 0.2), value: isShowingDeleteAlert)
+            .overlay {
+                if isShowingLimitExceeded {
+                    LimitExceededView(
+                        title: "Grow Limit Reached",
+                        message: "You've reached the maximum of \(AppConstants.maxGrowCount) grows. Delete a grow to create a new one.",
+                        onClose: {
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                isShowingLimitExceeded = false
+                            }
+                        }
+                    )
+                }
+            }
+            .animation(.easeInOut(duration: 0.2), value: isShowingLimitExceeded)
             .alert("Error", isPresented: Binding(
                 get: { saveError != nil },
                 set: { if !$0 { saveError = nil } }

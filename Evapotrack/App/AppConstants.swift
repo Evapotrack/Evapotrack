@@ -26,6 +26,10 @@ enum AppConstants {
     /// Maximum plants per grow. Prevents excessively long lists and
     /// keeps relationship arrays manageable for interval recalculation.
     static let maxPlantsPerGrow = 25
+
+    /// Hard cap on total plants across all grows.
+    /// maxGrowCount × maxPlantsPerGrow = 750.
+    static let maxTotalPlants = 750
     static let maxNumericInputLength = 10
     static let maxRetentionCapacityRange: ClosedRange<Double> = 0.001...100.0
     static let waterAddedRange: ClosedRange<Double> = 0.001...100.0
