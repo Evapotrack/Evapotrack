@@ -152,11 +152,13 @@ struct CreatePlantView: View {
                         }
                     }
                 }
+                .font(.body)
                 .fontWeight(.bold)
                 .disabled(vm.showSaveConfirmation)
             }
         }
         .onAppear {
+            vm.resetState()
             vm.configure(modelContext: modelContext, waterUnit: waterUnit, grow: grow)
         }
         .overlay {

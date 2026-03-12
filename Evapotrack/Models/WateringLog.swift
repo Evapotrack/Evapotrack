@@ -17,7 +17,7 @@ final class WateringLog {
 
     // MARK: - Identity
 
-    var id: UUID
+    @Attribute(.unique) var id: UUID
 
     // MARK: - User-Entered Fields
 
@@ -65,18 +65,20 @@ final class WateringLog {
         intervalHours: Double? = nil,
         plant: Plant? = nil
     ) {
+        let clampedWater = max(waterAdded, 0.001)
+        let clampedRunoff = max(runoffCollected, 0)
         self.id = id
-        self.waterAdded = waterAdded
-        self.runoffCollected = runoffCollected
+        self.waterAdded = clampedWater
+        self.runoffCollected = clampedRunoff
         self.dateTime = dateTime
         self.temperatureCelsius = temperatureCelsius
         self.humidityPercent = humidityPercent
         self.plant = plant
 
         // Compute derived fields — stored unrounded
-        self.retained = max(0, waterAdded - runoffCollected)
-        self.runoffPercent = waterAdded > 0
-            ? min((runoffCollected / waterAdded) * 100.0, 100.0)
+        self.retained = max(0, clampedWater - clampedRunoff)
+        self.runoffPercent = clampedWater > 0
+            ? min((clampedRunoff / clampedWater) * 100.0, 100.0)
             : 0
         self.intervalHours = intervalHours
     }

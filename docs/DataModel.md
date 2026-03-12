@@ -24,7 +24,7 @@
 
 | Field | Type | Required | Notes |
 |-------|------|----------|-------|
-| id | UUID | Yes | Auto-generated |
+| id | UUID | Yes | @Attribute(.unique), auto-generated |
 | growName | String | Yes | 1-50 chars, unique (case-insensitive) |
 | createdAt | Date | Yes | Set on creation |
 | plants | [Plant] | Yes | @Relationship(deleteRule: .cascade) |
@@ -33,7 +33,7 @@
 
 | Field | Type | Required | Notes |
 |-------|------|----------|-------|
-| id | UUID | Yes | Auto-generated |
+| id | UUID | Yes | @Attribute(.unique), auto-generated |
 | plantName | String | Yes | 1-50 chars, unique within grow |
 | potSize | String | Yes | Descriptive (e.g. "6 inch") |
 | mediumType | String | Yes | Descriptive (e.g. "soil") |
@@ -46,8 +46,8 @@
 
 | Field | Type | Required | Notes |
 |-------|------|----------|-------|
-| id | UUID | Yes | Auto-generated |
-| waterAdded | Double | Yes | Liters, 0.001-100.0 |
+| id | UUID | Yes | @Attribute(.unique), auto-generated |
+| waterAdded | Double | Yes | Liters, clamped >= 0.001 |
 | runoffCollected | Double | Yes | Liters, >= 0 and < waterAdded |
 | dateTime | Date | Yes | Not future, unique per plant (minute) |
 | temperatureCelsius | Double? | No | -50 to 60 C |
@@ -63,7 +63,7 @@
 |-------|------|---------|-------|
 | waterUnit | WaterUnit | .liters | mL, L, or gal |
 | temperatureUnit | TemperatureUnit | .fahrenheit | C or F |
-| appearanceMode | AppearanceMode | .light | Day or Dark |
+| appearanceMode | AppearanceMode | .dark | Dark or Light |
 
 ## Cascade Delete Rules
 
@@ -85,3 +85,5 @@
 | Max grows | 30 | SwiftData performance on older devices |
 | Max plants per grow | 25 | Prevents excessively long lists |
 | Max theoretical plants | 750 | 30 x 25 |
+
+Limits are enforced at both the ViewModel layer (UI gating) and the Service layer (throws `ServiceError.limitExceeded`).

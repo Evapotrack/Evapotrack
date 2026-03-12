@@ -35,6 +35,9 @@ enum AppConstants {
     static let maxRetentionCapacityRange: ClosedRange<Double> = 0.001...100.0
     static let waterAddedRange: ClosedRange<Double> = 0.001...100.0
     static let humidityRange: ClosedRange<Double> = 0.0...100.0
+    static let temperatureRangeCelsius: ClosedRange<Double> = -50.0...60.0
+    static let minimumIntervalDays = 1.0
+    static let maximumIntervalDays = 60.0
 
     // MARK: - Algorithm
 

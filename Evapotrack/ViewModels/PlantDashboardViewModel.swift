@@ -74,9 +74,9 @@ final class PlantDashboardViewModel {
         guard let service = logService else { return }
         do {
             try service.deleteLog(log)
+            loadData()
         } catch {
             deleteError = "Failed to delete log. Please try again."
         }
-        loadData()
     }
 }

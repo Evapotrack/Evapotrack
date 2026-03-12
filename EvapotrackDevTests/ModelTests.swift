@@ -14,7 +14,7 @@ final class ModelTests: XCTestCase {
 
     private func makeContainer() throws -> ModelContainer {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        return try ModelContainer(for: Plant.self, WateringLog.self, configurations: config)
+        return try ModelContainer(for: Grow.self, Plant.self, WateringLog.self, configurations: config)
     }
 
     // MARK: - Plant Init
@@ -167,6 +167,34 @@ final class ModelTests: XCTestCase {
         // After deletion, the selectedLogID no longer resolves
         let after = service.fetchLogs(for: plant).first(where: { $0.id == selectedLogID })
         XCTAssertNil(after, "Selected log ID must not resolve after deletion")
+    }
+
+    // MARK: - Three-Level Cascade Delete (Grow → Plant → WateringLog)
+
+    func test_deleteGrow_cascadeDeletesPlantsAndLogs() throws {
+        let container = try makeContainer()
+        let context = container.mainContext
+
+        let grow = Grow(growName: "Test Grow")
+        context.insert(grow)
+
+        let plant = Plant(plantName: "Test Plant", potSize: "Small", mediumType: "soil", maxRetentionCapacity: 1.0, grow: grow)
+        context.insert(plant)
+
+        let log = WateringLog(waterAdded: 0.5, runoffCollected: 0.1, dateTime: Date())
+        log.plant = plant
+        context.insert(log)
+        try context.save()
+
+        XCTAssertEqual(try context.fetchCount(FetchDescriptor<Plant>()), 1)
+        XCTAssertEqual(try context.fetchCount(FetchDescriptor<WateringLog>()), 1)
+
+        context.delete(grow)
+        try context.save()
+
+        XCTAssertEqual(try context.fetchCount(FetchDescriptor<Grow>()), 0)
+        XCTAssertEqual(try context.fetchCount(FetchDescriptor<Plant>()), 0, "Plants should be cascade-deleted with grow")
+        XCTAssertEqual(try context.fetchCount(FetchDescriptor<WateringLog>()), 0, "Logs should be cascade-deleted with plant")
     }
 
     // MARK: - UserSettings

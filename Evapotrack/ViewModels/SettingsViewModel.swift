@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Observation
+import OSLog
 
 @Observable
 @MainActor
@@ -25,15 +26,21 @@ final class SettingsViewModel {
     }
 
     func load() {
-        guard let data = UserDefaults.standard.data(forKey: AppConstants.userSettingsKey),
-              let decoded = try? JSONDecoder().decode(UserSettings.self, from: data)
-        else { return }
-        settings = decoded
+        guard let data = UserDefaults.standard.data(forKey: AppConstants.userSettingsKey) else { return }
+        do {
+            settings = try JSONDecoder().decode(UserSettings.self, from: data)
+        } catch {
+            Logger.viewModel.error("Failed to decode UserSettings: \(error.localizedDescription)")
+        }
     }
 
     func save() {
-        guard let data = try? JSONEncoder().encode(settings) else { return }
-        UserDefaults.standard.set(data, forKey: AppConstants.userSettingsKey)
+        do {
+            let data = try JSONEncoder().encode(settings)
+            UserDefaults.standard.set(data, forKey: AppConstants.userSettingsKey)
+        } catch {
+            Logger.viewModel.error("Failed to encode UserSettings: \(error.localizedDescription)")
+        }
     }
 
     func reset() {

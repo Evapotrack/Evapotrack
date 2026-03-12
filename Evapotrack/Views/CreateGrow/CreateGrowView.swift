@@ -76,11 +76,13 @@ struct CreateGrowView: View {
                         }
                     }
                 }
+                .font(.body)
                 .fontWeight(.bold)
                 .disabled(vm.showSaveConfirmation)
             }
         }
         .onAppear {
+            vm.resetState()
             vm.configure(modelContext: modelContext)
             currentTime = Date()
         }

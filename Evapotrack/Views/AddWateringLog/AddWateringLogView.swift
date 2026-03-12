@@ -133,6 +133,7 @@ struct AddWateringLogView: View {
             HowToView(context: .addWatering)
         }
         .onAppear {
+            vm.resetState()
             vm.configure(
                 modelContext: modelContext,
                 waterUnit: waterUnit,

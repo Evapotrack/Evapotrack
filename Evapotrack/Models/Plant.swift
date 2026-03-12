@@ -15,7 +15,7 @@ final class Plant {
     // MARK: - Stored Fields
 
     /// Unique identifier.
-    var id: UUID
+    @Attribute(.unique) var id: UUID
 
     /// User-given name for the plant (required).
     var plantName: String
@@ -61,7 +61,7 @@ final class Plant {
         self.plantName = plantName
         self.potSize = potSize
         self.mediumType = mediumType
-        self.maxRetentionCapacity = maxRetentionCapacity
+        self.maxRetentionCapacity = max(maxRetentionCapacity, 0.001)
         // Clamp to valid range — prevents division by zero in recommendation algorithm
         self.goalRunoffPercent = min(max(goalRunoffPercent, 0.1), 99.9)
         self.createdAt = createdAt

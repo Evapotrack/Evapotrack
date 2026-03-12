@@ -52,9 +52,9 @@ enum Validators {
         runoff >= 0 && runoff < waterAdded
     }
 
-    /// Temperature in Celsius must be between -50 and 60.
+    /// Temperature in Celsius must be within the allowed range.
     static func isValidTemperature(_ value: Double) -> Bool {
-        value >= -50 && value <= 60
+        AppConstants.temperatureRangeCelsius.contains(value)
     }
 
     /// Humidity must be 0–100.

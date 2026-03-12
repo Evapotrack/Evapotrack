@@ -64,8 +64,8 @@ enum WateringCalculationService {
     private static let outdoorFactor = 0.8
     private static let referenceVolume = 0.25
     private static let volumeCoefficient = 0.3
-    private static let minimumIntervalDays = 1.0
-    private static let maximumIntervalDays = 60.0
+    private static let minimumIntervalDays = AppConstants.minimumIntervalDays
+    private static let maximumIntervalDays = AppConstants.maximumIntervalDays
 
     /// Compute a recommended interval in days from plant parameters.
     static func computeRecommendedInterval(
@@ -166,8 +166,8 @@ enum WateringCalculationService {
         guard !intervals.isEmpty else { return formulaInterval }
 
         let actualAvg = intervals.reduce(0, +) / Double(intervals.count)
-        assert(abs(AppConstants.blendingWeightSum - 1.0) < 0.001,
-               "formulaWeight + historyWeight must equal 1.0")
+        precondition(abs(AppConstants.blendingWeightSum - 1.0) < 0.001,
+                     "formulaWeight + historyWeight must equal 1.0")
         let blended = formulaInterval * AppConstants.formulaWeight + actualAvg * AppConstants.historyWeight
         return min(max(blended, minimumIntervalDays), maximumIntervalDays)
     }

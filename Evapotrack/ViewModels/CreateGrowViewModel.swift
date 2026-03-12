@@ -27,6 +27,12 @@ final class CreateGrowViewModel {
         self.growService = GrowService(modelContext: modelContext)
     }
 
+    /// Resets transient state so the form is clean if the sheet is re-presented.
+    func resetState() {
+        showSaveConfirmation = false
+        validationError = nil
+    }
+
     // MARK: - Actions
 
     func validate() -> Bool {

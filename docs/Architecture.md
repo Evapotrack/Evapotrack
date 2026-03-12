@@ -13,14 +13,15 @@ Evapotrack/
     WateringLog.swift             # @Model: single watering event
     UserSettings.swift            # Codable: display units, appearance mode
   Services/
-    GrowService.swift             # CRUD for Grow entities
-    PlantService.swift            # CRUD for Plant entities
+    GrowService.swift             # CRUD for Grow entities (with limit enforcement)
+    PlantService.swift            # CRUD for Plant entities (with limit enforcement)
     WateringLogService.swift      # CRUD + interval recalculation for logs
     WateringCalculationService.swift  # Pure algorithm functions
     ValidationService.swift       # Human-readable validation results
     UnitConversionService.swift   # Liters/Celsius to/from display units
     HapticService.swift           # UIFeedbackGenerator wrappers
     DataExportService.swift       # Plain-text grow data export + FileDocument
+    ServiceError.swift            # Shared error type for service-layer operations
   ViewModels/
     SettingsViewModel.swift       # UserDefaults-backed settings
     CreateGrowViewModel.swift     # Form state for grow creation

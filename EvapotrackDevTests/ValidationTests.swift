@@ -185,7 +185,42 @@ final class ValidationTests: XCTestCase {
         XCTAssertTrue(Validators.isValidTemperature(60))
     }
 
+    // MARK: - Grow Name
+
+    func test_growName_empty_isInvalid() {
+        XCTAssertFalse(Validators.isValidGrowName(""))
+    }
+
+    func test_growName_whitespaceOnly_isInvalid() {
+        XCTAssertFalse(Validators.isValidGrowName("   "))
+    }
+
+    func test_growName_singleChar_isValid() {
+        XCTAssertTrue(Validators.isValidGrowName("A"))
+    }
+
+    func test_growName_50chars_isValid() {
+        let name = String(repeating: "g", count: 50)
+        XCTAssertTrue(Validators.isValidGrowName(name))
+    }
+
+    func test_growName_51chars_isInvalid() {
+        let name = String(repeating: "g", count: 51)
+        XCTAssertFalse(Validators.isValidGrowName(name))
+    }
+
     // MARK: - ValidationService Error Messages
+
+    func test_validateGrowName_valid_returnsValid() {
+        XCTAssertEqual(ValidationService.validateGrowName("My Grow"), .valid)
+    }
+
+    func test_validateGrowName_empty_returnsInvalidWithMessage() {
+        XCTAssertEqual(
+            ValidationService.validateGrowName(""),
+            .invalid("Grow name must be 1–\(AppConstants.maxGrowNameLength) characters and not blank.")
+        )
+    }
 
     func test_validatePlantName_valid_returnsValid() {
         XCTAssertEqual(ValidationService.validatePlantName("Basil"), .valid)

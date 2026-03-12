@@ -15,7 +15,7 @@ final class Grow {
     // MARK: - Stored Fields
 
     /// Unique identifier.
-    var id: UUID
+    @Attribute(.unique) var id: UUID
 
     /// User-given name for the grow (required).
     var growName: String

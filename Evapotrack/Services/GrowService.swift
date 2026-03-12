@@ -17,6 +17,11 @@ final class GrowService {
     }
 
     func addGrow(_ grow: Grow) throws {
+        let count = (try? modelContext.fetchCount(FetchDescriptor<Grow>())) ?? 0
+        guard count < AppConstants.maxGrowCount else {
+            Logger.services.warning("Grow limit reached (\(AppConstants.maxGrowCount))")
+            throw ServiceError.limitExceeded
+        }
         modelContext.insert(grow)
         try modelContext.save()
         Logger.services.info("Added grow: \(grow.growName)")
@@ -24,7 +29,7 @@ final class GrowService {
 
     func fetchAll() -> [Grow] {
         let descriptor = FetchDescriptor<Grow>(
-            sortBy: [SortDescriptor(\.growName)]
+            sortBy: [SortDescriptor(\.createdAt, order: .reverse)]
         )
         do {
             return try modelContext.fetch(descriptor)
