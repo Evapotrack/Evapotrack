@@ -61,7 +61,9 @@ struct InsightsPanelView: View {
         .padding(.vertical, 10)
         .background(
             RoundedRectangle(cornerRadius: 10)
-                .fill(Color.evFrostBlue.opacity(0.08))
+                .fill(Color.evFrostBlue.opacity(0.12))
         )
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(label): \(value)")
     }
 }

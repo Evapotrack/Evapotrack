@@ -22,6 +22,7 @@ struct CreateGrowView: View {
                 TextField("Grow Name", text: $vm.growName)
                     .autocorrectionDisabled()
                     .textLimit($vm.growName, maxLength: AppConstants.maxGrowNameLength)
+                    .accessibilityLabel("Grow Name")
             } header: {
                 Text("Grow Info")
                     .font(.title2.weight(.bold))
@@ -108,6 +109,8 @@ struct CreateGrowView: View {
                         .transition(.scale.combined(with: .opacity))
                     }
                     .allowsHitTesting(false)
+                    .accessibilityAddTraits(.isModal)
+                    .accessibilityLabel("Saved")
             }
         }
         .animation(.easeInOut(duration: 0.3), value: vm.showSaveConfirmation)

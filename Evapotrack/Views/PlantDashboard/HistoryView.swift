@@ -134,6 +134,7 @@ struct HistoryView: View {
                 }
                 .disabled(vm.wateringLogs.count < 2)
                 .accessibilityLabel(isShowingChart ? "Hide Chart" : "Show Chart")
+                .accessibilityHint("Toggle the retained water chart")
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
@@ -248,5 +249,7 @@ struct HistoryView: View {
         .frame(height: 180)
         .padding(.vertical, 8)
         .padding(.horizontal, 4)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Retained water over time chart with \(sorted.count) data points")
     }
 }

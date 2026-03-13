@@ -60,6 +60,8 @@ struct GrowListView: View {
                             .foregroundStyle(Color.evSlateGray)
                             .textCase(nil)
                     }
+                    .accessibilityElement(children: .combine)
+                    .accessibilityLabel("Grows, \(grows.count) of \(AppConstants.maxGrowCount)")
                 }
             }
             .listStyle(.insetGrouped)
@@ -194,6 +196,7 @@ struct GrowListView: View {
             Image(systemName: "leaf.circle.fill")
                 .font(.system(size: 56))
                 .foregroundStyle(Color.evPrimaryBlue)
+                .accessibilityHidden(true)
 
             Text("No Grows Yet")
                 .font(.title2.weight(.bold))
@@ -205,10 +208,13 @@ struct GrowListView: View {
                 Image(systemName: "plus")
                     .font(.body.weight(.black))
                     .foregroundStyle(Color.evPrimaryBlue)
+                    .accessibilityHidden(true)
                 Text("to create your first grow.")
                     .foregroundStyle(Color.evSecondaryText)
             }
             .font(.body)
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel("Tap plus to create your first grow")
 
             NavigationLink {
                 HowToView(context: .general)

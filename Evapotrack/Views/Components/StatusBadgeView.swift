@@ -49,11 +49,11 @@ struct StatusBadgeView: View {
         case .neverWatered:
             return .evSlateGray
         case .healthy:
-            return .green
+            return Color(red: 0.2, green: 0.65, blue: 0.3)
         case .dueSoon:
-            return .orange
+            return Color(red: 0.85, green: 0.55, blue: 0.1)
         case .overdue:
-            return .red
+            return Color(red: 0.85, green: 0.2, blue: 0.2)
         }
     }
 
@@ -64,5 +64,6 @@ struct StatusBadgeView: View {
             .padding(.horizontal, 8)
             .padding(.vertical, 3)
             .background(Capsule().fill(badgeColor))
+            .accessibilityLabel("Status: \(badgeText)")
     }
 }

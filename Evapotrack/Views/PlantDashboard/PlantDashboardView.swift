@@ -157,5 +157,7 @@ struct PlantDashboardView: View {
                 .lineLimit(1)
                 .truncationMode(.tail)
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(label): \(value)")
     }
 }

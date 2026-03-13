@@ -25,12 +25,15 @@ struct CreatePlantView: View {
                 TextField("Plant Name", text: $vm.plantName)
                     .autocorrectionDisabled()
                     .textLimit($vm.plantName, maxLength: AppConstants.maxPlantNameLength)
+                    .accessibilityLabel("Plant Name")
 
                 TextField("Pot Size (e.g. 6 inch, 1 gallon)", text: $vm.potSize)
                     .textLimit($vm.potSize, maxLength: AppConstants.maxPotSizeLength)
+                    .accessibilityLabel("Pot Size")
 
                 TextField("Medium Type (e.g. soil, perlite)", text: $vm.mediumType)
                     .textLimit($vm.mediumType, maxLength: AppConstants.maxMediumTypeLength)
+                    .accessibilityLabel("Medium Type")
             } header: {
                 Text("Plant Info")
                     .font(.title2.weight(.bold))
@@ -45,6 +48,7 @@ struct CreatePlantView: View {
                 )
                 .keyboardType(.decimalPad)
                 .textLimit($vm.maxRetentionCapacityText, maxLength: AppConstants.maxNumericInputLength)
+                .accessibilityLabel("Max Retention Capacity in \(waterUnit.abbreviation)")
 
                 Text("The maximum volume of water the medium can hold before runoff begins.")
                     .font(.callout)
@@ -64,6 +68,7 @@ struct CreatePlantView: View {
                     )
                     .keyboardType(.decimalPad)
                     .textLimit($vm.calculatorWaterAddedText, maxLength: AppConstants.maxNumericInputLength)
+                    .accessibilityLabel("Calculator Water Added in \(waterUnit.abbreviation)")
 
                     TextField(
                         "Runoff Collected (\(waterUnit.abbreviation))",
@@ -71,6 +76,7 @@ struct CreatePlantView: View {
                     )
                     .keyboardType(.decimalPad)
                     .textLimit($vm.calculatorRunoffText, maxLength: AppConstants.maxNumericInputLength)
+                    .accessibilityLabel("Calculator Runoff Collected in \(waterUnit.abbreviation)")
 
                     HStack(spacing: 12) {
                         Button("Calculate") {
@@ -82,6 +88,7 @@ struct CreatePlantView: View {
                         .padding(.horizontal, 24)
                         .padding(.vertical, 12)
                         .background(Capsule().fill(Color.evPrimaryBlue))
+                        .accessibilityHint("Calculate max retention from water added and runoff")
 
                         Button("Clear") {
                             vm.clearCalculator()
@@ -112,6 +119,7 @@ struct CreatePlantView: View {
                 TextField("Example: 15%", text: $vm.goalRunoffPercentText)
                     .keyboardType(.decimalPad)
                     .textLimit($vm.goalRunoffPercentText, maxLength: AppConstants.maxNumericInputLength)
+                    .accessibilityLabel("Goal Runoff Percent")
 
                 Text("The runoff percentage the Next algorithm will target. Defaults to 15% if left blank.")
                     .font(.callout)
@@ -183,6 +191,8 @@ struct CreatePlantView: View {
                         .transition(.scale.combined(with: .opacity))
                     }
                     .allowsHitTesting(false)
+                    .accessibilityAddTraits(.isModal)
+                    .accessibilityLabel("Saved")
             }
         }
         .animation(.easeInOut(duration: 0.3), value: vm.showSaveConfirmation)

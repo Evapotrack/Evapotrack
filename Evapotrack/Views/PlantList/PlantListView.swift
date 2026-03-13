@@ -69,6 +69,8 @@ struct PlantListView: View {
                         .foregroundStyle(Color.evSlateGray)
                         .textCase(nil)
                 }
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("Plants, \(plants.count) of \(AppConstants.maxPlantsPerGrow)")
             }
         }
         .listStyle(.insetGrouped)
@@ -216,6 +218,7 @@ struct PlantListView: View {
             Image(systemName: "leaf.circle.fill")
                 .font(.system(size: 56))
                 .foregroundStyle(Color.evPrimaryBlue)
+                .accessibilityHidden(true)
 
             Text("No Plants Yet")
                 .font(.title2.weight(.bold))
@@ -227,10 +230,13 @@ struct PlantListView: View {
                 Image(systemName: "plus")
                     .font(.body.weight(.black))
                     .foregroundStyle(Color.evPrimaryBlue)
+                    .accessibilityHidden(true)
                 Text("to add your first plant.")
                     .foregroundStyle(Color.evSecondaryText)
             }
             .font(.body)
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel("Tap plus to add your first plant")
         }
     }
 

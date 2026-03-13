@@ -24,6 +24,7 @@ struct HistoryPanelView: View {
                     Image(systemName: "clock.arrow.circlepath")
                         .foregroundStyle(.evPrimaryBlue)
                         .font(.body.weight(.semibold))
+                        .accessibilityHidden(true)
                     Text("View All Logs")
                         .fontWeight(.semibold)
                         .foregroundStyle(.evPrimaryBlue)
@@ -33,6 +34,7 @@ struct HistoryPanelView: View {
                         .foregroundStyle(.evPrimaryBlue)
                 }
             }
+            .accessibilityLabel("View All Logs, \(vm.wateringLogs.count) total")
         } header: {
             Label {
                 Text("History")

@@ -23,6 +23,7 @@ struct LaunchView: View {
                     .frame(width: 130, height: 130)
                     .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
                     .shadow(color: .evPrimaryBlue.opacity(0.2), radius: 16, y: 6)
+                    .accessibilityHidden(true)
 
                 Text("EVAPOTRACK")
                     .font(.system(size: 28, weight: .bold, design: .rounded))
@@ -35,6 +36,8 @@ struct LaunchView: View {
                     .opacity(sloganOpacity)
             }
             .opacity(iconOpacity)
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel("Evapotrack. Optimize plant watering.")
         }
         .task {
             // Fade in icon and title

@@ -31,6 +31,7 @@ struct AddWateringLogView: View {
                 )
                 .keyboardType(.decimalPad)
                 .textLimit($vm.waterAddedText, maxLength: AppConstants.maxNumericInputLength)
+                .accessibilityLabel("Water Added in \(waterUnit.abbreviation)")
 
                 TextField(
                     "Runoff Collected (\(waterUnit.abbreviation))",
@@ -38,6 +39,7 @@ struct AddWateringLogView: View {
                 )
                 .keyboardType(.decimalPad)
                 .textLimit($vm.runoffCollectedText, maxLength: AppConstants.maxNumericInputLength)
+                .accessibilityLabel("Runoff Collected in \(waterUnit.abbreviation)")
             } header: {
                 Text("Water")
                     .font(.title2.weight(.bold))
@@ -62,10 +64,14 @@ struct AddWateringLogView: View {
                 )
                 .keyboardType(.decimalPad)
                 .textLimit($vm.temperatureText, maxLength: AppConstants.maxNumericInputLength)
+                .accessibilityLabel("Temperature in \(tempUnit.abbreviation)")
+                .accessibilityHint("Optional")
 
                 TextField("Humidity (%, optional)", text: $vm.humidityText)
                     .keyboardType(.decimalPad)
                     .textLimit($vm.humidityText, maxLength: AppConstants.maxNumericInputLength)
+                    .accessibilityLabel("Humidity percent")
+                    .accessibilityHint("Optional")
             } header: {
                 Text("Environment")
                     .font(.title2.weight(.bold))
@@ -162,6 +168,8 @@ struct AddWateringLogView: View {
                         .transition(.scale.combined(with: .opacity))
                     }
                     .allowsHitTesting(false)
+                    .accessibilityAddTraits(.isModal)
+                    .accessibilityLabel("Saved")
             }
         }
         .animation(.easeInOut(duration: 0.3), value: vm.showSaveConfirmation)

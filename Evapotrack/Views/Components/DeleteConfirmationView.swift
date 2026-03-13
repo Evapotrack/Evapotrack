@@ -91,5 +91,6 @@ struct DeleteConfirmationView: View {
             .padding(.horizontal, 32)
         }
         .transition(.opacity)
+        .accessibilityAddTraits(.isModal)
     }
 }

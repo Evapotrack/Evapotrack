@@ -59,7 +59,7 @@ struct WateringLogRowView: View {
                         .font(.caption.weight(.semibold))
                         .foregroundStyle(Color.evSlateGray)
                         .rotationEffect(.degrees(isExpanded ? 90 : 0))
-                        .accessibilityLabel(isExpanded ? "Collapse" : "Expand")
+                        .accessibilityHidden(true)
                 }
                 .font(.body)
 
@@ -72,6 +72,7 @@ struct WateringLogRowView: View {
                         .font(.subheadline)
                         .fontWeight(.semibold)
                         .foregroundStyle(Color.evPrimaryBlue)
+                        .accessibilityLabel("Capacity \(DisplayFormatter.percent(capacityPercent))")
                 }
 
                 // Expanded detail fields
@@ -102,6 +103,7 @@ struct WateringLogRowView: View {
                 }
             }
             .accessibilityLabel(isExpanded ? "Collapse log details" : "Expand log details")
+            .accessibilityHint("Double tap to expand or collapse details")
             .accessibilityAddTraits(.isButton)
         }
         .padding(.vertical, 6)
