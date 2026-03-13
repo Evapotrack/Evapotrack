@@ -4,6 +4,7 @@
 // Dedicated full-screen view for watering log history.
 // Shows all logs with stats, selection, and delete functionality.
 // Only one log may be expanded at a time.
+// Chart button toggles between chart view and log list.
 // Pushed via NavigationLink from the plant dashboard.
 
 import SwiftUI
@@ -54,24 +55,24 @@ struct HistoryView: View {
             if vm.wateringLogs.isEmpty {
                 Text("No watering logs yet.")
                     .foregroundStyle(Color.evSecondaryText)
-            } else {
-                if isShowingChart && vm.wateringLogs.count >= 2 {
-                    Section {
-                        retainedChart
-                    } header: {
+            } else if isShowingChart && vm.wateringLogs.count >= 2 {
+                // Chart mode — replaces log list
+                Section {
+                    retainedChart
+                } header: {
+                    Label {
                         Text("Retained Over Time")
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(Color.evDeepNavy)
-                            .textCase(nil)
+                    } icon: {
+                        Image(systemName: "chart.line.uptrend.xyaxis")
                     }
+                    .font(.title2.weight(.bold))
+                    .foregroundStyle(.evDeepNavy)
+                    .textCase(nil)
                 }
-
+            } else {
+                // Log list mode
                 ForEach(groupedLogs, id: \.date) { group in
-                    Section(header: Text(sectionTitle(for: group.date))
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(Color.evDeepNavy)
-                        .textCase(nil)
-                    ) {
+                    Section {
                         ForEach(group.logs, id: \.id) { log in
                             WateringLogRowView(
                                 log: log,
@@ -93,6 +94,11 @@ struct HistoryView: View {
                                     : nil
                             )
                         }
+                    } header: {
+                        Text(sectionTitle(for: group.date))
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(Color.evDeepNavy)
+                            .textCase(nil)
                     }
                 }
             }
@@ -100,8 +106,8 @@ struct HistoryView: View {
         .listStyle(.insetGrouped)
         .scrollContentBackground(.hidden)
         .background(Color.evBackground)
-        .navigationTitle("History")
-        .navigationBarTitleDisplayMode(.large)
+        .navigationTitle("")
+        .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
@@ -128,14 +134,13 @@ struct HistoryView: View {
                         isShowingChart.toggle()
                     }
                 } label: {
-                    Image(systemName: isShowingChart ? "chart.line.uptrend.xyaxis.circle.fill" : "chart.line.uptrend.xyaxis.circle")
+                    Image(systemName: isShowingChart ? "list.bullet" : "chart.line.uptrend.xyaxis")
                         .font(.title3)
                         .fontWeight(.bold)
                         .foregroundStyle(.evPrimaryBlue)
                 }
                 .disabled(vm.wateringLogs.count < 2)
-                .accessibilityLabel(isShowingChart ? "Hide Chart" : "Show Chart")
-                .accessibilityHint("Toggle the retained water chart")
+                .accessibilityLabel(isShowingChart ? "Show Logs" : "Show Chart")
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
@@ -199,10 +204,27 @@ struct HistoryView: View {
 
     // MARK: - Chart
 
+    /// Evenly spaced indices from 0..<count, always including first and last.
+    private static func evenlySpacedIndices(count: Int, max maxCount: Int) -> Set<Int> {
+        guard count > 0 else { return [] }
+        guard count > maxCount else { return Set(0..<count) }
+        var indices = Set<Int>()
+        for i in 0..<maxCount {
+            let index = i * (count - 1) / (maxCount - 1)
+            indices.insert(index)
+        }
+        return indices
+    }
+
     @ViewBuilder
     private var retainedChart: some View {
-        let sorted = vm.wateringLogs.sorted { $0.dateTime < $1.dateTime }
-        Chart(sorted, id: \.id) { log in
+        let chartData = vm.wateringLogs.sorted { $0.dateTime < $1.dateTime }
+        let dotIndices = Self.evenlySpacedIndices(count: chartData.count, max: 10)
+        let dateLabelDates: [Date] = chartData.count >= 2
+            ? [chartData.first!.dateTime, chartData.last!.dateTime]
+            : chartData.map(\.dateTime)
+
+        Chart(Array(chartData.enumerated()), id: \.element.id) { index, log in
             AreaMark(
                 x: .value("Date", log.dateTime),
                 y: .value("Retained", UnitConversionService.fromLiters(log.retained, to: waterUnit))
@@ -224,12 +246,14 @@ struct HistoryView: View {
             .lineStyle(StrokeStyle(lineWidth: 2))
             .interpolationMethod(.catmullRom)
 
-            PointMark(
-                x: .value("Date", log.dateTime),
-                y: .value("Retained", UnitConversionService.fromLiters(log.retained, to: waterUnit))
-            )
-            .foregroundStyle(Color.evPrimaryBlue)
-            .symbolSize(24)
+            if dotIndices.contains(index) {
+                PointMark(
+                    x: .value("Date", log.dateTime),
+                    y: .value("Retained", UnitConversionService.fromLiters(log.retained, to: waterUnit))
+                )
+                .foregroundStyle(Color.evPrimaryBlue)
+                .symbolSize(24)
+            }
         }
         .chartYAxis {
             AxisMarks(position: .leading, values: .automatic(desiredCount: 4)) { _ in
@@ -241,7 +265,7 @@ struct HistoryView: View {
             }
         }
         .chartXAxis {
-            AxisMarks(values: .automatic(desiredCount: 4)) { _ in
+            AxisMarks(values: dateLabelDates) { _ in
                 AxisValueLabel(format: .dateTime.month(.abbreviated).day())
                     .font(.caption2)
                     .foregroundStyle(Color.evSecondaryText)
@@ -251,6 +275,6 @@ struct HistoryView: View {
         .padding(.vertical, 8)
         .padding(.horizontal, 4)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Retained water over time chart with \(sorted.count) data points")
+        .accessibilityLabel("Retained water over time chart with \(chartData.count) data points")
     }
 }

@@ -2,14 +2,14 @@
 // Evapotrack
 //
 // Displays the most recent WateringLog's key metrics in a compact grid.
-// Shows: Last Event, Retained, Max Capacity, Capacity %, Interval.
+// Shows: Last Event, Interval, Retained, Capacity %.
 // Empty state when no logs exist.
 
 import SwiftUI
 
 struct SummaryPanelView: View {
     let lastLog: WateringLog?
-    let maxRetentionCapacity: Double // liters
+    let maxRetentionCapacity: Double
     let waterUnit: WaterUnit
     @Environment(\.horizontalSizeClass) private var sizeClass
 
@@ -26,7 +26,6 @@ struct SummaryPanelView: View {
                     metricCell("Interval", intervalText(for: log))
                     metricCell("Retained", DisplayFormatter.water(log.retained, unit: waterUnit))
                     metricCell("Capacity", capacityText(for: log))
-                    metricCell("Max Capacity", DisplayFormatter.water(maxRetentionCapacity, unit: waterUnit))
                 }
                 .padding(.vertical, 4)
             } else {

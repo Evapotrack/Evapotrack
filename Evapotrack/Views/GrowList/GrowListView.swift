@@ -255,7 +255,7 @@ struct GrowListView: View {
 
         let plant = Plant(
             plantName: "Example Plant",
-            potSize: "6 inch",
+            potSize: "Fabric 3 gal",
             mediumType: "soil",
             maxRetentionCapacity: 1.6,
             goalRunoffPercent: 15.0,

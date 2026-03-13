@@ -20,7 +20,7 @@ final class Plant {
     /// User-given name for the plant (required).
     var plantName: String
 
-    /// Descriptive pot size (e.g. "6 inch", "1 gallon", "small").
+    /// Descriptive pot size (e.g. "Fabric 3 gal", "1 gallon", "small").
     var potSize: String
 
     /// Growing medium type (e.g. "soil", "perlite", "coco coir").

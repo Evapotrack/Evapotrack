@@ -36,22 +36,7 @@ enum AppConstants {
     static let waterAddedRange: ClosedRange<Double> = 0.001...100.0
     static let humidityRange: ClosedRange<Double> = 0.0...100.0
     static let temperatureRangeCelsius: ClosedRange<Double> = -50.0...60.0
-    static let minimumIntervalDays = 1.0
-    static let maximumIntervalDays = 60.0
-
     // MARK: - Algorithm
-
-    /// Minimum number of watering logs before history-based blending kicks in.
-    static let minimumLogsForBlending = 3
-
-    /// Formula weight when blending with actual history.
-    static let formulaWeight = 0.4
-
-    /// History weight when blending with actual history.
-    static let historyWeight = 0.6
-
-    /// Blending weights must sum to 1.0 — verified at the call site.
-    static let blendingWeightSum = formulaWeight + historyWeight
 
     /// Target runoff percentage used by the Next water recommendation algorithm.
     static let targetRunoffPercent = 15.0

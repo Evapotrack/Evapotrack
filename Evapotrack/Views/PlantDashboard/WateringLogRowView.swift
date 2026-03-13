@@ -64,16 +64,31 @@ struct WateringLogRowView: View {
                 .font(.body)
 
                 // Collapsed summary: key metrics at a glance
-                HStack(spacing: 12) {
-                    compactMetric(DisplayFormatter.water(log.waterAdded, unit: waterUnit), label: "added")
-                    compactMetric(DisplayFormatter.water(log.retained, unit: waterUnit), label: "retained")
+                HStack(spacing: 0) {
+                    Text(DisplayFormatter.water(log.waterAdded, unit: waterUnit))
+                        .fontWeight(.medium)
+                        .foregroundStyle(Color.evPrimaryText)
+                    Text(" added")
+                        .foregroundStyle(Color.evSlateGray)
+
+                    Text("  ·  ")
+                        .foregroundStyle(Color.evSlateGray)
+
+                    Text(DisplayFormatter.water(log.retained, unit: waterUnit))
+                        .fontWeight(.medium)
+                        .foregroundStyle(Color.evPrimaryText)
+                    Text(" ret")
+                        .foregroundStyle(Color.evSlateGray)
+
                     Spacer()
+
                     Text(DisplayFormatter.percent(capacityPercent))
-                        .font(.subheadline)
                         .fontWeight(.semibold)
                         .foregroundStyle(Color.evPrimaryBlue)
                         .accessibilityLabel("Capacity \(DisplayFormatter.percent(capacityPercent))")
                 }
+                .font(.subheadline)
+                .lineLimit(1)
 
                 // Expanded detail fields
                 if isExpanded {
@@ -107,18 +122,6 @@ struct WateringLogRowView: View {
             .accessibilityAddTraits(.isButton)
         }
         .padding(.vertical, 6)
-    }
-
-    private func compactMetric(_ value: String, label: String) -> some View {
-        HStack(spacing: 4) {
-            Text(value)
-                .fontWeight(.medium)
-                .foregroundStyle(Color.evPrimaryText)
-            Text(label)
-                .fixedSize()
-                .foregroundStyle(Color.evSlateGray)
-        }
-        .font(.body)
     }
 
     private func fieldRow(_ label: String, _ value: String, shaded: Bool = false) -> some View {

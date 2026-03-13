@@ -32,11 +32,6 @@ final class CreatePlantViewModel {
     var calculatorError: String?
     var showSaveConfirmation = false
 
-    // MARK: - Picker Data
-
-    static let suggestedPotSizes = ["Small", "Medium", "Large", "6 inch", "8 inch", "1 gallon", "3 gallon", "5 gallon"]
-    static let suggestedMediumTypes = ["Soil", "Perlite", "Coco Coir", "LECA", "Sphagnum Moss", "Pumice", "Vermiculite"]
-
     // MARK: - Dependencies
 
     private var plantService: PlantService?

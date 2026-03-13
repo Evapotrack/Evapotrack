@@ -27,7 +27,7 @@ struct CreatePlantView: View {
                     .textLimit($vm.plantName, maxLength: AppConstants.maxPlantNameLength)
                     .accessibilityLabel("Plant Name")
 
-                TextField("Pot Size (e.g. 6 inch, 1 gallon)", text: $vm.potSize)
+                TextField("Pot Size (e.g. Fabric 3 gal)", text: $vm.potSize)
                     .textLimit($vm.potSize, maxLength: AppConstants.maxPotSizeLength)
                     .accessibilityLabel("Pot Size")
 

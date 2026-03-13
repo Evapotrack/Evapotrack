@@ -42,6 +42,8 @@ struct PlantDashboardView: View {
                     Spacer()
                     plantInfoCell("Medium", vm.plant.mediumType.isEmpty ? "—" : vm.plant.mediumType)
                     Spacer()
+                    plantInfoCell("Max Capacity", DisplayFormatter.water(vm.plant.maxRetentionCapacity, unit: waterUnit))
+                    Spacer()
                     plantInfoCell("Goal Runoff", DisplayFormatter.percent(vm.plant.goalRunoffPercent))
                 }
                 .frame(maxWidth: sizeClass == .regular ? 500 : .infinity)
