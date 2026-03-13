@@ -5,6 +5,7 @@ DerivedData/
 build/
 *.moved-aside
 *.ipa
+*.xctestplan
 
 # macOS
 .DS_Store
