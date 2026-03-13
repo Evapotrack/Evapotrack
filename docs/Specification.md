@@ -122,6 +122,16 @@ Each row in HistoryView includes a water droplet button that opens the AddWateri
 - **Deployment target**: iOS 17.0
 - **Export compliance**: ITSAppUsesNonExemptEncryption = NO (no encryption used)
 
+## iPad Adaptive Layout
+
+The app uses the same stacked navigation flow on iPad as iPhone. `@Environment(\.horizontalSizeClass)` detects iPad (`.regular`) and applies targeted adjustments:
+
+- **Modal overlays** (DeleteConfirmationView, LimitExceededView): capped at 420pt width on iPad
+- **Summary grid**: 3 columns on iPad (vs 2 on iPhone) for the 5 metric cells
+- **Plant info HStack**: constrained to 500pt max width, centered
+- **Retained water chart**: 260pt height on iPad (vs 180pt on iPhone)
+- **Lists and forms**: `.insetGrouped` style auto-adapts content width on iPad — no manual constraint needed
+
 ## Privacy
 
 - No tracking (NSPrivacyTracking = false)

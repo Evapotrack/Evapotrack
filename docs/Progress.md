@@ -105,6 +105,13 @@ Chronological record of Evapotrack's development from initial commit to current 
 - Export compliance declared (ITSAppUsesNonExemptEncryption = NO)
 - v2 roadmap documented (app icon, plant photos, localization)
 
+### iPad Adaptive Layout (March 12, 2026)
+- Modal overlays (delete confirmation, limit exceeded) constrained to 420pt width on iPad
+- Summary grid switches from 2 to 3 columns on iPad via horizontalSizeClass
+- Plant info HStack constrained to 500pt max width, centered
+- Retained water chart height increased to 260pt on iPad (180pt on iPhone)
+- Lists and forms auto-adapt via .insetGrouped — no manual constraint needed
+
 ## Current State
 
 - **136 unit tests**, all passing
@@ -124,7 +131,6 @@ Chronological record of Evapotrack's development from initial commit to current 
 6. Bundle ID and provisioning profiles
 7. App Store Connect setup
 8. TestFlight testing on physical devices
-9. iPad layout decision (support natively or exclude)
 
 ## v2 Roadmap
 
