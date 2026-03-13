@@ -112,9 +112,38 @@ Chronological record of Evapotrack's development from initial commit to current 
 - Retained water chart height increased to 260pt on iPad (180pt on iPhone)
 - Lists and forms auto-adapt via .insetGrouped — no manual constraint needed
 
+## Phase 4: Cleanup & Polish (March 13, 2026)
+
+### Feature Changes
+- Removed plant status/overdue feature entirely (app recommends how much, not when)
+- Moved Max Capacity from Summary to Plant Info panel
+- Added Capacity % to Summary panel (retained / maxRetentionCapacity × 100)
+- Removed suggested pot sizes and medium types from creation form
+- Example data pot size changed from "6 inch" to "Fabric 3 gal"
+
+### History & Chart Improvements
+- Chart toggles between chart view and log list (no longer shows both)
+- Chart dots limited to 10 evenly spaced points across all logs
+- Chart date labels: oldest (left) and most recent (right) below chart corners
+- Interval format changed from "2.8 d" to "2d 19h"
+- Compact log rows (reduced padding and font sizes)
+- Reduced section spacing on dashboard and history screens
+
+### Dead Code Removal
+- WateringLogService.mostRecentLog() (unused function)
+- WaterUnit.label, TemperatureUnit.label (unused properties)
+- AppConstants.appName, appVersion (unused constants)
+- DisplayFormatter.intervalHours() (replaced by intervalAdaptive)
+- Logger.app, Logger.data (unused categories)
+
+### Documentation Updates
+- Specification.md: removed stale water droplet section, fixed algorithm, metric count, badge reference
+- Requirements.md: FR-3.7 and FR-4.6 corrected to match implementation
+- AppStoreMetadata.md: status badges replaced with Capacity % tracking
+
 ## Current State
 
-- **136 unit tests**, all passing
+- **111 unit tests**, all passing
 - **45 Swift source files** across Models, Services, ViewModels, Views, Utilities
 - **9 custom color assets** with light/dark variants
 - **Privacy manifest**: no tracking, no data collection, UserDefaults only
@@ -123,11 +152,12 @@ Chronological record of Evapotrack's development from initial commit to current 
 
 ## Development Time
 
-- **~19 hours** of active Claude Code development time (accounting for session overlap)
-- **9 sessions** across 12 calendar days (March 1–13, 2026)
+- **~21 hours** of active Claude Code development time (accounting for session overlap)
+- **11 sessions** across 13 calendar days (March 1–13, 2026)
 - **Phase 1 (March 1–2):** ~12 hrs — foundation, core features, settings, UI, polish, tests
 - **Phase 2 (March 6):** ~3 hrs — data integrity, limits, export, code review
 - **Phase 3 (March 12–13):** ~4 hrs — light mode, accessibility, Dynamic Type, App Store prep, iPad layout, code review, App Store prep docs
+- **Phase 4 (March 13):** ~2 hrs — status removal, chart/history polish, dead code cleanup, doc sync
 
 ## Completed Pre-Submission Items
 
@@ -135,7 +165,7 @@ Chronological record of Evapotrack's development from initial commit to current 
 - [x] Privacy policy — `docs/privacy-policy.html`
 - [x] Support page — `docs/support.html`
 - [x] App Store metadata — `docs/AppStoreMetadata.md`
-- [x] Full code review — 136 tests passing, 2 fixes applied
+- [x] Full code review — 111 tests passing, dead code removed
 
 ## Next Steps (In Order)
 
