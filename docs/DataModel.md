@@ -35,7 +35,7 @@
 |-------|------|----------|-------|
 | id | UUID | Yes | @Attribute(.unique), auto-generated |
 | plantName | String | Yes | 1-50 chars, unique within grow |
-| potSize | String | Yes | Descriptive (e.g. "6 inch") |
+| potSize | String | Yes | Descriptive (e.g. "Fabric 3 gal") |
 | mediumType | String | Yes | Descriptive (e.g. "soil") |
 | maxRetentionCapacity | Double | Yes | Liters, 0.001-100.0 |
 | goalRunoffPercent | Double | Yes | 0.1-99.9, defaults to 15.0 |

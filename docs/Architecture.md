@@ -56,7 +56,7 @@ Evapotrack/
       LaunchView.swift            # Animated launch screen
       DeleteConfirmationView.swift # Reusable delete modal overlay
       LimitExceededView.swift     # Reusable limit-exceeded modal overlay
-      StatusBadgeView.swift       # Color-coded watering status capsule
+
   Utilities/
     Validators.swift              # Pure validation functions
     DisplayFormatter.swift        # Unit-aware display formatting

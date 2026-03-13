@@ -21,7 +21,6 @@ Evapotrack is an iOS 17+ application for tracking and optimizing plant watering 
 - FR-2.5: Users can delete plants. Deleting a plant cascade-deletes all watering logs.
 - FR-2.6: Plants include a calculator to derive max retention capacity from a test watering (water added - runoff = retention).
 - FR-2.7: Plants are listed by creation date, newest first.
-- FR-2.8: Each plant row displays a color-coded status badge (New, Healthy, Due Soon, Due Today, Overdue) based on last watering date and average interval.
 
 ### FR-3: Watering Log Management
 - FR-3.1: Users can log watering events with: water added, runoff collected, date/time, and optional temperature and humidity.

@@ -78,19 +78,19 @@ Chronological record of Evapotrack's development from initial commit to current 
 
 ### Features
 - Temperature and humidity display in expanded watering log rows
-- Status badges on plant rows (Healthy/Due Soon/Due Today/Overdue/New)
+- ~~Status badges on plant rows~~ (removed — app recommends how much to water, not when)
 - Empty state "How to Get Started" link to HowToView
 - Dashboard card styling (frosted blue backgrounds on metric cells)
 - Retained water chart in History (area + line + point marks, catmullRom interpolation)
 - Example data loader in Settings (creates sample grow with 6 watering logs)
 
 ### Light Mode Pass
-- Replaced system colors (.green/.orange/.red) with fixed RGB in StatusBadgeView
+- Replaced system colors with fixed RGB for consistent contrast
 - Increased evFrostBlue card opacity from 0.08 to 0.12 for light mode visibility
 - Fixed LimitExceededView icon color for consistent appearance
 
 ### VoiceOver Accessibility
-- accessibilityLabel on all metric cells, status badges, chart, counters, form inputs
+- accessibilityLabel on all metric cells, chart, counters, form inputs
 - accessibilityHint on optional fields, chart toggle, calculator, log expansion
 - accessibilityHidden on decorative images (empty state icons, launch icon, chevrons)
 - accessibilityElement(children: .combine) on metric cells, counters, empty state text
@@ -98,7 +98,7 @@ Chronological record of Evapotrack's development from initial commit to current 
 
 ### Dynamic Type
 - LaunchView fonts converted from fixed sizes to semantic Dynamic Type fonts
-- Increased padding in StatusBadgeView, WateringLogRowView, HowToView for text scaling
+- Increased padding in WateringLogRowView, HowToView for text scaling
 
 ### App Store Preparation
 - Portrait-only orientation locked (iPhone and iPad)

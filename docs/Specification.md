@@ -82,23 +82,9 @@ Counters are displayed in list section headers (e.g., "2/30" for grows, "5/25" f
 
 SettingsView accepts an optional `Grow` parameter. When opened from PlantListView (with a grow), a "Download Data" section appears for that grow. When opened from GrowListView (no grow), the export section is hidden. DataExportService generates a plain-text report containing grow metadata, all plants, and their watering log history in a tabular format. Temp/Humidity columns appear dynamically if any log has that data. Values are formatted in the user's display units. The export file is saved as `.txt` via `.fileExporter`.
 
-## Status Badges
-
-PlantRowView displays a StatusBadgeView capsule showing the plant's watering status. Status is computed from the most recent log's date and the average interval between waterings:
-
-| Status | Condition | Color |
-|--------|-----------|-------|
-| New | No logs exist | evSlateGray |
-| Healthy | Within recommended interval | RGB(0.2, 0.65, 0.3) |
-| Due Soon | Within 1 day of recommended interval | RGB(0.85, 0.55, 0.1) |
-| Due Today | At the recommended interval | RGB(0.85, 0.55, 0.1) |
-| Overdue | Past the recommended interval | RGB(0.85, 0.2, 0.2) |
-
-Badge colors are fixed RGB values (not system adaptive) to ensure white text contrast in both light and dark modes.
-
 ## Retained Water Chart
 
-HistoryView includes a toggleable Swift Charts line chart showing retained water volumes across all logs for a plant. The chart is hidden by default and toggled via a "Show Chart" / "Hide Chart" button. Chart data points use the same unit conversion as the rest of the display. The chart has an accessibility label summarizing the data point count.
+HistoryView includes a toggleable Swift Charts line chart showing retained water volumes across all logs for a plant. The chart button toggles between chart view and log list — only one is visible at a time. The chart plots all logs but limits dots to 10 evenly spaced points and shows only the oldest and most recent date labels to prevent overcrowding. Chart data points use the same unit conversion as the rest of the display. The chart has an accessibility label summarizing the data point count.
 
 ## Example Data Loader
 
