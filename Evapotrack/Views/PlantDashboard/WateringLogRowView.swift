@@ -12,6 +12,7 @@ import SwiftUI
 struct WateringLogRowView: View {
     let log: WateringLog
     let waterUnit: WaterUnit
+    let temperatureUnit: TemperatureUnit
     let maxRetentionCapacity: Double // liters — for Capacity %
     let isSelected: Bool
     let isExpanded: Bool
@@ -84,6 +85,12 @@ struct WateringLogRowView: View {
                         fieldRow("Runoff %", DisplayFormatter.percent(log.runoffPercent), shaded: false)
                         fieldRow("Capacity %", DisplayFormatter.percent(capacityPercent), shaded: true)
                         fieldRow("Interval", intervalText, shaded: false)
+                        if let temp = log.temperatureCelsius {
+                            fieldRow("Temperature", DisplayFormatter.temperature(temp, unit: temperatureUnit), shaded: true)
+                        }
+                        if let humidity = log.humidityPercent {
+                            fieldRow("Humidity", DisplayFormatter.percent(humidity), shaded: log.temperatureCelsius == nil)
+                        }
                     }
                     .transition(.opacity)
                 }

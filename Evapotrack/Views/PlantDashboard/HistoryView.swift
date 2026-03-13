@@ -62,6 +62,7 @@ struct HistoryView: View {
                             WateringLogRowView(
                                 log: log,
                                 waterUnit: waterUnit,
+                                temperatureUnit: settingsVM.settings.temperatureUnit,
                                 maxRetentionCapacity: maxRetentionCapacity,
                                 isSelected: selectedLogID == log.id,
                                 isExpanded: expandedLogID == log.id,
