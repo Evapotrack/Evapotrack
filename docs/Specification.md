@@ -82,6 +82,27 @@ Counters are displayed in list section headers (e.g., "2/30" for grows, "5/25" f
 
 SettingsView accepts an optional `Grow` parameter. When opened from PlantListView (with a grow), a "Download Data" section appears for that grow. When opened from GrowListView (no grow), the export section is hidden. DataExportService generates a plain-text report containing grow metadata, all plants, and their watering log history in a tabular format. Temp/Humidity columns appear dynamically if any log has that data. Values are formatted in the user's display units. The export file is saved as `.txt` via `.fileExporter`.
 
+## Accessibility
+
+- VoiceOver: all interactive elements have accessibilityLabel; decorative images hidden; modal traits on overlays
+- Dynamic Type: semantic fonts used throughout; padding scaled for larger text sizes
+- Color contrast: custom RGB badge colors maintain white text contrast in both light and dark modes
+- Touch targets: minimum 44x44pt on all toolbar buttons
+
+## Device & Orientation
+
+- **Orientation**: Portrait only (iPhone and iPad)
+- **Device family**: iPhone and iPad (TARGETED_DEVICE_FAMILY = "1,2")
+- **Deployment target**: iOS 17.0
+- **Export compliance**: ITSAppUsesNonExemptEncryption = NO (no encryption used)
+
+## Privacy
+
+- No tracking (NSPrivacyTracking = false)
+- No data collection (NSPrivacyCollectedDataTypes empty)
+- Only API accessed: UserDefaults (reason CA92.1)
+- All data stored locally on device; nothing sent to the internet
+
 ## v2 Roadmap
 
 Features planned for future updates:
