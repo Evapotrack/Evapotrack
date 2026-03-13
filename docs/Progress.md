@@ -129,19 +129,33 @@ Chronological record of Evapotrack's development from initial commit to current 
 - **Phase 2 (March 6):** ~3 hrs — data integrity, limits, export, code review
 - **Phase 3 (March 12–13):** ~4 hrs — light mode, accessibility, Dynamic Type, App Store prep, iPad layout
 
-## Remaining for App Store Submission
+## Completed Pre-Submission Items
 
-1. App icon (1024x1024)
-2. Privacy policy URL
-3. Support URL
-4. App Store metadata (description, keywords, screenshots)
-5. Apple Developer Account enrollment
-6. Bundle ID and provisioning profiles
-7. App Store Connect setup
-8. TestFlight testing on physical devices
+- [x] App icon (1024x1024) — in asset catalog
+- [x] Privacy policy — `docs/privacy-policy.html`
+- [x] Support page — `docs/support.html`
+- [x] App Store metadata — `docs/AppStoreMetadata.md`
+- [x] Full code review — 136 tests passing, 2 fixes applied
+
+## Next Steps (In Order)
+
+1. **Apple Developer Account** — Enroll at developer.apple.com ($99/year), complete identity verification
+2. **Bundle ID** — Register in Apple Developer portal, update Xcode from `Evapotrack.EvapotrackDev` to production ID
+3. **Provisioning profiles** — Auto-managed signing in Xcode once Developer Account is active
+4. **Enable GitHub Pages** — Settings → Pages → Deploy from `main` / `docs` to publish privacy policy and support URLs
+5. **TestFlight build** — Archive in Xcode, upload to App Store Connect, test on physical iPhone and iPad
+6. **Physical device testing** — Verify haptics, data persistence, orientation lock, export file saving, Dark/Light mode
+7. **Screenshots** — Capture on required simulators (6.7" iPhone, iPad Pro 13") after testing confirms everything works
+8. **App Store Connect** — Create app listing, paste metadata, add URLs, upload screenshots, set pricing (Free), age rating (4+)
+9. **Submit for review** — Select build, submit to Apple review
+
+## Optional Enhancements (Not Blocking v1)
+
+- **App Store preview video** — 15-30 sec screen recording of core flow
+- **Additional test coverage** — Services, ViewModels, DataExportService (~6-8 hrs)
 
 ## v2 Roadmap
 
-- Professional app icon design
+- Onboarding flow (swipeable first-launch walkthrough)
 - Plant photos for visual identification
 - Localization (multi-language via NSLocalizedString)
