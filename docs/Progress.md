@@ -121,6 +121,14 @@ Chronological record of Evapotrack's development from initial commit to current 
 - **Deployment target**: iOS 17.0
 - **Device family**: iPhone and iPad (portrait only)
 
+## Development Time
+
+- **~16 hours** of active Claude Code development time (accounting for session overlap)
+- **8 sessions** across 12 calendar days (March 1–13, 2026)
+- **Phase 1 (March 1–2):** ~12 hrs — foundation, core features, settings, UI, polish, tests
+- **Phase 2 (March 6):** ~3 hrs — data integrity, limits, export, code review
+- **Phase 3 (March 12–13):** ~4 hrs — light mode, accessibility, Dynamic Type, App Store prep, iPad layout
+
 ## Remaining for App Store Submission
 
 1. App icon (1024x1024)
