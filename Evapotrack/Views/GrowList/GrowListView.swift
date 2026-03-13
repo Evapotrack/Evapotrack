@@ -199,7 +199,7 @@ struct GrowListView: View {
                 .foregroundStyle(Color.evPrimaryBlue)
                 .accessibilityHidden(true)
 
-            Text("No Grows Yet")
+            Text("No Grows Created")
                 .font(.title2.weight(.bold))
                 .foregroundStyle(Color.evDeepNavy)
 
