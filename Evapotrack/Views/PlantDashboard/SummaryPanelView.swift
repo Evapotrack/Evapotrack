@@ -11,11 +11,12 @@ struct SummaryPanelView: View {
     let lastLog: WateringLog?
     let maxRetentionCapacity: Double // liters
     let waterUnit: WaterUnit
+    @Environment(\.horizontalSizeClass) private var sizeClass
 
-    private let columns = [
-        GridItem(.flexible(), spacing: 12),
-        GridItem(.flexible(), spacing: 12)
-    ]
+    private var columns: [GridItem] {
+        let count = sizeClass == .regular ? 3 : 2
+        return Array(repeating: GridItem(.flexible(), spacing: 12), count: count)
+    }
 
     var body: some View {
         Section {

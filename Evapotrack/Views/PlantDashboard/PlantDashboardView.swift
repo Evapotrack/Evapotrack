@@ -12,6 +12,7 @@ struct PlantDashboardView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(SettingsViewModel.self) private var settingsVM
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.horizontalSizeClass) private var sizeClass
     @State private var vm: PlantDashboardViewModel
 
     init(plant: Plant) {
@@ -43,6 +44,8 @@ struct PlantDashboardView: View {
                     Spacer()
                     plantInfoCell("Goal Runoff", DisplayFormatter.percent(vm.plant.goalRunoffPercent))
                 }
+                .frame(maxWidth: sizeClass == .regular ? 500 : .infinity)
+                .frame(maxWidth: .infinity, alignment: .center)
             } header: {
                 Label {
                     Text("Plant Info")

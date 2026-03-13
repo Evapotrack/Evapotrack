@@ -16,6 +16,7 @@ struct HistoryView: View {
 
     @Environment(\.dismiss) private var dismiss
     @Environment(SettingsViewModel.self) private var settingsVM
+    @Environment(\.horizontalSizeClass) private var sizeClass
     @State private var selectedLogID: UUID?
     @State private var expandedLogID: UUID?
     @State private var isShowingDeleteAlert = false
@@ -246,7 +247,7 @@ struct HistoryView: View {
                     .foregroundStyle(Color.evSecondaryText)
             }
         }
-        .frame(height: 180)
+        .frame(height: sizeClass == .regular ? 260 : 180)
         .padding(.vertical, 8)
         .padding(.horizontal, 4)
         .accessibilityElement(children: .ignore)

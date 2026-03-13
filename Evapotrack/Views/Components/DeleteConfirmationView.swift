@@ -13,6 +13,7 @@ struct DeleteConfirmationView: View {
     let message: String
     let onDelete: () -> Void
     let onCancel: () -> Void
+    @Environment(\.horizontalSizeClass) private var sizeClass
 
     private var styledMessage: Text {
         let keyword = "permanently"
@@ -89,6 +90,7 @@ struct DeleteConfirmationView: View {
                     .shadow(color: .black.opacity(0.15), radius: 20, y: 10)
             )
             .padding(.horizontal, 32)
+            .frame(maxWidth: sizeClass == .regular ? 420 : .infinity)
         }
         .transition(.opacity)
         .accessibilityAddTraits(.isModal)

@@ -11,6 +11,7 @@ struct LimitExceededView: View {
     let title: String
     let message: String
     let onClose: () -> Void
+    @Environment(\.horizontalSizeClass) private var sizeClass
 
     var body: some View {
         ZStack {
@@ -58,6 +59,7 @@ struct LimitExceededView: View {
                     .shadow(color: .black.opacity(0.15), radius: 20, y: 10)
             )
             .padding(.horizontal, 32)
+            .frame(maxWidth: sizeClass == .regular ? 420 : .infinity)
         }
         .transition(.opacity)
         .accessibilityAddTraits(.isModal)
