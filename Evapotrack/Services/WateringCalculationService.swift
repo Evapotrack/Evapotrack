@@ -166,8 +166,10 @@ enum WateringCalculationService {
         guard !intervals.isEmpty else { return formulaInterval }
 
         let actualAvg = intervals.reduce(0, +) / Double(intervals.count)
-        precondition(abs(AppConstants.blendingWeightSum - 1.0) < 0.001,
-                     "formulaWeight + historyWeight must equal 1.0")
+        guard abs(AppConstants.blendingWeightSum - 1.0) < 0.001 else {
+            assertionFailure("formulaWeight + historyWeight must equal 1.0")
+            return formulaInterval
+        }
         let blended = formulaInterval * AppConstants.formulaWeight + actualAvg * AppConstants.historyWeight
         return min(max(blended, minimumIntervalDays), maximumIntervalDays)
     }
