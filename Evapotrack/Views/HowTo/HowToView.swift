@@ -172,6 +172,6 @@ struct HowToView: View {
         }
         .font(.body)
         .foregroundStyle(Color.evPrimaryText)
-        .padding(.vertical, 3)
+        .padding(.vertical, 6)
     }
 }

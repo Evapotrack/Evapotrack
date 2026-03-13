@@ -79,7 +79,7 @@ struct WateringLogRowView: View {
                 if isExpanded {
                     VStack(alignment: .leading, spacing: 0) {
                         Divider()
-                            .padding(.vertical, 2)
+                            .padding(.vertical, 4)
                         fieldRow("Water Added", DisplayFormatter.water(log.waterAdded, unit: waterUnit), shaded: true)
                         fieldRow("Runoff Collected", DisplayFormatter.water(log.runoffCollected, unit: waterUnit), shaded: false)
                         fieldRow("Retained", DisplayFormatter.water(log.retained, unit: waterUnit), shaded: true)
@@ -132,8 +132,8 @@ struct WateringLogRowView: View {
                 .foregroundStyle(Color.evPrimaryText)
         }
         .font(.body)
-        .padding(.vertical, 5)
-        .padding(.horizontal, 6)
+        .padding(.vertical, 6)
+        .padding(.horizontal, 8)
         .background(
             RoundedRectangle(cornerRadius: 4)
                 .fill(shaded ? Color.evFrostBlue.opacity(0.12) : Color.clear)

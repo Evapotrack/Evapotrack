@@ -62,7 +62,7 @@ struct StatusBadgeView: View {
             .font(.caption2.weight(.bold))
             .foregroundStyle(.white)
             .padding(.horizontal, 8)
-            .padding(.vertical, 3)
+            .padding(.vertical, 4)
             .background(Capsule().fill(badgeColor))
             .accessibilityLabel("Status: \(badgeText)")
     }

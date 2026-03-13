@@ -26,12 +26,12 @@ struct LaunchView: View {
                     .accessibilityHidden(true)
 
                 Text("EVAPOTRACK")
-                    .font(.system(size: 28, weight: .bold, design: .rounded))
+                    .font(.title.weight(.bold))
                     .foregroundStyle(Color.evPrimaryText)
                     .kerning(2)
 
                 Text("Optimize plant watering")
-                    .font(.system(size: 16, weight: .medium, design: .rounded))
+                    .font(.subheadline.weight(.medium))
                     .foregroundStyle(Color.evSecondaryText)
                     .opacity(sloganOpacity)
             }
