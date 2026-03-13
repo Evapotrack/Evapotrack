@@ -8,7 +8,7 @@
 //   mL:  0 decimals       °C:  1 decimal
 //   L:   2 decimals       °F:  1 decimal
 //   gal: 2 decimals       %:   1 decimal
-//   Interval days/hours: 1 decimal, minutes/seconds: 0 decimals
+//   Interval ≥24h: Xd Yh, <24h: 1 decimal hours, <1h: 0 decimal min/sec
 
 import Foundation
 
@@ -39,12 +39,16 @@ enum DisplayFormatter {
 
     // MARK: - Interval
 
-    /// Format interval as days if ≥ 24h, hours if ≥ 1h, minutes if ≥ 1min, else seconds.
+    /// Format interval as days+hours if ≥ 24h, hours if ≥ 1h, minutes if ≥ 1min, else seconds.
     /// Never displays less than 1 second.
     static func intervalAdaptive(_ hours: Double) -> String {
-        let days = hours / 24.0
-        if days >= 1.0 {
-            return "\(formatNumber(days, decimals: 1)) d"
+        if hours >= 24.0 {
+            let wholeDays = Int(hours / 24.0)
+            let remainingHours = Int(hours.truncatingRemainder(dividingBy: 24.0))
+            if remainingHours > 0 {
+                return "\(wholeDays)d \(remainingHours)h"
+            }
+            return "\(wholeDays)d"
         } else if hours >= 1.0 {
             return "\(formatNumber(hours, decimals: 1)) h"
         } else {

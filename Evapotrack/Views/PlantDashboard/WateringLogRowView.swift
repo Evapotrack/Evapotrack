@@ -48,7 +48,7 @@ struct WateringLogRowView: View {
             .accessibilityLabel(isSelected ? "Deselect log" : "Select log")
 
             // Tappable content area
-            VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: 4) {
                 // Time and expand chevron
                 HStack {
                     Text(log.dateTime.timeFormatted)
@@ -121,7 +121,7 @@ struct WateringLogRowView: View {
             .accessibilityHint("Double tap to expand or collapse details")
             .accessibilityAddTraits(.isButton)
         }
-        .padding(.vertical, 6)
+        .padding(.vertical, 2)
     }
 
     private func fieldRow(_ label: String, _ value: String, shaded: Bool = false) -> some View {
@@ -134,8 +134,8 @@ struct WateringLogRowView: View {
                 .fontWeight(.medium)
                 .foregroundStyle(Color.evPrimaryText)
         }
-        .font(.body)
-        .padding(.vertical, 6)
+        .font(.subheadline)
+        .padding(.vertical, 4)
         .padding(.horizontal, 8)
         .background(
             RoundedRectangle(cornerRadius: 4)

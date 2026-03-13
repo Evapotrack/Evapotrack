@@ -104,6 +104,7 @@ struct HistoryView: View {
             }
         }
         .listStyle(.insetGrouped)
+        .listSectionSpacing(8)
         .scrollContentBackground(.hidden)
         .background(Color.evBackground)
         .navigationTitle("")
@@ -220,9 +221,8 @@ struct HistoryView: View {
     private var retainedChart: some View {
         let chartData = vm.wateringLogs.sorted { $0.dateTime < $1.dateTime }
         let dotIndices = Self.evenlySpacedIndices(count: chartData.count, max: 10)
-        let dateLabelDates: [Date] = chartData.count >= 2
-            ? [chartData.first!.dateTime, chartData.last!.dateTime]
-            : chartData.map(\.dateTime)
+        let firstDate = chartData.first!.dateTime
+        let lastDate = chartData.last!.dateTime
 
         Chart(Array(chartData.enumerated()), id: \.element.id) { index, log in
             AreaMark(
@@ -252,28 +252,41 @@ struct HistoryView: View {
                     y: .value("Retained", UnitConversionService.fromLiters(log.retained, to: waterUnit))
                 )
                 .foregroundStyle(Color.evPrimaryBlue)
-                .symbolSize(24)
+                .symbolSize(30)
+                .annotation(position: .overlay) {
+                    Circle()
+                        .stroke(Color.evBackground, lineWidth: 1.5)
+                        .frame(width: 7, height: 7)
+                }
             }
         }
         .chartYAxis {
             AxisMarks(position: .leading, values: .automatic(desiredCount: 4)) { _ in
                 AxisGridLine(stroke: StrokeStyle(lineWidth: 0.5, dash: [4]))
-                    .foregroundStyle(Color.evSlateGray.opacity(0.2))
+                    .foregroundStyle(Color.evSlateGray.opacity(0.3))
                 AxisValueLabel()
                     .font(.caption2)
                     .foregroundStyle(Color.evSecondaryText)
             }
         }
-        .chartXAxis {
-            AxisMarks(values: dateLabelDates) { _ in
-                AxisValueLabel(format: .dateTime.month(.abbreviated).day())
-                    .font(.caption2)
-                    .foregroundStyle(Color.evSecondaryText)
+        .chartXScale(domain: firstDate...max(lastDate, firstDate.addingTimeInterval(60)))
+        .chartXAxis(.hidden)
+        .frame(height: sizeClass == .regular ? 260 : 180)
+        .padding(.horizontal, 4)
+        .overlay(alignment: .bottom) {
+            if firstDate != lastDate {
+                HStack {
+                    Text(firstDate, format: .dateTime.month(.abbreviated).day())
+                    Spacer()
+                    Text(lastDate, format: .dateTime.month(.abbreviated).day())
+                }
+                .font(.caption2)
+                .foregroundStyle(Color.evSecondaryText)
+                .padding(.horizontal, 4)
+                .offset(y: 20)
             }
         }
-        .frame(height: sizeClass == .regular ? 260 : 180)
-        .padding(.vertical, 8)
-        .padding(.horizontal, 4)
+        .padding(.bottom, firstDate != lastDate ? 20 : 0)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Retained water over time chart with \(chartData.count) data points")
     }

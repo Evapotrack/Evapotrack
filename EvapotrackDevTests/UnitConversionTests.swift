@@ -160,14 +160,18 @@ final class UnitConversionTests: XCTestCase {
     }
 
     func test_displayFormatter_intervalAdaptive_hours() {
-        // < 24h → show hours
+        // < 24h → show hours with 1 decimal
         let result = DisplayFormatter.intervalAdaptive(18.5)
-        XCTAssertTrue(result.contains("h"))
+        XCTAssertEqual(result, "18.5 h")
     }
 
-    func test_displayFormatter_intervalAdaptive_days() {
-        // >= 24h → show days
-        let result = DisplayFormatter.intervalAdaptive(48.0)
-        XCTAssertTrue(result.contains("d"))
+    func test_displayFormatter_intervalAdaptive_daysAndHours() {
+        // >= 24h → show days + hours
+        XCTAssertEqual(DisplayFormatter.intervalAdaptive(67.0), "2d 19h")
+    }
+
+    func test_displayFormatter_intervalAdaptive_exactDays() {
+        // Exact days → no hours suffix
+        XCTAssertEqual(DisplayFormatter.intervalAdaptive(48.0), "2d")
     }
 }
