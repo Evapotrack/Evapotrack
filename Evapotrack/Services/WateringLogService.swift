@@ -54,11 +54,6 @@ final class WateringLogService {
         Logger.services.info("Deleted watering log")
     }
 
-    /// Most recent log for a plant by dateTime.
-    func mostRecentLog(for plant: Plant) -> WateringLog? {
-        plant.wateringLogs.max(by: { $0.dateTime < $1.dateTime })
-    }
-
     // MARK: - Private
 
     private func recalculateIntervals(for plant: Plant) {

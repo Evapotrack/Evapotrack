@@ -18,7 +18,7 @@ Features:
 - Log water added, runoff collected, temperature, and humidity for each watering
 - Automatic retention and runoff percentage calculations
 - Smart watering recommendations based on historical patterns
-- Color-coded status badges showing which plants are due for watering
+- Capacity % tracking to monitor plant saturation levels
 - Retained water chart to visualize trends over time
 - Export grow data as a text file for your records
 - Support for milliliters, liters, and gallons

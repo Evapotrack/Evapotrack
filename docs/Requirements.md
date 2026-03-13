@@ -29,7 +29,7 @@ Evapotrack is an iOS 17+ application for tracking and optimizing plant watering 
 - FR-3.4: Logs are immutable after creation (no editing).
 - FR-3.5: Date/time cannot be in the future.
 - FR-3.6: History view includes a toggleable chart showing retained water volumes over time.
-- FR-3.7: Each history row includes a "Water" button to quickly log a new watering for that plant.
+- FR-3.7: History view toolbar includes an add button to quickly log a new watering for that plant.
 
 ### FR-4: Calculations & Insights
 - FR-4.1: Retained volume = water added - runoff collected (computed on creation).
@@ -37,7 +37,7 @@ Evapotrack is an iOS 17+ application for tracking and optimizing plant watering 
 - FR-4.3: Interval hours between consecutive logs recalculated on add/delete.
 - FR-4.4: Capacity % = (retained / max retention capacity) x 100, capped at 105%.
 - FR-4.5: Average retained computed from all logs for a plant.
-- FR-4.6: Next water recommendation blends formula-based and history-based estimates (40/60 weight) after 3+ logs.
+- FR-4.6: Next water recommendation blends most recent retained with historical average (50/50) and divides by retention factor.
 - FR-4.7: Goal runoff amount computed from next recommendation and goal %.
 
 ### FR-5: Display & Units

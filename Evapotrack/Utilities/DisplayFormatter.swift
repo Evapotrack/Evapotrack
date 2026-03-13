@@ -37,12 +37,7 @@ enum DisplayFormatter {
         "\(formatNumber(value, decimals: 1))%"
     }
 
-    // MARK: - Interval Hours
-
-    /// Format interval hours for display. 1 decimal.
-    static func intervalHours(_ hours: Double) -> String {
-        "\(formatNumber(hours, decimals: 1)) h"
-    }
+    // MARK: - Interval
 
     /// Format interval as days if ≥ 24h, hours if ≥ 1h, minutes if ≥ 1min, else seconds.
     /// Never displays less than 1 second.

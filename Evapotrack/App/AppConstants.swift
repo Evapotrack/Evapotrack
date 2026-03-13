@@ -8,11 +8,6 @@ import Foundation
 
 enum AppConstants {
 
-    // MARK: - General
-
-    static let appName = "Evapotrack"
-    static let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
-
     // MARK: - Validation Bounds
 
     static let maxGrowNameLength = 50

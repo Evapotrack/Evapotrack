@@ -67,14 +67,6 @@ enum WaterUnit: String, Codable, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
-    var label: String {
-        switch self {
-        case .milliliters: return "Milliliters"
-        case .liters:      return "Liters"
-        case .gallons:     return "Gallons"
-        }
-    }
-
     var abbreviation: String { rawValue }
 
     /// Number of decimal places for display.
@@ -94,13 +86,6 @@ enum TemperatureUnit: String, Codable, CaseIterable, Identifiable {
     case fahrenheit = "°F"
 
     var id: String { rawValue }
-
-    var label: String {
-        switch self {
-        case .celsius:    return "Celsius"
-        case .fahrenheit: return "Fahrenheit"
-        }
-    }
 
     var abbreviation: String { rawValue }
 

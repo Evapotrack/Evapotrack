@@ -159,11 +159,6 @@ final class UnitConversionTests: XCTestCase {
         XCTAssertEqual(result, "45.7%")
     }
 
-    func test_displayFormatter_intervalHours() {
-        let result = DisplayFormatter.intervalHours(72.456)
-        XCTAssertEqual(result, "72.5 h")
-    }
-
     func test_displayFormatter_intervalAdaptive_hours() {
         // < 24h → show hours
         let result = DisplayFormatter.intervalAdaptive(18.5)

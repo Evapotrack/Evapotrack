@@ -58,11 +58,11 @@ ViewModels use a `configure(modelContext:)` method called from `.onAppear` rathe
 
 ## Algorithm: Next Water Recommendation
 
-1. If < 3 logs: formula-only estimate based on retention capacity and goal runoff %.
-2. If >= 3 logs: blend formula estimate (40%) with history-based average (60%).
-3. Formula: `capacity / retentionFactor` where `retentionFactor = 1 - goalRunoff/100`.
-4. History: weighted moving average of past watering volumes.
-5. Goal runoff amount: `next * goalRunoffPercent / 100`.
+1. Estimate expected retention by averaging the most recent retained amount with the historical average (50/50 blend).
+2. `next = expectedRetained / (1 - goalRunoffPercent / 100)`.
+3. Cap next so it never exceeds what max retention capacity would require.
+4. Goal runoff amount: `next * goalRunoffPercent / 100`.
+5. Returns nil if last retained <= 0.
 
 ## Interval Recalculation
 
@@ -90,15 +90,11 @@ HistoryView includes a toggleable Swift Charts line chart showing retained water
 
 GrowListView shows a "Try Example Data" button in the empty state (when no grows exist). Tapping it creates a sample grow with one plant and six watering logs including temperature and humidity data. The button is disabled after loading to prevent duplicates. This helps first-time users explore the app's features before entering their own data.
 
-## Watering from History
-
-Each row in HistoryView includes a water droplet button that opens the AddWateringLogView pre-configured for that plant. This provides a quick-access watering path directly from the history list.
-
 ## Accessibility
 
 - VoiceOver: all interactive elements have accessibilityLabel; decorative images hidden; modal traits on overlays
 - Dynamic Type: semantic fonts used throughout; padding scaled for larger text sizes
-- Color contrast: custom RGB badge colors maintain white text contrast in both light and dark modes
+- Color contrast: custom palette maintains readability in both light and dark modes
 - Touch targets: minimum 44x44pt on all toolbar buttons
 
 ## Device & Orientation
@@ -113,7 +109,7 @@ Each row in HistoryView includes a water droplet button that opens the AddWateri
 The app uses the same stacked navigation flow on iPad as iPhone. `@Environment(\.horizontalSizeClass)` detects iPad (`.regular`) and applies targeted adjustments:
 
 - **Modal overlays** (DeleteConfirmationView, LimitExceededView): capped at 420pt width on iPad
-- **Summary grid**: 3 columns on iPad (vs 2 on iPhone) for the 5 metric cells
+- **Summary grid**: 3 columns on iPad (vs 2 on iPhone) for the 4 metric cells
 - **Plant info HStack**: constrained to 500pt max width, centered
 - **Retained water chart**: 260pt height on iPad (vs 180pt on iPhone)
 - **Lists and forms**: `.insetGrouped` style auto-adapts content width on iPad — no manual constraint needed
