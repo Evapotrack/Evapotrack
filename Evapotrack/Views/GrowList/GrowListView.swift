@@ -26,6 +26,7 @@ struct GrowListView: View {
     @State private var isShowingDeleteAlert = false
     @State private var isShowingLimitExceeded = false
     @State private var saveError: String?
+    @State private var exampleDataLoaded = false
 
     private var selectedGrow: Grow? {
         guard let id = selectedGrowID else { return nil }
@@ -224,6 +225,16 @@ struct GrowListView: View {
                     .foregroundStyle(Color.evPrimaryBlue)
             }
             .padding(.top, 4)
+
+            Button {
+                loadExampleData()
+            } label: {
+                Label("Try Example Data", systemImage: "tray.and.arrow.down")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Color.evPrimaryBlue)
+            }
+            .disabled(exampleDataLoaded)
+            .accessibilityLabel("Load example grow with sample watering data")
         }
     }
 
@@ -236,6 +247,51 @@ struct GrowListView: View {
         } else {
             selectedGrowID = grow.id
         }
+    }
+
+    private func loadExampleData() {
+        let grow = Grow(growName: "Example Grow")
+        modelContext.insert(grow)
+
+        let plant = Plant(
+            plantName: "Example Plant",
+            potSize: "6 inch",
+            mediumType: "soil",
+            maxRetentionCapacity: 1.6,
+            goalRunoffPercent: 15.0,
+            grow: grow
+        )
+        modelContext.insert(plant)
+
+        let calendar = Calendar.current
+        let logData: [(month: Int, day: Int, hour: Int, minute: Int, water: Double, runoff: Double, tempF: Double, humidity: Double)] = [
+            (2, 10, 8, 45, 1.50, 0.19, 76.0, 13.0),
+            (2, 12, 9, 24, 1.25, 0.32, 81.0, 18.0),
+            (2, 14, 10, 30, 1.25, 0.32, 82.0, 18.0),
+            (2, 16, 18, 36, 1.00, 0.32, 84.0, 20.0),
+            (2, 18, 16, 48, 0.89, 0.19, 79.0, 24.0),
+            (2, 21, 11, 6, 1.00, 0.10, 83.0, 33.0)
+        ]
+
+        for entry in logData {
+            let components = DateComponents(year: 2026, month: entry.month, day: entry.day, hour: entry.hour, minute: entry.minute)
+            let date = calendar.date(from: components) ?? Date()
+            let tempC = UnitConversionService.toCelsius(entry.tempF, from: .fahrenheit)
+            let log = WateringLog(
+                waterAdded: entry.water,
+                runoffCollected: entry.runoff,
+                dateTime: date,
+                temperatureCelsius: tempC,
+                humidityPercent: entry.humidity
+            )
+            log.plant = plant
+            modelContext.insert(log)
+        }
+
+        WateringCalculationService.recalculateIntervalHours(for: plant.wateringLogs)
+        try? modelContext.save()
+        HapticService.success()
+        exampleDataLoaded = true
     }
 
     private func deleteGrow(_ grow: Grow) {
