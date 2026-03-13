@@ -11,7 +11,7 @@ Evapotrack is an iOS 17+ application for tracking and optimizing plant watering 
 - FR-1.2: Users can delete grows. Deleting a grow cascade-deletes all plants and watering logs.
 - FR-1.3: Maximum 30 grows per user.
 - FR-1.4: Grows are immutable after creation (no editing).
-- FR-1.5: Grows are listed alphabetically by name.
+- FR-1.5: Grows are listed by creation date, newest first.
 
 ### FR-2: Plant Management
 - FR-2.1: Users can create plants within a grow with: name, pot size, medium type, max retention capacity, and optional goal runoff %.
@@ -20,6 +20,8 @@ Evapotrack is an iOS 17+ application for tracking and optimizing plant watering 
 - FR-2.4: Plants are immutable after creation (no editing).
 - FR-2.5: Users can delete plants. Deleting a plant cascade-deletes all watering logs.
 - FR-2.6: Plants include a calculator to derive max retention capacity from a test watering (water added - runoff = retention).
+- FR-2.7: Plants are listed by creation date, newest first.
+- FR-2.8: Each plant row displays a color-coded status badge (New, Healthy, Due Soon, Due Today, Overdue) based on last watering date and average interval.
 
 ### FR-3: Watering Log Management
 - FR-3.1: Users can log watering events with: water added, runoff collected, date/time, and optional temperature and humidity.
@@ -27,6 +29,8 @@ Evapotrack is an iOS 17+ application for tracking and optimizing plant watering 
 - FR-3.3: Users can delete individual watering logs.
 - FR-3.4: Logs are immutable after creation (no editing).
 - FR-3.5: Date/time cannot be in the future.
+- FR-3.6: History view includes a toggleable chart showing retained water volumes over time.
+- FR-3.7: Each history row includes a "Water" button to quickly log a new watering for that plant.
 
 ### FR-4: Calculations & Insights
 - FR-4.1: Retained volume = water added - runoff collected (computed on creation).
@@ -49,6 +53,7 @@ Evapotrack is an iOS 17+ application for tracking and optimizing plant watering 
 - FR-6.3: User can switch appearance mode (Day/Dark).
 - FR-6.4: Settings persist across app launches via UserDefaults.
 - FR-6.5: Reset to defaults available.
+- FR-6.6: Example data loader available for first-time users (creates sample grow, plants, and logs).
 
 ### FR-7: Help & Onboarding
 - FR-7.1: Context-aware help (general context from list views, watering context from dashboard).
