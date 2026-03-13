@@ -102,7 +102,7 @@ HistoryView includes a toggleable Swift Charts line chart showing retained water
 
 ## Example Data Loader
 
-SettingsView includes a "Load Example Data" button (visible only when no grows exist) that creates a sample grow with plants and watering logs. This helps first-time users explore the app's features before entering their own data.
+GrowListView shows a "Try Example Data" button in the empty state (when no grows exist). Tapping it creates a sample grow with one plant and six watering logs including temperature and humidity data. The button is disabled after loading to prevent duplicates. This helps first-time users explore the app's features before entering their own data.
 
 ## Watering from History
 

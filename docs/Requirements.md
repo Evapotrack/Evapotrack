@@ -53,7 +53,7 @@ Evapotrack is an iOS 17+ application for tracking and optimizing plant watering 
 - FR-6.3: User can switch appearance mode (Day/Dark).
 - FR-6.4: Settings persist across app launches via UserDefaults.
 - FR-6.5: Reset to defaults available.
-- FR-6.6: Example data loader available for first-time users (creates sample grow, plants, and logs).
+- FR-6.6: Example data loader available on the My Grows screen when no grows exist (creates sample grow, plant, and logs for first-time users).
 
 ### FR-7: Help & Onboarding
 - FR-7.1: Context-aware help (general context from list views, watering context from dashboard).
