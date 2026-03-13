@@ -7,6 +7,7 @@
 // Pushed via NavigationLink from the plant dashboard.
 
 import SwiftUI
+import Charts
 
 struct HistoryView: View {
     var vm: PlantDashboardViewModel
@@ -18,6 +19,7 @@ struct HistoryView: View {
     @State private var selectedLogID: UUID?
     @State private var expandedLogID: UUID?
     @State private var isShowingDeleteAlert = false
+    @State private var isShowingChart = false
 
     private var selectedLog: WateringLog? {
         guard let id = selectedLogID else { return nil }
@@ -52,6 +54,17 @@ struct HistoryView: View {
                 Text("No watering logs yet.")
                     .foregroundStyle(Color.evSecondaryText)
             } else {
+                if isShowingChart && vm.wateringLogs.count >= 2 {
+                    Section {
+                        retainedChart
+                    } header: {
+                        Text("Retained Over Time")
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(Color.evDeepNavy)
+                            .textCase(nil)
+                    }
+                }
+
                 ForEach(groupedLogs, id: \.date) { group in
                     Section(header: Text(sectionTitle(for: group.date))
                         .font(.subheadline.weight(.semibold))
@@ -107,6 +120,20 @@ struct HistoryView: View {
                         .foregroundStyle(.evPrimaryBlue)
                 }
                 .accessibilityLabel("Back")
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        isShowingChart.toggle()
+                    }
+                } label: {
+                    Image(systemName: isShowingChart ? "chart.line.uptrend.xyaxis.circle.fill" : "chart.line.uptrend.xyaxis.circle")
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .foregroundStyle(.evPrimaryBlue)
+                }
+                .disabled(vm.wateringLogs.count < 2)
+                .accessibilityLabel(isShowingChart ? "Hide Chart" : "Show Chart")
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
@@ -166,5 +193,60 @@ struct HistoryView: View {
         } else {
             expandedLogID = log.id
         }
+    }
+
+    // MARK: - Chart
+
+    @ViewBuilder
+    private var retainedChart: some View {
+        let sorted = vm.wateringLogs.sorted { $0.dateTime < $1.dateTime }
+        Chart(sorted, id: \.id) { log in
+            AreaMark(
+                x: .value("Date", log.dateTime),
+                y: .value("Retained", UnitConversionService.fromLiters(log.retained, to: waterUnit))
+            )
+            .foregroundStyle(
+                LinearGradient(
+                    colors: [Color.evPrimaryBlue.opacity(0.25), Color.evPrimaryBlue.opacity(0.05)],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            )
+            .interpolationMethod(.catmullRom)
+
+            LineMark(
+                x: .value("Date", log.dateTime),
+                y: .value("Retained", UnitConversionService.fromLiters(log.retained, to: waterUnit))
+            )
+            .foregroundStyle(Color.evPrimaryBlue)
+            .lineStyle(StrokeStyle(lineWidth: 2))
+            .interpolationMethod(.catmullRom)
+
+            PointMark(
+                x: .value("Date", log.dateTime),
+                y: .value("Retained", UnitConversionService.fromLiters(log.retained, to: waterUnit))
+            )
+            .foregroundStyle(Color.evPrimaryBlue)
+            .symbolSize(24)
+        }
+        .chartYAxis {
+            AxisMarks(position: .leading, values: .automatic(desiredCount: 4)) { _ in
+                AxisGridLine(stroke: StrokeStyle(lineWidth: 0.5, dash: [4]))
+                    .foregroundStyle(Color.evSlateGray.opacity(0.2))
+                AxisValueLabel()
+                    .font(.caption2)
+                    .foregroundStyle(Color.evSecondaryText)
+            }
+        }
+        .chartXAxis {
+            AxisMarks(values: .automatic(desiredCount: 4)) { _ in
+                AxisValueLabel(format: .dateTime.month(.abbreviated).day())
+                    .font(.caption2)
+                    .foregroundStyle(Color.evSecondaryText)
+            }
+        }
+        .frame(height: 180)
+        .padding(.vertical, 8)
+        .padding(.horizontal, 4)
     }
 }

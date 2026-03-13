@@ -10,10 +10,12 @@
 // SwiftData values are ever modified.
 
 import SwiftUI
+import SwiftData
 import UniformTypeIdentifiers
 
 struct SettingsView: View {
     @Environment(SettingsViewModel.self) private var settingsVM
+    @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
 
     /// The grow to offer data export for. Nil when opened from GrowListView.
@@ -22,6 +24,7 @@ struct SettingsView: View {
     @State private var isShowingExport = false
     @State private var exportDocument: GrowExportDocument?
     @State private var exportFilename = "data"
+    @State private var showExampleLoaded = false
 
     private var appVersionText: String {
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
@@ -139,6 +142,31 @@ struct SettingsView: View {
             }
 
             Section {
+                Button {
+                    loadExampleData()
+                } label: {
+                    HStack {
+                        Label("Load Example Data", systemImage: "tray.and.arrow.down")
+                            .font(.body.weight(.semibold))
+                            .foregroundStyle(Color.evPrimaryBlue)
+                        Spacer()
+                    }
+                }
+                .disabled(showExampleLoaded)
+                .accessibilityLabel("Load example grow with sample watering data")
+            } header: {
+                Text("Example Data")
+                    .font(.title2.weight(.bold))
+                    .foregroundStyle(.evDeepNavy)
+                    .textCase(nil)
+            } footer: {
+                Text(showExampleLoaded
+                     ? "Example data loaded."
+                     : "Creates a sample grow with watering history to explore the app.")
+                    .foregroundStyle(Color.evSecondaryText)
+            }
+
+            Section {
                 HStack {
                     Spacer()
                     Button("Reset Settings") {
@@ -191,5 +219,55 @@ struct SettingsView: View {
         ) { _ in
             exportDocument = nil
         }
+    }
+
+    // MARK: - Example Data
+
+    private func loadExampleData() {
+        let grow = Grow(growName: "Example Grow")
+        modelContext.insert(grow)
+
+        let plant = Plant(
+            plantName: "Example Plant",
+            potSize: "6 inch",
+            mediumType: "soil",
+            maxRetentionCapacity: 1.6,
+            goalRunoffPercent: 15.0,
+            grow: grow
+        )
+        modelContext.insert(plant)
+
+        let calendar = Calendar.current
+        let logData: [(month: Int, day: Int, hour: Int, minute: Int, water: Double, runoff: Double, tempF: Double, humidity: Double)] = [
+            (2, 10, 8, 45, 1.50, 0.19, 76.0, 13.0),
+            (2, 12, 9, 24, 1.25, 0.32, 81.0, 18.0),
+            (2, 14, 10, 30, 1.25, 0.32, 82.0, 18.0),
+            (2, 16, 18, 36, 1.00, 0.32, 84.0, 20.0),
+            (2, 18, 16, 48, 0.89, 0.19, 79.0, 24.0),
+            (2, 21, 11, 6, 1.00, 0.10, 83.0, 33.0)
+        ]
+
+        for entry in logData {
+            let components = DateComponents(year: 2026, month: entry.month, day: entry.day, hour: entry.hour, minute: entry.minute)
+            let date = calendar.date(from: components) ?? Date()
+            let tempC = UnitConversionService.toCelsius(entry.tempF, from: .fahrenheit)
+            let log = WateringLog(
+                waterAdded: entry.water,
+                runoffCollected: entry.runoff,
+                dateTime: date,
+                temperatureCelsius: tempC,
+                humidityPercent: entry.humidity
+            )
+            log.plant = plant
+            modelContext.insert(log)
+        }
+
+        // Recalculate interval hours
+        let allLogs = plant.wateringLogs
+        WateringCalculationService.recalculateIntervalHours(for: allLogs)
+
+        try? modelContext.save()
+        HapticService.success()
+        showExampleLoaded = true
     }
 }

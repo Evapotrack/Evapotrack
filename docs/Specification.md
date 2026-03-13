@@ -86,6 +86,6 @@ SettingsView accepts an optional `Grow` parameter. When opened from PlantListVie
 
 Features planned for future updates:
 
+- **App Icon**: Professional 1024x1024px icon for App Store. Design should reflect watering/plant theme using app's blue palette.
 - **Plant Photos**: Allow users to attach a photo to each plant for visual identification
-- **Trend Charts**: SwiftUI Charts integration in HistoryView showing retained water and water added over time
 - **Localization**: NSLocalizedString() wrapping for multi-language support
