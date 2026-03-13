@@ -81,3 +81,11 @@ Counters are displayed in list section headers (e.g., "2/30" for grows, "5/25" f
 ## Data Export
 
 SettingsView accepts an optional `Grow` parameter. When opened from PlantListView (with a grow), a "Download Data" section appears for that grow. When opened from GrowListView (no grow), the export section is hidden. DataExportService generates a plain-text report containing grow metadata, all plants, and their watering log history in a tabular format. Temp/Humidity columns appear dynamically if any log has that data. Values are formatted in the user's display units. The export file is saved as `.txt` via `.fileExporter`.
+
+## v2 Roadmap
+
+Features planned for future updates:
+
+- **Plant Photos**: Allow users to attach a photo to each plant for visual identification
+- **Trend Charts**: SwiftUI Charts integration in HistoryView showing retained water and water added over time
+- **Localization**: NSLocalizedString() wrapping for multi-language support
