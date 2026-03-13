@@ -2,7 +2,7 @@
 // Evapotrack
 //
 // A single row in the plant list.
-// Shows a left-side circular selection indicator and plantName only.
+// Shows a left-side circular selection indicator, plantName, and status badge.
 // The selection circle is for deletion; tapping the name navigates.
 
 import SwiftUI
@@ -26,12 +26,16 @@ struct PlantRowView: View {
             .buttonStyle(.plain)
             .accessibilityLabel(isSelected ? "Deselect \(plant.plantName)" : "Select \(plant.plantName)")
 
-            // Plant info
+            // Plant info and status
             Text(plant.plantName)
                 .font(.title3.weight(.bold))
                 .foregroundStyle(Color.evDeepNavy)
                 .lineLimit(1)
                 .truncationMode(.tail)
+
+            Spacer()
+
+            StatusBadgeView(plant: plant)
         }
         .padding(.vertical, 6)
     }

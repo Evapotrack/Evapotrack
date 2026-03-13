@@ -209,6 +209,15 @@ struct GrowListView: View {
                     .foregroundStyle(Color.evSecondaryText)
             }
             .font(.body)
+
+            NavigationLink {
+                HowToView(context: .general)
+            } label: {
+                Label("How to Get Started", systemImage: "questionmark.circle")
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Color.evPrimaryBlue)
+            }
+            .padding(.top, 4)
         }
     }
 

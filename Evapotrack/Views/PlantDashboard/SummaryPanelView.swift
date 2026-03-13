@@ -45,9 +45,9 @@ struct SummaryPanelView: View {
     }
 
     private func metricCell(_ label: String, _ value: String) -> some View {
-        VStack(spacing: 2) {
+        VStack(spacing: 4) {
             Text(label)
-                .font(.subheadline)
+                .font(.caption)
                 .fontWeight(.semibold)
                 .foregroundStyle(Color.evSecondaryText)
             Text(value)
@@ -55,6 +55,12 @@ struct SummaryPanelView: View {
                 .fontWeight(.semibold)
                 .foregroundStyle(Color.evPrimaryBlue)
         }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 10)
+        .background(
+            RoundedRectangle(cornerRadius: 10)
+                .fill(Color.evFrostBlue.opacity(0.08))
+        )
     }
 
     private func capacityText(for log: WateringLog) -> String {
