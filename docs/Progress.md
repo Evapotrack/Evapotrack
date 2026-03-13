@@ -123,11 +123,11 @@ Chronological record of Evapotrack's development from initial commit to current 
 
 ## Development Time
 
-- **~16 hours** of active Claude Code development time (accounting for session overlap)
-- **8 sessions** across 12 calendar days (March 1–13, 2026)
+- **~19 hours** of active Claude Code development time (accounting for session overlap)
+- **9 sessions** across 12 calendar days (March 1–13, 2026)
 - **Phase 1 (March 1–2):** ~12 hrs — foundation, core features, settings, UI, polish, tests
 - **Phase 2 (March 6):** ~3 hrs — data integrity, limits, export, code review
-- **Phase 3 (March 12–13):** ~4 hrs — light mode, accessibility, Dynamic Type, App Store prep, iPad layout
+- **Phase 3 (March 12–13):** ~4 hrs — light mode, accessibility, Dynamic Type, App Store prep, iPad layout, code review, App Store prep docs
 
 ## Completed Pre-Submission Items
 
