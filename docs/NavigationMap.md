@@ -11,8 +11,11 @@ GrowListView (ROOT - owns NavigationStack)
 │   ├── [Push] PlantDashboardView(plant:)
 │   │   │   via navigationDestination(for: PlantNavID.self)
 │   │   │
-│   │   ├── [Push] HistoryView(logs:)
-│   │   │       via NavigationLink in HistoryPanelView
+│   │   ├── [Push] HistoryView(vm:waterUnit:maxRetentionCapacity:)
+│   │   │   │   via NavigationLink in HistoryPanelView or chart toolbar button
+│   │   │   │
+│   │   │   └── [Push] HowToView(context: .chart)
+│   │   │           via NavigationLink in toolbar
 │   │   │
 │   │   ├── [Push] HowToView(context: .addWatering)
 │   │   │       via NavigationLink in toolbar
@@ -60,10 +63,13 @@ GrowListView (ROOT - owns NavigationStack)
 
 | Placement | Item | Action |
 |-----------|------|--------|
+| Leading | Back chevron | Pops view (child views only) |
 | Leading | Gear icon | Opens Settings sheet |
 | Leading | Question mark icon | Pushes HowToView |
-| Trailing | Trash icon | Triggers delete confirmation |
-| Primary Action | Plus icon | Opens create/add sheet |
+| Primary Action | Trash + Plus (grouped) | Delete selected / Create new |
+
+PlantDashboardView adds a chart button (trailing) that pushes HistoryView in chart mode.
+HistoryView adds a chart/list toggle (trailing) and help button (leading).
 
 ### Delete Flow
 1. User taps selection circle on an item.
@@ -83,9 +89,9 @@ GrowListView (ROOT - owns NavigationStack)
 | GrowListView | Root | Large ("My Grows") | Yes |
 | PlantListView | Push | Large (grow name) | Yes |
 | PlantDashboardView | Push | Inline (empty) + centered name | Yes |
-| HistoryView | Push | Large ("History") | Yes (trash only) |
+| HistoryView | Push | Inline (empty) | Yes (help, chart toggle, trash+plus) |
 | CreateGrowView | Sheet | Inline ("Add Grow") | Cancel + Save |
 | CreatePlantView | Sheet | Inline ("Add Plant") | Cancel + Save |
 | AddWateringLogView | Sheet | Inline ("Add Watering") | Cancel + Save |
 | SettingsView | Sheet | Inline ("Settings") | Done |
-| HowToView | Push | Large ("How To") | None |
+| HowToView | Push | Large ("How To") | Back only |

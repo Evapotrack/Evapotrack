@@ -21,4 +21,9 @@ extension Color {
     static let evButtonPrimary: Color = .evPrimaryBlue
     static let evButtonDisabled: Color = .evCoolMist
     static let evHighlight: Color = .evFrostBlue
+
+    // MARK: - Chart Overlay Colors
+
+    static let evWarmOrange = Color(red: 0.92, green: 0.55, blue: 0.20)
+    static let evSoftPurple = Color(red: 0.58, green: 0.40, blue: 0.82)
 }

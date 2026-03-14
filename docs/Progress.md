@@ -141,23 +141,57 @@ Chronological record of Evapotrack's development from initial commit to current 
 - Requirements.md: FR-3.7 and FR-4.6 corrected to match implementation
 - AppStoreMetadata.md: status badges replaced with Capacity % tracking
 
+## Phase 5: Chart Overlays & UX Polish (March 13–14, 2026)
+
+### Chart Enhancements
+- Temperature and humidity data line overlays on retained chart
+- Pill-shaped toggle buttons (Retained always-on, Temp, Humidity) below chart header
+- Dual Y-axis via ZStack overlay — each data line has independent scale
+- When both overlays active, right Y-axis hidden to avoid label overlap
+- Chart colors: evPrimaryBlue (retained), evWarmOrange (temperature), evSoftPurple (humidity)
+- Dynamic chart header title based on active toggles (e.g., "Retained · Temp · Humidity Over Time")
+- Chart shortcut button on PlantDashboardView toolbar (opens HistoryView in chart mode)
+
+### Toolbar Layout Refinements
+- Trash and plus buttons grouped in single ToolbarItem (HStack, 12pt spacing) on all screens
+- Help button always coupled with gear/settings on leading side
+- Chart toggle button on HistoryView trailing side
+- Added help button to HistoryView (chart-specific How To context)
+
+### How To Content
+- New HowToContext.chart with 4 sections: Reading the Chart, Temperature and Humidity Overlays, What Is Next?, Watering Protocol
+- "How to Download Your Grow Data" section added to general context
+- "What Is Next?" rewritten for clarity across all contexts
+- Updated chart description to accurately reflect all-logs plotting behavior
+
+### Text & Layout Polish
+- Increased display text sizes across panels (InsightsPanelView, SummaryPanelView, WateringLogRowView, GrowRowView)
+- Unified row padding to 8pt across GrowRowView and PlantRowView
+- History log date section headers changed to evPrimaryBlue
+- Hardcoded LimitExceededView icon color replaced with evWarmOrange
+
+### Example Data Adjustments
+- Humidity values adjusted to 45–65% range
+- Temperature values adjusted to 69–91°F range (stored as Celsius internally)
+
 ## Current State
 
 - **111 unit tests**, all passing
 - **45 Swift source files** across Models, Services, ViewModels, Views, Utilities
-- **9 custom color assets** with light/dark variants
+- **11 custom color assets** with light/dark variants (added evWarmOrange, evSoftPurple)
 - **Privacy manifest**: no tracking, no data collection, UserDefaults only
 - **Deployment target**: iOS 17.0
 - **Device family**: iPhone and iPad (portrait only)
 
 ## Development Time
 
-- **~21 hours** of active Claude Code development time (accounting for session overlap)
-- **11 sessions** across 13 calendar days (March 1–13, 2026)
+- **~24 hours** of active Claude Code development time (accounting for session overlap)
+- **12 sessions** across 14 calendar days (March 1–14, 2026)
 - **Phase 1 (March 1–2):** ~12 hrs — foundation, core features, settings, UI, polish, tests
 - **Phase 2 (March 6):** ~3 hrs — data integrity, limits, export, code review
 - **Phase 3 (March 12–13):** ~4 hrs — light mode, accessibility, Dynamic Type, App Store prep, iPad layout, code review, App Store prep docs
 - **Phase 4 (March 13):** ~2 hrs — status removal, chart/history polish, dead code cleanup, doc sync
+- **Phase 5 (March 13–14):** ~3 hrs — chart overlays, toolbar polish, How To content, text sizing
 
 ## Completed Pre-Submission Items
 

@@ -14,6 +14,7 @@ import SwiftUI
 enum HowToContext {
     case general
     case addWatering
+    case chart
 }
 
 struct HowToView: View {
@@ -29,6 +30,8 @@ struct HowToView: View {
                 generalContent
             case .addWatering:
                 addWateringContent
+            case .chart:
+                chartContent
             }
         }
         .listStyle(.insetGrouped)
@@ -57,7 +60,7 @@ struct HowToView: View {
         helpSection("What Is Evapotrack?", highlightWord: "Evapotrack") {
             bullet("Evapotrack helps you track and optimize watering for your plants by recording how much water you add and how much runs off.")
             bullet("The app calculates key metrics like Retained volume, Capacity %, and a recommended Next watering amount based on your history.")
-            bullet("All data is stored locally on your device. Nothing is sent to the internet.")
+            bullet("All data is stored locally on your device. You can download your data directly from Settings.")
         }
 
         helpSection("Grows and Plants") {
@@ -83,6 +86,14 @@ struct HowToView: View {
         }
 
         wateringProtocolSection
+
+        helpSection("How to Download Your Grow Data") {
+            bullet("Open a grow's plant list, then tap the gear icon to open Settings.")
+            bullet("Scroll to the Export Data section. This section only appears when Settings is opened from within a grow.")
+            bullet("Tap Export to generate a formatted text file containing all plants in the grow, their details, and every watering log.")
+            bullet("Values are exported in your chosen display units (water unit and temperature unit).")
+            bullet("Choose where to save or share the file using the system share sheet.")
+        }
     }
 
     // MARK: - Add Watering Context (Plant Dashboard)
@@ -100,12 +111,40 @@ struct HowToView: View {
         }
 
         helpSection("What Is Next?", highlightWord: "Next") {
-            bullet("Next is the Next Watering Amount shown in the Insights panel.")
-            bullet("It estimates how much water your medium will absorb next time by averaging your most recent Retained amount with your Average Retained across all logs.")
-            bullet("Next is the exact water amount needed so that, if your medium absorbs the estimated amount, the runoff will be your Goal Runoff %. It is capped by your Max Retention Capacity to prevent over-watering.")
-            bullet("Goal Runoff is the estimated runoff you should expect if you apply the recommended Next amount. It is calculated as Next multiplied by your Goal Runoff %.")
+            bullet("Next is the recommended water amount shown in the Insights panel. It tells you how much to water next time to hit your Goal Runoff %.")
+            bullet("It may increase or decrease based on your history to keep your runoff as close to your Goal Runoff % as possible.")
+            bullet("The estimate is based on your recent watering history — it averages your last Retained amount with your overall average to predict absorption.")
+            bullet("Goal Runoff shows the expected runoff if you apply the Next amount. It equals Next multiplied by your Goal Runoff %.")
             bullet("The more logs you record, the more accurate the recommendation becomes.")
         }
+    }
+
+    // MARK: - Chart Context (History / Chart Screen)
+
+    @ViewBuilder
+    private var chartContent: some View {
+        helpSection("Reading the Chart") {
+            bullet("The chart plots your Retained water volume across all stored logs for the plant, from the earliest log date to the most recent.")
+            bullet("An upward trend in Retained means your medium is absorbing more water over time, which may indicate drying out between waterings or increased plant uptake.")
+            bullet("A downward trend may indicate the medium is staying saturated or that your watering volume is decreasing.")
+            bullet("A flat, consistent line means your watering routine is stable and your medium is absorbing a predictable amount each time.")
+        }
+
+        helpSection("Temperature and Humidity Overlays") {
+            bullet("Toggle the Temp and Humidity pills to overlay environmental data on the chart.")
+            bullet("Each overlay renders on its own scale so the line shape accurately reflects the data.")
+            bullet("Look for correlations: rising temperature often increases water uptake, while higher humidity may reduce it.")
+            bullet("These fields are optional. If no logs include temperature or humidity data, the toggle will be disabled.")
+        }
+
+        helpSection("What Is Next?", highlightWord: "Next") {
+            bullet("Next is the recommended water amount shown in the Insights panel. It tells you how much to water next time to hit your Goal Runoff %.")
+            bullet("It may increase or decrease based on your history to keep your runoff as close to your Goal Runoff % as possible.")
+            bullet("The estimate is based on your recent watering history — it averages your last Retained amount with your overall average to predict absorption.")
+            bullet("The more logs you record, the more accurate the recommendation becomes.")
+        }
+
+        wateringProtocolSection
     }
 
     // MARK: - Shared Sections

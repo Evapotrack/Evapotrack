@@ -43,7 +43,7 @@ struct GrowRowView: View {
                         Image(systemName: "leaf.fill")
                             .foregroundStyle(Color.evPrimaryBlue)
                     }
-                    .font(.subheadline)
+                    .font(.callout)
 
                     Label {
                         Text(grow.createdAt.shortFormatted)
@@ -52,7 +52,7 @@ struct GrowRowView: View {
                         Image(systemName: "calendar")
                             .foregroundStyle(Color.evSecondaryText)
                     }
-                    .font(.subheadline)
+                    .font(.callout)
                 }
             }
         }

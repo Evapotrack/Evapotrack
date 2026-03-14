@@ -14,6 +14,7 @@ struct HistoryView: View {
     var vm: PlantDashboardViewModel
     let waterUnit: WaterUnit
     let maxRetentionCapacity: Double
+    var startInChartMode: Bool = false
 
     @Environment(\.dismiss) private var dismiss
     @Environment(SettingsViewModel.self) private var settingsVM
@@ -22,6 +23,8 @@ struct HistoryView: View {
     @State private var expandedLogID: UUID?
     @State private var isShowingDeleteAlert = false
     @State private var isShowingChart = false
+    @State private var showTemperature = false
+    @State private var showHumidity = false
 
     private var selectedLog: WateringLog? {
         guard let id = selectedLogID else { return nil }
@@ -49,6 +52,25 @@ struct HistoryView: View {
         }
     }
 
+    private var hasTemperatureData: Bool {
+        vm.wateringLogs.contains { $0.temperatureCelsius != nil }
+    }
+
+    private var hasHumidityData: Bool {
+        vm.wateringLogs.contains { $0.humidityPercent != nil }
+    }
+
+    private var hasOverlays: Bool {
+        showTemperature || showHumidity
+    }
+
+    private var chartHeaderTitle: String {
+        var parts = ["Retained"]
+        if showTemperature { parts.append("Temp") }
+        if showHumidity { parts.append("Humidity") }
+        return parts.joined(separator: " · ") + " Over Time"
+    }
+
     var body: some View {
         @Bindable var vm = vm
         List {
@@ -58,10 +80,11 @@ struct HistoryView: View {
             } else if isShowingChart && vm.wateringLogs.count >= 2 {
                 // Chart mode — replaces log list
                 Section {
+                    chartTogglePills
                     retainedChart
                 } header: {
                     Label {
-                        Text("Retained Over Time")
+                        Text(chartHeaderTitle)
                     } icon: {
                         Image(systemName: "chart.line.uptrend.xyaxis")
                     }
@@ -69,6 +92,7 @@ struct HistoryView: View {
                     .foregroundStyle(.evDeepNavy)
                     .textCase(nil)
                 }
+
             } else {
                 // Log list mode
                 ForEach(groupedLogs, id: \.date) { group in
@@ -97,7 +121,7 @@ struct HistoryView: View {
                     } header: {
                         Text(sectionTitle(for: group.date))
                             .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(Color.evDeepNavy)
+                            .foregroundStyle(Color.evPrimaryBlue)
                             .textCase(nil)
                     }
                 }
@@ -112,13 +136,26 @@ struct HistoryView: View {
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                Button { vm.isShowingAddWatering = true } label: {
-                    Image(systemName: "plus")
-                        .font(.title3)
-                        .fontWeight(.bold)
-                        .frame(minWidth: 44, minHeight: 44)
+                HStack(spacing: 12) {
+                    Button {
+                        isShowingDeleteAlert = true
+                    } label: {
+                        Image(systemName: "trash")
+                            .font(.title3)
+                            .fontWeight(.bold)
+                            .foregroundStyle(selectedLogID != nil ? .red : .evSlateGray)
+                    }
+                    .disabled(selectedLogID == nil)
+                    .accessibilityLabel("Delete Log")
+
+                    Button { vm.isShowingAddWatering = true } label: {
+                        Image(systemName: "plus")
+                            .font(.title3)
+                            .fontWeight(.bold)
+                            .frame(minWidth: 44, minHeight: 44)
+                    }
+                    .accessibilityLabel("Add Watering")
                 }
-                .accessibilityLabel("Add Watering")
             }
             ToolbarItem(placement: .navigationBarLeading) {
                 Button { dismiss() } label: {
@@ -128,6 +165,17 @@ struct HistoryView: View {
                         .foregroundStyle(.evPrimaryBlue)
                 }
                 .accessibilityLabel("Back")
+            }
+            ToolbarItem(placement: .navigationBarLeading) {
+                NavigationLink {
+                    HowToView(context: .chart)
+                } label: {
+                    Image(systemName: "questionmark.circle")
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .foregroundStyle(.evPrimaryBlue)
+                }
+                .accessibilityLabel("Help")
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
@@ -142,18 +190,6 @@ struct HistoryView: View {
                 }
                 .disabled(vm.wateringLogs.count < 2)
                 .accessibilityLabel(isShowingChart ? "Show Logs" : "Show Chart")
-            }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    isShowingDeleteAlert = true
-                } label: {
-                    Image(systemName: "trash")
-                        .font(.title3)
-                        .fontWeight(.bold)
-                        .foregroundStyle(selectedLogID != nil ? .red : .evSlateGray)
-                }
-                .disabled(selectedLogID == nil)
-                .accessibilityLabel("Delete Log")
             }
         }
         .sheet(isPresented: $vm.isShowingAddWatering, onDismiss: { vm.loadData() }) {
@@ -184,6 +220,11 @@ struct HistoryView: View {
             }
         }
         .animation(.easeInOut(duration: 0.2), value: isShowingDeleteAlert)
+        .onAppear {
+            if startInChartMode {
+                isShowingChart = true
+            }
+        }
     }
 
     private func toggleSelection(for log: WateringLog) {
@@ -201,6 +242,65 @@ struct HistoryView: View {
         } else {
             expandedLogID = log.id
         }
+    }
+
+    // MARK: - Chart Toggle Pills
+
+    @ViewBuilder
+    private var chartTogglePills: some View {
+        let tempAvailable = hasTemperatureData
+        let humidityAvailable = hasHumidityData
+
+        HStack(spacing: 8) {
+            chartPill(label: "Retained", color: .evPrimaryBlue, isActive: true, enabled: true) {}
+
+            chartPill(label: "Temp", color: .evWarmOrange, isActive: showTemperature, enabled: tempAvailable) {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    showTemperature.toggle()
+                }
+            }
+
+            chartPill(label: "Humidity", color: .evSoftPurple, isActive: showHumidity, enabled: humidityAvailable) {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    showHumidity.toggle()
+                }
+            }
+
+            Spacer()
+        }
+        .padding(.bottom, 4)
+    }
+
+    @ViewBuilder
+    private func chartPill(label: String, color: Color, isActive: Bool, enabled: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack(spacing: 4) {
+                Circle()
+                    .fill(color)
+                    .frame(width: 8, height: 8)
+                Text(label)
+                    .font(.caption.weight(.semibold))
+            }
+            .padding(.horizontal, 10)
+            .padding(.vertical, 5)
+            .background(
+                isActive
+                    ? color.opacity(0.15)
+                    : Color.clear
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 14)
+                    .stroke(isActive ? color : Color.evSlateGray.opacity(0.4), lineWidth: 1)
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .foregroundStyle(isActive ? color : Color.evSecondaryText)
+        }
+        .buttonStyle(.plain)
+        .disabled(!enabled)
+        .opacity(enabled ? 1.0 : 0.4)
+        .accessibilityLabel("\(label) chart line")
+        .accessibilityHint(enabled ? (isActive ? "Active. Double tap to hide." : "Inactive. Double tap to show.") : "No \(label.lowercased()) data available.")
+        .accessibilityAddTraits(isActive ? .isSelected : [])
     }
 
     // MARK: - Chart
@@ -223,55 +323,66 @@ struct HistoryView: View {
         let dotIndices = Self.evenlySpacedIndices(count: chartData.count, max: 10)
         let firstDate = chartData.first!.dateTime
         let lastDate = chartData.last!.dateTime
+        let xDomain = firstDate...max(lastDate, firstDate.addingTimeInterval(60))
+        let chartHeight: CGFloat = sizeClass == .regular ? 260 : 180
 
-        Chart(Array(chartData.enumerated()), id: \.element.id) { index, log in
-            AreaMark(
-                x: .value("Date", log.dateTime),
-                y: .value("Retained", UnitConversionService.fromLiters(log.retained, to: waterUnit))
-            )
-            .foregroundStyle(
-                LinearGradient(
-                    colors: [Color.evPrimaryBlue.opacity(0.25), Color.evPrimaryBlue.opacity(0.05)],
-                    startPoint: .top,
-                    endPoint: .bottom
+        ZStack {
+            // Primary chart: Retained water (left Y-axis)
+            Chart(Array(chartData.enumerated()), id: \.element.id) { index, log in
+                AreaMark(
+                    x: .value("Date", log.dateTime),
+                    y: .value("Retained", UnitConversionService.fromLiters(log.retained, to: waterUnit))
                 )
-            )
-            .interpolationMethod(.catmullRom)
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: [Color.evPrimaryBlue.opacity(0.25), Color.evPrimaryBlue.opacity(0.05)],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+                .interpolationMethod(.catmullRom)
 
-            LineMark(
-                x: .value("Date", log.dateTime),
-                y: .value("Retained", UnitConversionService.fromLiters(log.retained, to: waterUnit))
-            )
-            .foregroundStyle(Color.evPrimaryBlue)
-            .lineStyle(StrokeStyle(lineWidth: 2))
-            .interpolationMethod(.catmullRom)
-
-            if dotIndices.contains(index) {
-                PointMark(
+                LineMark(
                     x: .value("Date", log.dateTime),
                     y: .value("Retained", UnitConversionService.fromLiters(log.retained, to: waterUnit))
                 )
                 .foregroundStyle(Color.evPrimaryBlue)
-                .symbolSize(30)
-                .annotation(position: .overlay) {
-                    Circle()
-                        .stroke(Color.evBackground, lineWidth: 1.5)
-                        .frame(width: 7, height: 7)
+                .lineStyle(StrokeStyle(lineWidth: 2))
+                .interpolationMethod(.catmullRom)
+
+                if dotIndices.contains(index) {
+                    PointMark(
+                        x: .value("Date", log.dateTime),
+                        y: .value("Retained", UnitConversionService.fromLiters(log.retained, to: waterUnit))
+                    )
+                    .foregroundStyle(Color.evPrimaryBlue)
+                    .symbolSize(30)
+                    .annotation(position: .overlay) {
+                        Circle()
+                            .stroke(Color.evBackground, lineWidth: 1.5)
+                            .frame(width: 7, height: 7)
+                    }
                 }
             }
-        }
-        .chartYAxis {
-            AxisMarks(position: .leading, values: .automatic(desiredCount: 4)) { _ in
-                AxisGridLine(stroke: StrokeStyle(lineWidth: 0.5, dash: [4]))
-                    .foregroundStyle(Color.evSlateGray.opacity(0.3))
-                AxisValueLabel()
-                    .font(.caption2)
-                    .foregroundStyle(Color.evSecondaryText)
+            .chartYAxis {
+                AxisMarks(position: .leading, values: .automatic(desiredCount: 4)) { _ in
+                    AxisGridLine(stroke: StrokeStyle(lineWidth: 0.5, dash: [4]))
+                        .foregroundStyle(Color.evSlateGray.opacity(0.3))
+                    AxisValueLabel()
+                        .font(.caption2)
+                        .foregroundStyle(Color.evSecondaryText)
+                }
+            }
+            .chartXScale(domain: xDomain)
+            .chartXAxis(.hidden)
+            .frame(height: chartHeight)
+
+            // Overlay chart: Temperature and/or Humidity (right Y-axis)
+            if hasOverlays {
+                overlayChart(chartData: chartData, xDomain: xDomain)
+                    .frame(height: chartHeight)
             }
         }
-        .chartXScale(domain: firstDate...max(lastDate, firstDate.addingTimeInterval(60)))
-        .chartXAxis(.hidden)
-        .frame(height: sizeClass == .regular ? 260 : 180)
         .padding(.horizontal, 4)
         .overlay(alignment: .bottom) {
             if firstDate != lastDate {
@@ -288,6 +399,88 @@ struct HistoryView: View {
         }
         .padding(.bottom, firstDate != lastDate ? 20 : 0)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Retained water over time chart with \(chartData.count) data points")
+        .accessibilityLabel(chartAccessibilityLabel(dataCount: chartData.count))
+    }
+
+    @ViewBuilder
+    private func overlayChart(chartData: [WateringLog], xDomain: ClosedRange<Date>) -> some View {
+        let tempUnit = settingsVM.settings.temperatureUnit
+
+        let bothActive = showTemperature && showHumidity
+
+        if showTemperature {
+            temperatureChart(chartData: chartData, tempUnit: tempUnit, xDomain: xDomain, showAxis: !bothActive)
+        }
+
+        if showHumidity {
+            humidityChart(chartData: chartData, xDomain: xDomain, showAxis: !bothActive)
+        }
+    }
+
+    @ViewBuilder
+    private func temperatureChart(chartData: [WateringLog], tempUnit: TemperatureUnit, xDomain: ClosedRange<Date>, showAxis: Bool) -> some View {
+        Chart {
+            ForEach(chartData.filter { $0.temperatureCelsius != nil }, id: \.id) { log in
+                LineMark(
+                    x: .value("Date", log.dateTime),
+                    y: .value("Temp", UnitConversionService.fromCelsius(log.temperatureCelsius!, to: tempUnit))
+                )
+                .foregroundStyle(Color.evWarmOrange)
+                .lineStyle(StrokeStyle(lineWidth: 1.5))
+                .interpolationMethod(.catmullRom)
+            }
+        }
+        .chartYAxis {
+            if showAxis {
+                AxisMarks(position: .trailing, values: .automatic(desiredCount: 4)) { _ in
+                    AxisValueLabel()
+                        .font(.caption2)
+                        .foregroundStyle(Color.evWarmOrange)
+                }
+            }
+        }
+        .chartXScale(domain: xDomain)
+        .chartXAxis(.hidden)
+        .chartLegend(.hidden)
+    }
+
+    @ViewBuilder
+    private func humidityChart(chartData: [WateringLog], xDomain: ClosedRange<Date>, showAxis: Bool) -> some View {
+        Chart {
+            ForEach(chartData.filter { $0.humidityPercent != nil }, id: \.id) { log in
+                LineMark(
+                    x: .value("Date", log.dateTime),
+                    y: .value("Humidity", log.humidityPercent!)
+                )
+                .foregroundStyle(Color.evSoftPurple)
+                .lineStyle(StrokeStyle(lineWidth: 1.5))
+                .interpolationMethod(.catmullRom)
+            }
+        }
+        .chartYAxis {
+            if showAxis {
+                AxisMarks(position: .trailing, values: .automatic(desiredCount: 4)) { _ in
+                    AxisValueLabel()
+                        .font(.caption2)
+                        .foregroundStyle(Color.evSoftPurple)
+                }
+            }
+        }
+        .chartXScale(domain: xDomain)
+        .chartXAxis(.hidden)
+        .chartLegend(.hidden)
+    }
+
+    private var overlayAxisColor: Color {
+        if showTemperature && !showHumidity { return .evWarmOrange }
+        if showHumidity && !showTemperature { return .evSoftPurple }
+        return .evSecondaryText
+    }
+
+    private func chartAccessibilityLabel(dataCount: Int) -> String {
+        var lines = ["Retained water"]
+        if showTemperature { lines.append("temperature") }
+        if showHumidity { lines.append("humidity") }
+        return "\(lines.joined(separator: ", ")) over time chart with \(dataCount) data points"
     }
 }

@@ -79,31 +79,33 @@ struct GrowListView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    Button {
-                        if grows.count >= AppConstants.maxGrowCount {
-                            isShowingLimitExceeded = true
-                        } else {
-                            isShowingCreateGrow = true
+                    HStack(spacing: 12) {
+                        Button {
+                            isShowingDeleteAlert = true
+                        } label: {
+                            Image(systemName: "trash")
+                                .font(.title3)
+                                .fontWeight(.bold)
+                                .foregroundStyle(selectedGrowID != nil ? .red : .evSlateGray)
+                                .padding(.leading, 8)
                         }
-                    } label: {
-                        Image(systemName: "plus")
-                            .font(.title3)
-                            .fontWeight(.bold)
-                            .frame(minWidth: 44, minHeight: 44)
+                        .disabled(selectedGrowID == nil)
+                        .accessibilityLabel("Delete Grow")
+
+                        Button {
+                            if grows.count >= AppConstants.maxGrowCount {
+                                isShowingLimitExceeded = true
+                            } else {
+                                isShowingCreateGrow = true
+                            }
+                        } label: {
+                            Image(systemName: "plus")
+                                .font(.title3)
+                                .fontWeight(.bold)
+                                .frame(minWidth: 44, minHeight: 44)
+                        }
+                        .accessibilityLabel(grows.count >= AppConstants.maxGrowCount ? "Maximum of \(AppConstants.maxGrowCount) grows reached" : "Add Grow")
                     }
-                    .accessibilityLabel(grows.count >= AppConstants.maxGrowCount ? "Maximum of \(AppConstants.maxGrowCount) grows reached" : "Add Grow")
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        isShowingDeleteAlert = true
-                    } label: {
-                        Image(systemName: "trash")
-                            .font(.title3)
-                            .fontWeight(.bold)
-                            .foregroundStyle(selectedGrowID != nil ? .red : .evSlateGray)
-                    }
-                    .disabled(selectedGrowID == nil)
-                    .accessibilityLabel("Delete Grow")
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button { isShowingSettings = true } label: {
@@ -217,24 +219,26 @@ struct GrowListView: View {
             .accessibilityElement(children: .combine)
             .accessibilityLabel("Tap plus to create your first grow")
 
-            NavigationLink {
-                HowToView(context: .general)
-            } label: {
-                Label("How to Get Started", systemImage: "questionmark.circle")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Color.evPrimaryBlue)
+            VStack(alignment: .leading, spacing: 8) {
+                NavigationLink {
+                    HowToView(context: .general)
+                } label: {
+                    Label("How to Get Started", systemImage: "questionmark.circle")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Color.evPrimaryBlue)
+                }
+
+                Button {
+                    loadExampleData()
+                } label: {
+                    Label("Try Example Data", systemImage: "tray.and.arrow.down")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(Color.evPrimaryBlue)
+                }
+                .disabled(exampleDataLoaded)
+                .accessibilityLabel("Load example grow with sample watering data")
             }
             .padding(.top, 4)
-
-            Button {
-                loadExampleData()
-            } label: {
-                Label("Try Example Data", systemImage: "tray.and.arrow.down")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(Color.evPrimaryBlue)
-            }
-            .disabled(exampleDataLoaded)
-            .accessibilityLabel("Load example grow with sample watering data")
         }
     }
 
@@ -265,12 +269,12 @@ struct GrowListView: View {
 
         let calendar = Calendar.current
         let logData: [(month: Int, day: Int, hour: Int, minute: Int, water: Double, runoff: Double, tempF: Double, humidity: Double)] = [
-            (2, 10, 8, 45, 1.50, 0.19, 76.0, 13.0),
-            (2, 12, 9, 24, 1.25, 0.32, 81.0, 18.0),
-            (2, 14, 10, 30, 1.25, 0.32, 82.0, 18.0),
-            (2, 16, 18, 36, 1.00, 0.32, 84.0, 20.0),
-            (2, 18, 16, 48, 0.89, 0.19, 79.0, 24.0),
-            (2, 21, 11, 6, 1.00, 0.10, 83.0, 33.0)
+            (2, 10, 8, 45, 1.50, 0.19, 72.0, 48.0),
+            (2, 12, 9, 24, 1.25, 0.32, 78.0, 45.0),
+            (2, 14, 10, 30, 1.25, 0.32, 85.0, 53.0),
+            (2, 16, 18, 36, 1.00, 0.32, 91.0, 61.0),
+            (2, 18, 16, 48, 0.89, 0.19, 83.0, 57.0),
+            (2, 21, 11, 6, 1.00, 0.10, 69.0, 65.0)
         ]
 
         for entry in logData {

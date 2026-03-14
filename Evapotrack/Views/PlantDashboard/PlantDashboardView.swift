@@ -123,6 +123,24 @@ struct PlantDashboardView: View {
                 }
                 .accessibilityLabel("Help")
             }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                NavigationLink {
+                    HistoryView(
+                        vm: vm,
+                        waterUnit: waterUnit,
+                        maxRetentionCapacity: vm.plant.maxRetentionCapacity,
+                        startInChartMode: true
+                    )
+                } label: {
+                    Image(systemName: "chart.line.uptrend.xyaxis")
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .foregroundStyle(.evPrimaryBlue)
+                        .padding(.leading, 8)
+                }
+                .disabled(vm.wateringLogs.count < 2)
+                .accessibilityLabel("Chart")
+            }
         }
         .sheet(isPresented: $vm.isShowingAddWatering, onDismiss: { vm.loadData() }) {
             NavigationStack {
@@ -153,11 +171,11 @@ struct PlantDashboardView: View {
     private func plantInfoCell(_ label: String, _ value: String) -> some View {
         VStack(spacing: 2) {
             Text(label)
-                .font(.footnote)
+                .font(.subheadline)
                 .fontWeight(.semibold)
                 .foregroundStyle(Color.evSecondaryText)
             Text(value)
-                .font(.subheadline)
+                .font(.callout)
                 .fontWeight(.semibold)
                 .foregroundStyle(Color.evPrimaryBlue)
                 .lineLimit(1)

@@ -88,35 +88,37 @@ struct PlantListView: View {
         }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                Button {
-                    if plants.count >= AppConstants.maxPlantsPerGrow {
-                        limitExceededMessage = "You've reached the maximum of \(AppConstants.maxPlantsPerGrow) plants per grow. Delete a plant to create a new one."
-                        isShowingLimitExceeded = true
-                    } else if totalPlantCount() >= AppConstants.maxTotalPlants {
-                        limitExceededMessage = "You've reached the maximum of \(AppConstants.maxTotalPlants) total plants. Delete a plant from any grow to create a new one."
-                        isShowingLimitExceeded = true
-                    } else {
-                        isShowingCreatePlant = true
+                HStack(spacing: 12) {
+                    Button {
+                        isShowingDeleteAlert = true
+                    } label: {
+                        Image(systemName: "trash")
+                            .font(.title3)
+                            .fontWeight(.bold)
+                            .foregroundStyle(selectedPlantID != nil ? .red : .evSlateGray)
+                            .padding(.leading, 8)
                     }
-                } label: {
-                    Image(systemName: "plus")
-                        .font(.title3)
-                        .fontWeight(.bold)
-                        .frame(minWidth: 44, minHeight: 44)
+                    .disabled(selectedPlantID == nil)
+                    .accessibilityLabel("Delete Plant")
+
+                    Button {
+                        if plants.count >= AppConstants.maxPlantsPerGrow {
+                            limitExceededMessage = "You've reached the maximum of \(AppConstants.maxPlantsPerGrow) plants per grow. Delete a plant to create a new one."
+                            isShowingLimitExceeded = true
+                        } else if totalPlantCount() >= AppConstants.maxTotalPlants {
+                            limitExceededMessage = "You've reached the maximum of \(AppConstants.maxTotalPlants) total plants. Delete a plant from any grow to create a new one."
+                            isShowingLimitExceeded = true
+                        } else {
+                            isShowingCreatePlant = true
+                        }
+                    } label: {
+                        Image(systemName: "plus")
+                            .font(.title3)
+                            .fontWeight(.bold)
+                            .frame(minWidth: 44, minHeight: 44)
+                    }
+                    .accessibilityLabel(plants.count >= AppConstants.maxPlantsPerGrow ? "Maximum of \(AppConstants.maxPlantsPerGrow) plants reached" : "Add Plant")
                 }
-                .accessibilityLabel(plants.count >= AppConstants.maxPlantsPerGrow ? "Maximum of \(AppConstants.maxPlantsPerGrow) plants reached" : "Add Plant")
-            }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    isShowingDeleteAlert = true
-                } label: {
-                    Image(systemName: "trash")
-                        .font(.title3)
-                        .fontWeight(.bold)
-                        .foregroundStyle(selectedPlantID != nil ? .red : .evSlateGray)
-                }
-                .disabled(selectedPlantID == nil)
-                .accessibilityLabel("Delete Plant")
             }
             ToolbarItem(placement: .navigationBarLeading) {
                 Button { dismiss() } label: {

@@ -47,7 +47,7 @@ struct SummaryPanelView: View {
     private func metricCell(_ label: String, _ value: String) -> some View {
         VStack(spacing: 4) {
             Text(label)
-                .font(.caption)
+                .font(.footnote)
                 .fontWeight(.semibold)
                 .foregroundStyle(Color.evSecondaryText)
             Text(value)

@@ -24,7 +24,7 @@ struct LimitExceededView: View {
             VStack(spacing: 20) {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .font(.system(size: 40))
-                    .foregroundStyle(Color(red: 0.85, green: 0.55, blue: 0.1))
+                    .foregroundStyle(Color.evWarmOrange)
                     .accessibilityHidden(true)
 
                 Text(title)

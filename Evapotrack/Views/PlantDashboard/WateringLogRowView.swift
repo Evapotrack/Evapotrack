@@ -87,7 +87,7 @@ struct WateringLogRowView: View {
                         .foregroundStyle(Color.evPrimaryBlue)
                         .accessibilityLabel("Capacity \(DisplayFormatter.percent(capacityPercent))")
                 }
-                .font(.subheadline)
+                .font(.callout)
                 .lineLimit(1)
 
                 // Expanded detail fields
@@ -134,7 +134,7 @@ struct WateringLogRowView: View {
                 .fontWeight(.medium)
                 .foregroundStyle(Color.evPrimaryText)
         }
-        .font(.subheadline)
+        .font(.callout)
         .padding(.vertical, 4)
         .padding(.horizontal, 8)
         .background(
