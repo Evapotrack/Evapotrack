@@ -220,6 +220,4 @@ Chronological record of Evapotrack's development from initial commit to current 
 
 ## v2 Roadmap
 
-- Onboarding flow (swipeable first-launch walkthrough)
-- Plant photos for visual identification
-- Localization (multi-language via NSLocalizedString)
+- Localization — wrap all user-facing strings in `NSLocalizedString()` to support multiple languages. This enables translators to provide `.strings` files for each locale without changing any Swift code. The app already uses hardcoded English strings throughout, so the work involves replacing each literal with `NSLocalizedString("key", comment: "context")` and creating a base `Localizable.strings` file. Once in place, adding a new language is just adding a translated `.strings` file to the project.
