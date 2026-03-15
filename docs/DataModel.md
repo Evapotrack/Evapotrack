@@ -64,6 +64,7 @@
 | waterUnit | WaterUnit | .liters | mL, L, or gal |
 | temperatureUnit | TemperatureUnit | .fahrenheit | C or F |
 | appearanceMode | AppearanceMode | .dark | Dark or Light |
+| language | AppLanguage | .english | EN or ES (in-app switching) |
 
 ## Cascade Delete Rules
 

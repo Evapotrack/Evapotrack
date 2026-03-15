@@ -128,4 +128,4 @@ Features planned for future updates:
 - **App Icon**: Professional 1024x1024px icon for App Store. Design should reflect watering/plant theme using app's blue palette.
 - **Plant Photos**: Allow users to attach a photo to each plant for visual identification
 - **Onboarding Flow**: 3-4 swipeable pages on first launch covering core concepts (create grow, add plant, log watering, recommendations). Show once via UserDefaults flag.
-- **Localization**: NSLocalizedString() wrapping for multi-language support
+- ~~**Localization**~~: Completed in Phase 6 — EN/ES in-app switching via custom `Strings` enum

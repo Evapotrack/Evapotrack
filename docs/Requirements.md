@@ -53,6 +53,7 @@ Evapotrack is an iOS 17+ application for tracking and optimizing plant watering 
 - FR-6.4: Settings persist across app launches via UserDefaults.
 - FR-6.5: Reset to defaults available.
 - FR-6.6: Example data loader available on the My Grows screen when no grows exist (creates sample grow, plant, and logs for first-time users).
+- FR-6.7: User can switch language between English and Spanish (in-app, no device restart required).
 
 ### FR-7: Help & Onboarding
 - FR-7.1: Context-aware help (general context from list views, watering context from dashboard).
@@ -70,7 +71,7 @@ Evapotrack is an iOS 17+ application for tracking and optimizing plant watering 
 ### NFR-3: Platform
 - iOS 17.0+ minimum deployment target.
 - SwiftUI with SwiftData persistence.
-- Supports iPhone in portrait orientation.
+- Supports iPhone and iPad in portrait orientation.
 
 ### NFR-4: Accessibility
 - All interactive elements have accessibility labels.

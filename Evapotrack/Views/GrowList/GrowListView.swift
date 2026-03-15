@@ -1,7 +1,7 @@
 // GrowListView.swift
 // Evapotrack
 //
-// Root view: shows all grows sorted by name.
+// Root view: shows all grows sorted by creation date (newest first).
 // Each row shows growName with a left-side circular selection indicator.
 // Selection is single-select and resets on appear.
 // Delete requires exactly one selected grow and shows a confirmation overlay.

@@ -11,7 +11,7 @@ Evapotrack/
     Grow.swift                    # @Model: grow group (root entity)
     Plant.swift                   # @Model: plant with retention capacity
     WateringLog.swift             # @Model: single watering event
-    UserSettings.swift            # Codable: display units, appearance mode
+    UserSettings.swift            # Codable: display units, appearance mode, language
   Services/
     GrowService.swift             # CRUD for Grow entities (with limit enforcement)
     PlantService.swift            # CRUD for Plant entities (with limit enforcement)
@@ -62,6 +62,7 @@ Evapotrack/
     DisplayFormatter.swift        # Unit-aware display formatting
     Extensions.swift              # Date, View, Text extensions
     DateProvider.swift            # Protocol for testable date injection
+    LocalizedStrings.swift        # EN/ES bilingual string enum (~530 lines)
     Logger.swift                  # OSLog subsystem categories
     Color+Evapotrack.swift        # Semantic color aliases
   Resources/
