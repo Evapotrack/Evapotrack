@@ -322,8 +322,8 @@ struct HistoryView: View {
     private var retainedChart: some View {
         let chartData = vm.wateringLogs.sorted { $0.dateTime < $1.dateTime }
         let dotIndices = Self.evenlySpacedIndices(count: chartData.count, max: 10)
-        guard let firstDate = chartData.first?.dateTime,
-              let lastDate = chartData.last?.dateTime else { return }
+        let firstDate = chartData.first!.dateTime
+        let lastDate = chartData.last!.dateTime
         let xDomain = firstDate...max(lastDate, firstDate.addingTimeInterval(60))
         let chartHeight: CGFloat = sizeClass == .regular ? 260 : 180
 
