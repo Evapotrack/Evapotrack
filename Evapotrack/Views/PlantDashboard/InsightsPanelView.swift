@@ -29,7 +29,7 @@ struct InsightsPanelView: View {
                         DisplayFormatter.water(recommendation.goalRunoff, unit: waterUnit)
                     )
                 }
-                .padding(.vertical, 4)
+                .padding(.vertical, 2)
             } else {
                 Text(Strings.noInsightsYet)
                     .foregroundStyle(Color.evSecondaryText)

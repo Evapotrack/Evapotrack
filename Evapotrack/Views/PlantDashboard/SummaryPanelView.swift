@@ -27,7 +27,7 @@ struct SummaryPanelView: View {
                     metricCell(Strings.retained, DisplayFormatter.water(log.retained, unit: waterUnit))
                     metricCell(Strings.capacityLabel, capacityText(for: log))
                 }
-                .padding(.vertical, 4)
+                .padding(.vertical, 2)
             } else {
                 Text(Strings.noWateringLogsYet)
                     .foregroundStyle(Color.evSecondaryText)
