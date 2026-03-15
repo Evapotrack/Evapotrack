@@ -283,9 +283,14 @@ Chronological record of Evapotrack's development from initial commit to current 
 
 ### Full App Audit
 - 111 tests passing (zero failures)
-- No dead code or unused files found
 - No debug artifacts, no security issues
 - Force unwrap in HistoryView chart verified safe (guarded by `count >= 2`)
+
+### Potential Future Cleanup (not blocking v1)
+- Remove unused `Date.daysBetween()` in Extensions.swift (line 32)
+- Remove 5 unused color aliases in Color+Evapotrack.swift: `evBorder`, `evIcon`, `evIconInactive`, `evButtonPrimary`, `evButtonDisabled`
+- Replace force unwraps after `.filter` in HistoryView chart (temp line 427, humidity line 454) with `if let` for safer pattern
+- Add error logging in PlantListView `deletePlant()` catch block
 
 ### App Store Preparedness
 - Expanded Next Steps with detailed step-by-step submission pipeline
