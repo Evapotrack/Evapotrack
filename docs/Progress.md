@@ -241,6 +241,7 @@ Chronological record of Evapotrack's development from initial commit to current 
 
 ## Optional Enhancements (Not Blocking v1)
 
+- **Dark mode screenshots** — Capture matching set of 19 screenshots in dark mode for `screenshots/dark-mode/`
 - **App Store preview video** — 15-30 sec screen recording of core flow
 - **Additional test coverage** — Services, ViewModels, DataExportService (~6-8 hrs)
 
