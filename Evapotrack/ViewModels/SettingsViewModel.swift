@@ -14,7 +14,9 @@ import OSLog
 @MainActor
 final class SettingsViewModel {
 
-    var settings: UserSettings = .default
+    var settings: UserSettings = .default {
+        didSet { Strings.current = settings.language }
+    }
 
     /// Single source of truth for the app's color scheme.
     var colorScheme: ColorScheme {

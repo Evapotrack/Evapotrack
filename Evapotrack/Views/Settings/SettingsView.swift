@@ -36,27 +36,6 @@ struct SettingsView: View {
         Form {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text(Strings.language)
-                        .font(.body)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(Color.evPrimaryText)
-                    Picker(Strings.language, selection: $settingsVM.settings.language) {
-                        ForEach(AppLanguage.allCases) { lang in
-                            Text(lang.displayName).tag(lang)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-                }
-                .padding(.vertical, 4)
-            } header: {
-                Text(Strings.language)
-                    .font(.title2.weight(.bold))
-                    .foregroundStyle(.evDeepNavy)
-                    .textCase(nil)
-            }
-
-            Section {
-                VStack(alignment: .leading, spacing: 8) {
                     Text(Strings.waterUnit)
                         .font(.body)
                         .fontWeight(.semibold)
@@ -161,6 +140,24 @@ struct SettingsView: View {
                 }
             }
 
+            if grow == nil {
+                Section {
+                    HStack {
+                        Text(Strings.language)
+                            .font(.subheadline)
+                            .foregroundStyle(Color.evSecondaryText)
+                        Spacer()
+                        Picker(Strings.language, selection: $settingsVM.settings.language) {
+                            ForEach(AppLanguage.allCases) { lang in
+                                Text(lang.displayName).tag(lang)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                        .frame(width: 100)
+                    }
+                }
+            }
+
             Section {
                 HStack {
                     Spacer()
@@ -193,6 +190,7 @@ struct SettingsView: View {
                 .listRowBackground(Color.clear)
             }
         }
+        .id(settingsVM.settings.language)
         .scrollContentBackground(.hidden)
         .background(Color.evBackground)
         .navigationTitle(Strings.settings)

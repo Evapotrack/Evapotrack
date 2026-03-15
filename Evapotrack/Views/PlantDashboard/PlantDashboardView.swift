@@ -79,6 +79,7 @@ struct PlantDashboardView: View {
         }
         .listStyle(.insetGrouped)
         .listSectionSpacing(8)
+        .id(settingsVM.settings.language)
         .scrollContentBackground(.hidden)
         .background(Color.evBackground)
         .navigationTitle("")

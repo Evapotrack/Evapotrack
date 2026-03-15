@@ -66,6 +66,7 @@ struct GrowListView: View {
                 }
             }
             .listStyle(.insetGrouped)
+            .id(settingsVM.settings.language)
             .scrollContentBackground(.hidden)
             .background(Color.evBackground)
             .navigationTitle(Strings.myGrows)

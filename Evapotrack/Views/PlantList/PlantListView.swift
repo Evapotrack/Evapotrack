@@ -74,6 +74,7 @@ struct PlantListView: View {
             }
         }
         .listStyle(.insetGrouped)
+        .id(settingsVM.settings.language)
         .scrollContentBackground(.hidden)
         .background(Color.evBackground)
         .navigationTitle(grow.growName)
