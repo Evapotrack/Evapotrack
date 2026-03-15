@@ -209,14 +209,15 @@ Chronological record of Evapotrack's development from initial commit to current 
 
 ## Development Time
 
-- **~27 hours** of active Claude Code development time (accounting for session overlap)
-- **13 sessions** across 14 calendar days (March 1–14, 2026)
+- **~28 hours** of active Claude Code development time (accounting for session overlap)
+- **14 sessions** across 15 calendar days (March 1–15, 2026)
 - **Phase 1 (March 1–2):** ~12 hrs — foundation, core features, settings, UI, polish, tests
 - **Phase 2 (March 6):** ~3 hrs — data integrity, limits, export, code review
 - **Phase 3 (March 12–13):** ~4 hrs — light mode, accessibility, Dynamic Type, App Store prep, iPad layout, code review, App Store prep docs
 - **Phase 4 (March 13):** ~2 hrs — status removal, chart/history polish, dead code cleanup, doc sync
 - **Phase 5 (March 13–14):** ~3 hrs — chart overlays, toolbar polish, How To content, text sizing
 - **Phase 6 (March 14):** ~3 hrs — EN/ES localization, actor isolation fixes, app display name, code review
+- **Phase 7 (March 14–15):** ~1 hr — example data fix, How To chart sections, Settings layout
 
 ## Completed Pre-Submission Items
 
@@ -242,6 +243,22 @@ Chronological record of Evapotrack's development from initial commit to current 
 
 - **App Store preview video** — 15-30 sec screen recording of core flow
 - **Additional test coverage** — Services, ViewModels, DataExportService (~6-8 hrs)
+
+## Phase 7: Post-Localization Polish (March 14–15, 2026)
+
+### Bug Fixes
+- Example data button no longer disabled after delete/try cycles (removed stale `exampleDataLoaded` state)
+
+### How To Content
+- Added "Reading the Chart" and "Temperature and Humidity Overlays" sections to plant dashboard How To context
+
+### Settings Layout
+- Merged Display Units and Theme into single section (eliminates scroll on iPhone)
+- Reduced vertical padding and font sizes for compact fit
+- Reset button padding tightened
+
+### Development Time
+- ~1 hr — bug fix, How To content, Settings layout
 
 ## v2 Roadmap
 

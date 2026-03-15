@@ -26,7 +26,6 @@ struct GrowListView: View {
     @State private var isShowingDeleteAlert = false
     @State private var isShowingLimitExceeded = false
     @State private var saveError: String?
-    @State private var exampleDataLoaded = false
 
     private var selectedGrow: Grow? {
         guard let id = selectedGrowID else { return nil }
@@ -236,7 +235,6 @@ struct GrowListView: View {
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(Color.evPrimaryBlue)
                 }
-                .disabled(exampleDataLoaded)
                 .accessibilityLabel(Strings.loadExampleData)
             }
             .padding(.top, 4)
@@ -296,7 +294,6 @@ struct GrowListView: View {
         WateringCalculationService.recalculateIntervalHours(for: plant.wateringLogs)
         try? modelContext.save()
         HapticService.success()
-        exampleDataLoaded = true
     }
 
     private func deleteGrow(_ grow: Grow) {

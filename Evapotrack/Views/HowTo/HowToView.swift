@@ -107,6 +107,18 @@ struct HowToView: View {
                 bullet(text)
             }
         }
+
+        helpSection(Strings.readingTheChart, highlightWord: Strings.readingTheChartHighlight) {
+            ForEach(Strings.readingTheChartBullets, id: \.self) { text in
+                bullet(text)
+            }
+        }
+
+        helpSection(Strings.tempHumidityOverlays, highlightWord: Strings.tempHumidityOverlaysHighlight) {
+            ForEach(Strings.tempHumidityOverlaysBullets, id: \.self) { text in
+                bullet(text)
+            }
+        }
     }
 
     // MARK: - Chart Context (History / Chart Screen)

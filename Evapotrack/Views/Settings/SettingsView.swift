@@ -35,9 +35,9 @@ struct SettingsView: View {
         @Bindable var settingsVM = settingsVM
         Form {
             Section {
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: 6) {
                     Text(Strings.waterUnit)
-                        .font(.body)
+                        .font(.subheadline)
                         .fontWeight(.semibold)
                         .foregroundStyle(Color.evPrimaryText)
                     Picker(Strings.waterUnit, selection: $settingsVM.settings.waterUnit) {
@@ -47,11 +47,11 @@ struct SettingsView: View {
                     }
                     .pickerStyle(.segmented)
                 }
-                .padding(.vertical, 4)
+                .padding(.vertical, 2)
 
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: 6) {
                     Text(Strings.temperatureUnit)
-                        .font(.body)
+                        .font(.subheadline)
                         .fontWeight(.semibold)
                         .foregroundStyle(Color.evPrimaryText)
                     Picker(Strings.temperatureUnit, selection: $settingsVM.settings.temperatureUnit) {
@@ -61,21 +61,11 @@ struct SettingsView: View {
                     }
                     .pickerStyle(.segmented)
                 }
-                .padding(.vertical, 4)
-            } header: {
-                Text(Strings.displayUnits)
-                    .font(.title2.weight(.bold))
-                    .foregroundStyle(.evDeepNavy)
-                    .textCase(nil)
-            } footer: {
-                Text(Strings.displayUnitsFooter)
-                    .foregroundStyle(Color.evSecondaryText)
-            }
+                .padding(.vertical, 2)
 
-            Section {
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: 6) {
                     Text(Strings.appearance)
-                        .font(.body)
+                        .font(.subheadline)
                         .fontWeight(.semibold)
                         .foregroundStyle(Color.evPrimaryText)
                     Picker(Strings.appearance, selection: $settingsVM.settings.appearanceMode) {
@@ -85,14 +75,14 @@ struct SettingsView: View {
                     }
                     .pickerStyle(.segmented)
                 }
-                .padding(.vertical, 4)
+                .padding(.vertical, 2)
             } header: {
-                Text(Strings.theme)
+                Text(Strings.displayUnits)
                     .font(.title2.weight(.bold))
                     .foregroundStyle(.evDeepNavy)
                     .textCase(nil)
             } footer: {
-                Text(Strings.themeFooter)
+                Text(Strings.displayUnitsFooter)
                     .foregroundStyle(Color.evSecondaryText)
             }
 
@@ -168,7 +158,7 @@ struct SettingsView: View {
                     .fontWeight(.bold)
                     .foregroundStyle(.evPrimaryBlue)
                     .padding(.horizontal, 32)
-                    .padding(.vertical, 14)
+                    .padding(.vertical, 10)
                     .background(
                         Capsule()
                             .stroke(Color.evPrimaryBlue, lineWidth: 1.5)
