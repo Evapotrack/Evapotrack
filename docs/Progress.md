@@ -209,8 +209,8 @@ Chronological record of Evapotrack's development from initial commit to current 
 
 ## Development Time
 
-- **~28 hours** of active Claude Code development time (accounting for session overlap)
-- **14 sessions** across 15 calendar days (March 1–15, 2026)
+- **~29 hours** of active Claude Code development time (accounting for session overlap)
+- **15 sessions** across 15 calendar days (March 1–15, 2026)
 - **Phase 1 (March 1–2):** ~12 hrs — foundation, core features, settings, UI, polish, tests
 - **Phase 2 (March 6):** ~3 hrs — data integrity, limits, export, code review
 - **Phase 3 (March 12–13):** ~4 hrs — light mode, accessibility, Dynamic Type, App Store prep, iPad layout, code review, App Store prep docs
@@ -218,26 +218,34 @@ Chronological record of Evapotrack's development from initial commit to current 
 - **Phase 5 (March 13–14):** ~3 hrs — chart overlays, toolbar polish, How To content, text sizing
 - **Phase 6 (March 14):** ~3 hrs — EN/ES localization, actor isolation fixes, app display name, code review
 - **Phase 7 (March 14–15):** ~1 hr — example data fix, How To chart sections, Settings layout
+- **Phase 8 (March 15):** ~1 hr — dashboard layout fix, full audit, App Store preparedness docs
 
 ## Completed Pre-Submission Items
 
 - [x] App icon (1024x1024) — in asset catalog
-- [x] Privacy policy — `docs/privacy-policy.html`
-- [x] Support page — `docs/support.html`
-- [x] App Store metadata — `docs/AppStoreMetadata.md`
-- [x] Full code review — 111 tests passing, dead code removed
+- [x] Privacy policy — `docs/privacy-policy.html` (live at https://evapotrack.github.io/Evapotrack/privacy-policy.html)
+- [x] Support page — `docs/support.html` (live at https://evapotrack.github.io/Evapotrack/support.html)
+- [x] GitHub Pages — repo public, pages deployed from main/docs
+- [x] App Store metadata — `docs/AppStoreMetadata.md` (name, subtitle, description, keywords, categories)
+- [x] Privacy manifest — no tracking, no data collection, UserDefaults only
+- [x] Export compliance — ITSAppUsesNonExemptEncryption = NO in Info.plist
+- [x] App display name — "Evapotrack" (not "EvapotrackDev")
+- [x] Light mode screenshots — 19 images in `screenshots/light-mode/`
+- [x] Full code audit — 111 tests passing, no dead code, no debug artifacts, no security issues
+- [x] Localization — EN/ES in-app switching complete
 
 ## Next Steps (In Order)
 
-1. **Apple Developer Account** — Enroll at developer.apple.com ($99/year), complete identity verification
-2. **Bundle ID** — Register in Apple Developer portal, update Xcode from `Evapotrack.EvapotrackDev` to production ID
-3. **Provisioning profiles** — Auto-managed signing in Xcode once Developer Account is active
-4. **Enable GitHub Pages** — Settings → Pages → Deploy from `main` / `docs` to publish privacy policy and support URLs
-5. **TestFlight build** — Archive in Xcode, upload to App Store Connect, test on physical iPhone and iPad
-6. **Physical device testing** — Verify haptics, data persistence, orientation lock, export file saving, Dark/Light mode
-7. **Screenshots** — Capture on required simulators (6.7" iPhone, iPad Pro 13") after testing confirms everything works
-8. **App Store Connect** — Create app listing, paste metadata, add URLs, upload screenshots, set pricing (Free), age rating (4+)
-9. **Submit for review** — Select build, submit to Apple review
+1. **Create Apple ID** — appleid.apple.com with Evapotrack phone number; enable two-factor authentication
+   - *Status: BLOCKED — rate limiting from March 14 attempts; retry March 15 from different device/network or call Apple Support at 1-800-275-2273*
+2. **Apple Developer Program** — Enroll at developer.apple.com/programs/enroll ($99/year), Individual enrollment, identity verification (up to 48 hrs)
+3. **Bundle ID** — Register in Apple Developer portal (Certificates, Identifiers & Profiles → Identifiers → App IDs); update Xcode bundle identifier from `Evapotrack.EvapotrackDev` to registered ID (e.g., `com.evapotrack.app`)
+4. **Configure Signing** — Xcode → Signing & Capabilities → select Team, enable "Automatically manage signing"
+5. **TestFlight Build** — Xcode: Product → Archive → Distribute App → App Store Connect; wait for processing (~10-30 min); add self as internal tester; install via TestFlight app on physical devices
+6. **Physical Device Testing** — Full checklist: launch, create/delete flow, data persistence, Dark/Light mode, EN/ES switching, export, portrait lock, chart overlays, VoiceOver, Dynamic Type
+7. **App Store Connect Listing** — Create app (appstoreconnect.apple.com → My Apps → +); fill: name, subtitle, category (Utilities/Lifestyle), age rating (4+), pricing (Free), privacy ("does not collect data"), privacy policy URL, support URL, description, keywords, screenshots, build selection, export compliance (No)
+8. **Screenshots** — Verify light mode set matches required dimensions (6.7" iPhone: 1290×2796, iPad Pro 13": 2048×2732); capture additional sizes if needed
+9. **Submit for Review** — Select TestFlight build, verify all fields complete, submit; typical review: 24-48 hrs
 
 ## Optional Enhancements (Not Blocking v1)
 
@@ -266,6 +274,27 @@ Chronological record of Evapotrack's development from initial commit to current 
 
 ### Development Time
 - ~1 hr — bug fix, How To content, Settings layout, code review
+
+## Phase 8: Dashboard Layout & Audit (March 15, 2026)
+
+### Layout Fix
+- PlantDashboardView listSectionSpacing reduced from 8 to 4 (eliminates slight scroll)
+- SummaryPanelView and InsightsPanelView grid padding reduced from 4 to 2
+
+### Full App Audit
+- 111 tests passing (zero failures)
+- No dead code or unused files found
+- No debug artifacts, no security issues
+- Force unwrap in HistoryView chart verified safe (guarded by `count >= 2`)
+
+### App Store Preparedness
+- Expanded Next Steps with detailed step-by-step submission pipeline
+- Documented full App Store Connect listing checklist (categories, pricing, privacy, screenshots, build)
+- Added TestFlight testing checklist (14 items)
+- Updated Completed Pre-Submission Items (11 items verified)
+
+### Development Time
+- ~1 hr — layout fix, audit, App Store preparedness documentation
 
 ## v2 Roadmap
 
