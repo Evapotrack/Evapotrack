@@ -22,20 +22,20 @@ struct CreatePlantView: View {
     var body: some View {
         Form {
             Section {
-                TextField("Plant Name", text: $vm.plantName)
+                TextField(Strings.plantName, text: $vm.plantName)
                     .autocorrectionDisabled()
                     .textLimit($vm.plantName, maxLength: AppConstants.maxPlantNameLength)
-                    .accessibilityLabel("Plant Name")
+                    .accessibilityLabel(Strings.plantName)
 
-                TextField("Pot Size (e.g. Fabric 3 gal)", text: $vm.potSize)
+                TextField(Strings.potSizePlaceholder, text: $vm.potSize)
                     .textLimit($vm.potSize, maxLength: AppConstants.maxPotSizeLength)
-                    .accessibilityLabel("Pot Size")
+                    .accessibilityLabel(Strings.potSize)
 
-                TextField("Medium Type (e.g. soil, perlite)", text: $vm.mediumType)
+                TextField(Strings.mediumTypePlaceholder, text: $vm.mediumType)
                     .textLimit($vm.mediumType, maxLength: AppConstants.maxMediumTypeLength)
-                    .accessibilityLabel("Medium Type")
+                    .accessibilityLabel(Strings.mediumType)
             } header: {
-                Text("Plant Info")
+                Text(Strings.plantInfo)
                     .font(.title2.weight(.bold))
                     .foregroundStyle(.evDeepNavy)
                     .textCase(nil)
@@ -43,43 +43,43 @@ struct CreatePlantView: View {
 
             Section {
                 TextField(
-                    "Max Retention Capacity (\(waterUnit.abbreviation))",
+                    Strings.maxRetentionField(waterUnit.abbreviation),
                     text: $vm.maxRetentionCapacityText
                 )
                 .keyboardType(.decimalPad)
                 .textLimit($vm.maxRetentionCapacityText, maxLength: AppConstants.maxNumericInputLength)
-                .accessibilityLabel("Max Retention Capacity in \(waterUnit.abbreviation)")
+                .accessibilityLabel(Strings.maxRetentionAccessibility(waterUnit.abbreviation))
 
-                Text("The maximum volume of water the medium can hold before runoff begins.")
+                Text(Strings.maxRetentionDescription)
                     .font(.callout)
                     .foregroundStyle(Color.evSecondaryText)
             } header: {
-                Text("Capacity")
+                Text(Strings.capacity)
                     .font(.title2.weight(.bold))
                     .foregroundStyle(.evDeepNavy)
                     .textCase(nil)
             }
 
             Section {
-                DisclosureGroup("Calculator") {
+                DisclosureGroup(Strings.calculator) {
                     TextField(
-                        "Water Added (\(waterUnit.abbreviation))",
+                        Strings.waterAddedField(waterUnit.abbreviation),
                         text: $vm.calculatorWaterAddedText
                     )
                     .keyboardType(.decimalPad)
                     .textLimit($vm.calculatorWaterAddedText, maxLength: AppConstants.maxNumericInputLength)
-                    .accessibilityLabel("Calculator Water Added in \(waterUnit.abbreviation)")
+                    .accessibilityLabel(Strings.calcWaterAddedAccessibility(waterUnit.abbreviation))
 
                     TextField(
-                        "Runoff Collected (\(waterUnit.abbreviation))",
+                        Strings.runoffCollectedField(waterUnit.abbreviation),
                         text: $vm.calculatorRunoffText
                     )
                     .keyboardType(.decimalPad)
                     .textLimit($vm.calculatorRunoffText, maxLength: AppConstants.maxNumericInputLength)
-                    .accessibilityLabel("Calculator Runoff Collected in \(waterUnit.abbreviation)")
+                    .accessibilityLabel(Strings.calcRunoffAccessibility(waterUnit.abbreviation))
 
                     HStack(spacing: 12) {
-                        Button("Calculate") {
+                        Button(Strings.calculate) {
                             vm.calculate()
                         }
                         .font(.body)
@@ -88,9 +88,9 @@ struct CreatePlantView: View {
                         .padding(.horizontal, 24)
                         .padding(.vertical, 12)
                         .background(Capsule().fill(Color.evPrimaryBlue))
-                        .accessibilityHint("Calculate max retention from water added and runoff")
+                        .accessibilityHint(Strings.calculateHint)
 
-                        Button("Clear") {
+                        Button(Strings.clear) {
                             vm.clearCalculator()
                         }
                         .font(.body)
@@ -111,21 +111,21 @@ struct CreatePlantView: View {
                     }
                 }
             } footer: {
-                Text("Don't know your capacity? Use the calculator to derive it from a test watering.")
+                Text(Strings.calculatorFooter)
                     .foregroundStyle(Color.evSecondaryText)
             }
 
             Section {
-                TextField("Example: 15%", text: $vm.goalRunoffPercentText)
+                TextField(Strings.goalRunoffPlaceholder, text: $vm.goalRunoffPercentText)
                     .keyboardType(.decimalPad)
                     .textLimit($vm.goalRunoffPercentText, maxLength: AppConstants.maxNumericInputLength)
-                    .accessibilityLabel("Goal Runoff Percent")
+                    .accessibilityLabel(Strings.goalRunoffPercent)
 
-                Text("The runoff percentage the Next algorithm will target. Defaults to 15% if left blank.")
+                Text(Strings.goalRunoffDescription)
                     .font(.callout)
                     .foregroundStyle(Color.evSecondaryText)
             } header: {
-                Text("Goal Runoff %")
+                Text(Strings.goalRunoffSection)
                     .font(.title2.weight(.bold))
                     .foregroundStyle(.evDeepNavy)
                     .textCase(nil)
@@ -142,16 +142,16 @@ struct CreatePlantView: View {
         .scrollDismissesKeyboard(.interactively)
         .scrollContentBackground(.hidden)
         .background(Color.evBackground)
-        .navigationTitle("Add Plant")
+        .navigationTitle(Strings.addPlant)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
-                Button("Cancel") { dismiss() }
+                Button(Strings.cancel) { dismiss() }
                     .font(.body)
                     .fontWeight(.bold)
             }
             ToolbarItem(placement: .confirmationAction) {
-                Button("Save") {
+                Button(Strings.save) {
                     if vm.save() {
                         HapticService.success()
                         dismissTask = Task {
@@ -178,7 +178,7 @@ struct CreatePlantView: View {
                             Image(systemName: "checkmark.circle.fill")
                                 .font(.system(size: 56))
                                 .foregroundStyle(.evPrimaryBlue)
-                            Text("Saved")
+                            Text(Strings.saved)
                                 .font(.headline.weight(.bold))
                                 .foregroundStyle(Color.evPrimaryText)
                         }
@@ -192,7 +192,7 @@ struct CreatePlantView: View {
                     }
                     .allowsHitTesting(false)
                     .accessibilityAddTraits(.isModal)
-                    .accessibilityLabel("Saved")
+                    .accessibilityLabel(Strings.savedLabel)
             }
         }
         .animation(.easeInOut(duration: 0.3), value: vm.showSaveConfirmation)

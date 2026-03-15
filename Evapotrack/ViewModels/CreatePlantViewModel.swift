@@ -63,7 +63,7 @@ final class CreatePlantViewModel {
         if let grow {
             let trimmed = plantName.trimmingCharacters(in: .whitespaces).lowercased()
             if grow.plants.contains(where: { $0.plantName.trimmingCharacters(in: .whitespaces).lowercased() == trimmed }) {
-                validationError = "A plant with this name already exists in this grow."
+                validationError = Strings.plantNameDuplicate
                 return false
             }
         }
@@ -75,7 +75,7 @@ final class CreatePlantViewModel {
         if !mediumResult.isValid { validationError = mediumResult.errorMessage; return false }
 
         guard let displayValue = Double(maxRetentionCapacityText) else {
-            validationError = "Max retention capacity must be a number."
+            validationError = Strings.maxRetentionMustBeNumber
             return false
         }
 
@@ -88,11 +88,11 @@ final class CreatePlantViewModel {
         // Goal Runoff % is optional — validate only if provided
         if !goalRunoffPercentText.trimmingCharacters(in: .whitespaces).isEmpty {
             guard let goalPercent = Double(goalRunoffPercentText) else {
-                validationError = "Goal Runoff % must be a number."
+                validationError = Strings.goalRunoffMustBeNumber
                 return false
             }
             guard goalPercent >= 0.1, goalPercent <= 99.9 else {
-                validationError = "Goal Runoff % must be between 0.1 and 99.9."
+                validationError = Strings.goalRunoffRange
                 return false
             }
         }
@@ -104,7 +104,7 @@ final class CreatePlantViewModel {
         guard validate() else { return false }
         guard let displayValue = Double(maxRetentionCapacityText) else { return false }
         guard let service = plantService else {
-            validationError = "Unable to save. Please try again."
+            validationError = Strings.unableToSave
             return false
         }
 
@@ -125,7 +125,7 @@ final class CreatePlantViewModel {
         do {
             try service.addPlant(plant)
         } catch {
-            validationError = "Failed to save. Please try again."
+            validationError = Strings.failedToSave
             return false
         }
         showSaveConfirmation = true
@@ -139,7 +139,7 @@ final class CreatePlantViewModel {
 
         // Parse water added
         guard let displayWater = Double(calculatorWaterAddedText) else {
-            calculatorError = "Water added must be a number."
+            calculatorError = Strings.waterAddedMustBeNumber
             return
         }
 
@@ -155,7 +155,7 @@ final class CreatePlantViewModel {
 
         // Parse runoff
         guard let displayRunoff = Double(calculatorRunoffText) else {
-            calculatorError = "Runoff collected must be a number."
+            calculatorError = Strings.runoffMustBeNumber
             return
         }
 
@@ -164,7 +164,7 @@ final class CreatePlantViewModel {
 
         // Calculator-specific: runoff must be > 0 (not ≥ 0 as in watering logs)
         guard runoffLiters > 0 else {
-            calculatorError = "Runoff collected must be greater than 0."
+            calculatorError = Strings.runoffMustBePositive
             return
         }
 

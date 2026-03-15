@@ -37,7 +37,7 @@ struct HowToView: View {
         .listStyle(.insetGrouped)
         .scrollContentBackground(.hidden)
         .background(Color.evBackground)
-        .navigationTitle("How To")
+        .navigationTitle(Strings.howTo)
         .navigationBarTitleDisplayMode(.large)
         .navigationBarBackButtonHidden(true)
         .toolbar {
@@ -48,7 +48,7 @@ struct HowToView: View {
                         .fontWeight(.bold)
                         .foregroundStyle(.evPrimaryBlue)
                 }
-                .accessibilityLabel("Back")
+                .accessibilityLabel(Strings.backLabel)
             }
         }
     }
@@ -57,42 +57,36 @@ struct HowToView: View {
 
     @ViewBuilder
     private var generalContent: some View {
-        helpSection("What Is Evapotrack?", highlightWord: "Evapotrack") {
-            bullet("Evapotrack helps you track and optimize watering for your plants by recording how much water you add and how much runs off.")
-            bullet("The app calculates key metrics like Retained volume, Capacity %, and a recommended Next watering amount based on your history.")
-            bullet("All data is stored locally on your device. You can download your data directly from Settings.")
+        helpSection(Strings.whatIsEvapotrack, highlightWord: Strings.whatIsEvapotrackHighlight) {
+            ForEach(Strings.whatIsEvapotrackBullets, id: \.self) { text in
+                bullet(text)
+            }
         }
 
-        helpSection("Grows and Plants") {
-            bullet("A Grow is a group that contains one or more plants. Use grows to organize plants by location, cycle, or any grouping that makes sense for you.")
-            bullet("Tap + on the My Grows screen to create a new grow. Each grow records its name and the date it was created.")
-            bullet("Tap a grow to open its plant list. From there, tap + to add plants to that grow.")
-            bullet("Deleting a grow will permanently delete all plants inside it and all of their watering logs.")
+        helpSection(Strings.growsAndPlants, highlightWord: Strings.growsAndPlantsHighlight) {
+            ForEach(Strings.growsAndPlantsBullets, id: \.self) { text in
+                bullet(text)
+            }
         }
 
-        helpSection("How to Create a Plant") {
-            bullet("Open a grow, then tap + to start creating a new plant.")
-            bullet("Enter the required fields: Plant Name, Pot Size, Medium Type, and Max Retention Capacity.")
-            bullet("If you already know your Max Retention Capacity, enter it directly. Otherwise, use the built-in calculator to derive it from a test watering.")
-            bullet("Plants cannot be edited after creation. Make sure all fields are correct before saving.")
-            bullet("Deleting a plant will permanently delete all of its watering logs.")
+        helpSection(Strings.howToCreatePlant, highlightWord: Strings.howToCreatePlantHighlight) {
+            ForEach(Strings.howToCreatePlantBullets, id: \.self) { text in
+                bullet(text)
+            }
         }
 
-        helpSection("What Is Max Retention Capacity?") {
-            bullet("Max Retention Capacity is the maximum volume of water your growing medium can absorb and hold before runoff begins.")
-            bullet("This value is central to how Evapotrack calculates Capacity %, Average Retained, and the Next Watering Amount.")
-            bullet("To determine it: water your medium slowly until runoff starts, then subtract the runoff from the water you added. The result is your Max Retention Capacity.")
-            bullet("A more saturated medium will produce more runoff. An accurate Max Retention Capacity leads to better recommendations.")
+        helpSection(Strings.whatIsMaxRetention, highlightWord: Strings.whatIsMaxRetentionHighlight) {
+            ForEach(Strings.whatIsMaxRetentionBullets, id: \.self) { text in
+                bullet(text)
+            }
         }
 
         wateringProtocolSection
 
-        helpSection("How to Download Your Grow Data") {
-            bullet("Open a grow's plant list, then tap the gear icon to open Settings.")
-            bullet("Scroll to the Export Data section. This section only appears when Settings is opened from within a grow.")
-            bullet("Tap Export to generate a formatted text file containing all plants in the grow, their details, and every watering log.")
-            bullet("Values are exported in your chosen display units (water unit and temperature unit).")
-            bullet("Choose where to save or share the file using the system share sheet.")
+        helpSection(Strings.howToDownloadData, highlightWord: Strings.howToDownloadDataHighlight) {
+            ForEach(Strings.howToDownloadDataBullets, id: \.self) { text in
+                bullet(text)
+            }
         }
     }
 
@@ -102,20 +96,16 @@ struct HowToView: View {
     private var addWateringContent: some View {
         wateringProtocolSection
 
-        helpSection("How to Log a Watering Event") {
-            bullet("From a plant's dashboard, tap + to add a new watering event.")
-            bullet("Enter Water Added and Runoff Collected. Both are required.")
-            bullet("Set the correct Date and Time. Future dates are not allowed.")
-            bullet("Temperature and Humidity are optional. They are recorded for your reference but are not used in any calculations.")
-            bullet("Logs cannot be edited after creation. If a log is incorrect, delete it and create a new one.")
+        helpSection(Strings.howToLogWatering, highlightWord: Strings.howToLogWateringHighlight) {
+            ForEach(Strings.howToLogWateringBullets, id: \.self) { text in
+                bullet(text)
+            }
         }
 
-        helpSection("What Is Next?", highlightWord: "Next") {
-            bullet("Next is the recommended water amount shown in the Insights panel. It tells you how much to water next time to hit your Goal Runoff %.")
-            bullet("It may increase or decrease based on your history to keep your runoff as close to your Goal Runoff % as possible.")
-            bullet("The estimate is based on your recent watering history — it averages your last Retained amount with your overall average to predict absorption.")
-            bullet("Goal Runoff shows the expected runoff if you apply the Next amount. It equals Next multiplied by your Goal Runoff %.")
-            bullet("The more logs you record, the more accurate the recommendation becomes.")
+        helpSection(Strings.whatIsNext, highlightWord: Strings.whatIsNextHighlight) {
+            ForEach(Strings.whatIsNextBullets, id: \.self) { text in
+                bullet(text)
+            }
         }
     }
 
@@ -123,25 +113,22 @@ struct HowToView: View {
 
     @ViewBuilder
     private var chartContent: some View {
-        helpSection("Reading the Chart") {
-            bullet("The chart plots your Retained water volume across all stored logs for the plant, from the earliest log date to the most recent.")
-            bullet("An upward trend in Retained means your medium is absorbing more water over time, which may indicate drying out between waterings or increased plant uptake.")
-            bullet("A downward trend may indicate the medium is staying saturated or that your watering volume is decreasing.")
-            bullet("A flat, consistent line means your watering routine is stable and your medium is absorbing a predictable amount each time.")
+        helpSection(Strings.readingTheChart, highlightWord: Strings.readingTheChartHighlight) {
+            ForEach(Strings.readingTheChartBullets, id: \.self) { text in
+                bullet(text)
+            }
         }
 
-        helpSection("Temperature and Humidity Overlays") {
-            bullet("Toggle the Temp and Humidity pills to overlay environmental data on the chart.")
-            bullet("Each overlay renders on its own scale so the line shape accurately reflects the data.")
-            bullet("Look for correlations: rising temperature often increases water uptake, while higher humidity may reduce it.")
-            bullet("These fields are optional. If no logs include temperature or humidity data, the toggle will be disabled.")
+        helpSection(Strings.tempHumidityOverlays, highlightWord: Strings.tempHumidityOverlaysHighlight) {
+            ForEach(Strings.tempHumidityOverlaysBullets, id: \.self) { text in
+                bullet(text)
+            }
         }
 
-        helpSection("What Is Next?", highlightWord: "Next") {
-            bullet("Next is the recommended water amount shown in the Insights panel. It tells you how much to water next time to hit your Goal Runoff %.")
-            bullet("It may increase or decrease based on your history to keep your runoff as close to your Goal Runoff % as possible.")
-            bullet("The estimate is based on your recent watering history — it averages your last Retained amount with your overall average to predict absorption.")
-            bullet("The more logs you record, the more accurate the recommendation becomes.")
+        helpSection(Strings.whatIsNext, highlightWord: Strings.whatIsNextHighlight) {
+            ForEach(Strings.whatIsNextBullets, id: \.self) { text in
+                bullet(text)
+            }
         }
 
         wateringProtocolSection
@@ -151,12 +138,10 @@ struct HowToView: View {
 
     @ViewBuilder
     private var wateringProtocolSection: some View {
-        helpSection("Watering Protocol") {
-            bullet("Water your medium slowly and evenly, always aiming for runoff.")
-            bullet("You must always have runoff. Runoff must always be less than Water Added.")
-            bullet("Your runoff goal is based on the Goal Runoff % set for each plant (default 15%).")
-            bullet("Collect all runoff in a tray and measure it after the pot finishes draining.")
-            bullet("Subtract Runoff Collected from Water Added. This is your Retained volume — the amount of water the medium actually absorbed.")
+        helpSection(Strings.wateringProtocol, highlightWord: Strings.wateringProtocolHighlight) {
+            ForEach(Strings.wateringProtocolBullets, id: \.self) { text in
+                bullet(text)
+            }
         }
     }
 

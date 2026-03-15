@@ -38,19 +38,19 @@ struct PlantDashboardView: View {
             // Plant details
             Section {
                 HStack {
-                    plantInfoCell("Pot", vm.plant.potSize.isEmpty ? "—" : vm.plant.potSize)
+                    plantInfoCell(Strings.pot, vm.plant.potSize.isEmpty ? "—" : vm.plant.potSize)
                     Spacer()
-                    plantInfoCell("Medium", vm.plant.mediumType.isEmpty ? "—" : vm.plant.mediumType)
+                    plantInfoCell(Strings.medium, vm.plant.mediumType.isEmpty ? "—" : vm.plant.mediumType)
                     Spacer()
-                    plantInfoCell("Max Capacity", DisplayFormatter.water(vm.plant.maxRetentionCapacity, unit: waterUnit))
+                    plantInfoCell(Strings.maxCapacity, DisplayFormatter.water(vm.plant.maxRetentionCapacity, unit: waterUnit))
                     Spacer()
-                    plantInfoCell("Goal Runoff", DisplayFormatter.percent(vm.plant.goalRunoffPercent))
+                    plantInfoCell(Strings.goalRunoff, DisplayFormatter.percent(vm.plant.goalRunoffPercent))
                 }
                 .frame(maxWidth: sizeClass == .regular ? 500 : .infinity)
                 .frame(maxWidth: .infinity, alignment: .center)
             } header: {
                 Label {
-                    Text("Plant Info")
+                    Text(Strings.plantInfo)
                 } icon: {
                     Image(systemName: "leaf")
                 }
@@ -92,7 +92,7 @@ struct PlantDashboardView: View {
                         .fontWeight(.bold)
                         .frame(minWidth: 44, minHeight: 44)
                 }
-                .accessibilityLabel("Add Watering")
+                .accessibilityLabel(Strings.addWateringLabel)
             }
             ToolbarItem(placement: .navigationBarLeading) {
                 Button { dismiss() } label: {
@@ -101,7 +101,7 @@ struct PlantDashboardView: View {
                         .fontWeight(.bold)
                         .foregroundStyle(.evPrimaryBlue)
                 }
-                .accessibilityLabel("Back")
+                .accessibilityLabel(Strings.backLabel)
             }
             ToolbarItem(placement: .navigationBarLeading) {
                 Button { vm.isShowingSettings = true } label: {
@@ -110,7 +110,7 @@ struct PlantDashboardView: View {
                         .fontWeight(.bold)
                         .foregroundStyle(.evPrimaryBlue)
                 }
-                .accessibilityLabel("Settings")
+                .accessibilityLabel(Strings.settingsLabel)
             }
             ToolbarItem(placement: .navigationBarLeading) {
                 NavigationLink {
@@ -121,7 +121,7 @@ struct PlantDashboardView: View {
                         .fontWeight(.bold)
                         .foregroundStyle(.evPrimaryBlue)
                 }
-                .accessibilityLabel("Help")
+                .accessibilityLabel(Strings.helpLabel)
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink {
@@ -139,7 +139,7 @@ struct PlantDashboardView: View {
                         .padding(.leading, 8)
                 }
                 .disabled(vm.wateringLogs.count < 2)
-                .accessibilityLabel("Chart")
+                .accessibilityLabel(Strings.chartLabel)
             }
         }
         .sheet(isPresented: $vm.isShowingAddWatering, onDismiss: { vm.loadData() }) {
@@ -158,11 +158,11 @@ struct PlantDashboardView: View {
             vm.configure(modelContext: modelContext)
             vm.loadData()
         }
-        .alert("Error", isPresented: Binding(
+        .alert(Strings.error, isPresented: Binding(
             get: { vm.deleteError != nil },
             set: { if !$0 { vm.deleteError = nil } }
         )) {
-            Button("OK") { vm.deleteError = nil }
+            Button(Strings.ok) { vm.deleteError = nil }
         } message: {
             Text(vm.deleteError ?? "")
         }

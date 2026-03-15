@@ -5,15 +5,15 @@
 
 import Foundation
 
-protocol DateProviding {
+nonisolated protocol DateProviding: Sendable {
     var now: Date { get }
 }
 
 struct SystemDateProvider: DateProviding {
-    var now: Date { .now }
+    nonisolated var now: Date { .now }
 }
 
 struct MockDateProvider: DateProviding {
     let fixedDate: Date
-    var now: Date { fixedDate }
+    nonisolated var now: Date { fixedDate }
 }

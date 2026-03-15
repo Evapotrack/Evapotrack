@@ -174,24 +174,49 @@ Chronological record of Evapotrack's development from initial commit to current 
 - Humidity values adjusted to 45–65% range
 - Temperature values adjusted to 69–91°F range (stored as Celsius internally)
 
+## Phase 6: Localization (March 14, 2026)
+
+### In-App Language Switching
+- English/Spanish language toggle via segmented picker (EN/ES) in Settings
+- Custom `Strings` enum with ~200 computed properties for all user-facing text
+- `nonisolated(unsafe) static var current: AppLanguage` synced on load/save/reset
+- Language persisted in UserSettings (backward-compatible decoder)
+- Default language: English
+
+### Actor Isolation Fixes
+- `nonisolated(unsafe) let plant: Plant` on PlantDashboardViewModel and AddWateringLogViewModel
+- `nonisolated init` on ViewModels to satisfy SwiftUI View protocol requirements
+- `nonisolated protocol DateProviding: Sendable` to prevent @MainActor inference
+- `nonisolated enum ValidationResult: Equatable, Sendable` for test compatibility
+
+### App Display Name
+- Changed app display name from "EvapotrackDev" to "Evapotrack" via Info.plist build settings
+- Xcode project and folder remain "EvapotrackDev"
+
+### Files Changed
+- New: `LocalizedStrings.swift` (~530 lines)
+- Modified: 27 existing files (all Views, ViewModels, Services, Models, Utilities)
+
 ## Current State
 
 - **111 unit tests**, all passing
-- **45 Swift source files** across Models, Services, ViewModels, Views, Utilities
+- **46 Swift source files** across Models, Services, ViewModels, Views, Utilities
 - **11 custom color assets** with light/dark variants (added evWarmOrange, evSoftPurple)
 - **Privacy manifest**: no tracking, no data collection, UserDefaults only
 - **Deployment target**: iOS 17.0
 - **Device family**: iPhone and iPad (portrait only)
+- **Languages**: English (default), Spanish — in-app switching
 
 ## Development Time
 
-- **~24 hours** of active Claude Code development time (accounting for session overlap)
-- **12 sessions** across 14 calendar days (March 1–14, 2026)
+- **~27 hours** of active Claude Code development time (accounting for session overlap)
+- **13 sessions** across 14 calendar days (March 1–14, 2026)
 - **Phase 1 (March 1–2):** ~12 hrs — foundation, core features, settings, UI, polish, tests
 - **Phase 2 (March 6):** ~3 hrs — data integrity, limits, export, code review
 - **Phase 3 (March 12–13):** ~4 hrs — light mode, accessibility, Dynamic Type, App Store prep, iPad layout, code review, App Store prep docs
 - **Phase 4 (March 13):** ~2 hrs — status removal, chart/history polish, dead code cleanup, doc sync
 - **Phase 5 (March 13–14):** ~3 hrs — chart overlays, toolbar polish, How To content, text sizing
+- **Phase 6 (March 14):** ~3 hrs — EN/ES localization, actor isolation fixes, app display name, code review
 
 ## Completed Pre-Submission Items
 
@@ -220,4 +245,4 @@ Chronological record of Evapotrack's development from initial commit to current 
 
 ## v2 Roadmap
 
-- Localization — wrap all user-facing strings in `NSLocalizedString()` to support multiple languages. This enables translators to provide `.strings` files for each locale without changing any Swift code. The app already uses hardcoded English strings throughout, so the work involves replacing each literal with `NSLocalizedString("key", comment: "context")` and creating a base `Localizable.strings` file. Once in place, adding a new language is just adding a translated `.strings` file to the project.
+- ~~Localization~~ — completed in Phase 6 (EN/ES in-app switching)

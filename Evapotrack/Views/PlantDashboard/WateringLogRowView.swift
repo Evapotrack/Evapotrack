@@ -45,7 +45,7 @@ struct WateringLogRowView: View {
                     .foregroundStyle(isSelected ? Color.evPrimaryBlue : Color.evSlateGray)
             }
             .buttonStyle(.plain)
-            .accessibilityLabel(isSelected ? "Deselect log" : "Select log")
+            .accessibilityLabel(isSelected ? Strings.deselectLog : Strings.selectLog)
 
             // Tappable content area
             VStack(alignment: .leading, spacing: 4) {
@@ -68,7 +68,7 @@ struct WateringLogRowView: View {
                     Text(DisplayFormatter.water(log.waterAdded, unit: waterUnit))
                         .fontWeight(.medium)
                         .foregroundStyle(Color.evPrimaryText)
-                    Text(" added")
+                    Text(Strings.added)
                         .foregroundStyle(Color.evSlateGray)
 
                     Text("  ·  ")
@@ -77,7 +77,7 @@ struct WateringLogRowView: View {
                     Text(DisplayFormatter.water(log.retained, unit: waterUnit))
                         .fontWeight(.medium)
                         .foregroundStyle(Color.evPrimaryText)
-                    Text(" ret")
+                    Text(Strings.ret)
                         .foregroundStyle(Color.evSlateGray)
 
                     Spacer()
@@ -85,7 +85,7 @@ struct WateringLogRowView: View {
                     Text(DisplayFormatter.percent(capacityPercent))
                         .fontWeight(.semibold)
                         .foregroundStyle(Color.evPrimaryBlue)
-                        .accessibilityLabel("Capacity \(DisplayFormatter.percent(capacityPercent))")
+                        .accessibilityLabel(Strings.capacityAccessibility(DisplayFormatter.percent(capacityPercent)))
                 }
                 .font(.callout)
                 .lineLimit(1)
@@ -95,17 +95,17 @@ struct WateringLogRowView: View {
                     VStack(alignment: .leading, spacing: 0) {
                         Divider()
                             .padding(.vertical, 4)
-                        fieldRow("Water Added", DisplayFormatter.water(log.waterAdded, unit: waterUnit), shaded: true)
-                        fieldRow("Runoff Collected", DisplayFormatter.water(log.runoffCollected, unit: waterUnit), shaded: false)
-                        fieldRow("Retained", DisplayFormatter.water(log.retained, unit: waterUnit), shaded: true)
-                        fieldRow("Runoff %", DisplayFormatter.percent(log.runoffPercent), shaded: false)
-                        fieldRow("Capacity %", DisplayFormatter.percent(capacityPercent), shaded: true)
-                        fieldRow("Interval", intervalText, shaded: false)
+                        fieldRow(Strings.waterAdded, DisplayFormatter.water(log.waterAdded, unit: waterUnit), shaded: true)
+                        fieldRow(Strings.runoffCollected, DisplayFormatter.water(log.runoffCollected, unit: waterUnit), shaded: false)
+                        fieldRow(Strings.retained, DisplayFormatter.water(log.retained, unit: waterUnit), shaded: true)
+                        fieldRow(Strings.runoffPercent, DisplayFormatter.percent(log.runoffPercent), shaded: false)
+                        fieldRow(Strings.capacityPercent, DisplayFormatter.percent(capacityPercent), shaded: true)
+                        fieldRow(Strings.interval, intervalText, shaded: false)
                         if let temp = log.temperatureCelsius {
-                            fieldRow("Temperature", DisplayFormatter.temperature(temp, unit: temperatureUnit), shaded: true)
+                            fieldRow(Strings.temperature, DisplayFormatter.temperature(temp, unit: temperatureUnit), shaded: true)
                         }
                         if let humidity = log.humidityPercent {
-                            fieldRow("Humidity", DisplayFormatter.percent(humidity), shaded: log.temperatureCelsius == nil)
+                            fieldRow(Strings.humidity, DisplayFormatter.percent(humidity), shaded: log.temperatureCelsius == nil)
                         }
                     }
                     .transition(.opacity)
@@ -117,8 +117,8 @@ struct WateringLogRowView: View {
                     onToggleExpansion()
                 }
             }
-            .accessibilityLabel(isExpanded ? "Collapse log details" : "Expand log details")
-            .accessibilityHint("Double tap to expand or collapse details")
+            .accessibilityLabel(isExpanded ? Strings.collapseLogDetails : Strings.expandLogDetails)
+            .accessibilityHint(Strings.doubleTapExpandCollapse)
             .accessibilityAddTraits(.isButton)
         }
         .padding(.vertical, 2)

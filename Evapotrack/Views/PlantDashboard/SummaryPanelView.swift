@@ -22,19 +22,19 @@ struct SummaryPanelView: View {
         Section {
             if let log = lastLog {
                 LazyVGrid(columns: columns, alignment: .center, spacing: 12) {
-                    metricCell("Last Event", log.dateTime.shortFormatted)
-                    metricCell("Interval", intervalText(for: log))
-                    metricCell("Retained", DisplayFormatter.water(log.retained, unit: waterUnit))
-                    metricCell("Capacity", capacityText(for: log))
+                    metricCell(Strings.lastEvent, log.dateTime.shortFormatted)
+                    metricCell(Strings.interval, intervalText(for: log))
+                    metricCell(Strings.retained, DisplayFormatter.water(log.retained, unit: waterUnit))
+                    metricCell(Strings.capacityLabel, capacityText(for: log))
                 }
                 .padding(.vertical, 4)
             } else {
-                Text("No watering logs yet.")
+                Text(Strings.noWateringLogsYet)
                     .foregroundStyle(Color.evSecondaryText)
             }
         } header: {
             Label {
-                Text("Summary")
+                Text(Strings.summary)
             } icon: {
                 Image(systemName: "list.clipboard")
             }

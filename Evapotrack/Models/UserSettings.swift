@@ -12,17 +12,20 @@ struct UserSettings: Codable, Equatable {
     var waterUnit: WaterUnit
     var temperatureUnit: TemperatureUnit
     var appearanceMode: AppearanceMode = .dark
+    var language: AppLanguage = .english
 
     static let `default` = UserSettings(
         waterUnit: .liters,
         temperatureUnit: .fahrenheit,
-        appearanceMode: .dark
+        appearanceMode: .dark,
+        language: .english
     )
 
     // Custom decoder for backward compatibility:
     // - Missing key (pre-appearance data) → .dark
     // - Old "System" value (removed) → .dark
     // - "Light" / "Dark" → decode normally
+    // - Missing language key (pre-localization) → .english
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         waterUnit = try container.decode(WaterUnit.self, forKey: .waterUnit)
@@ -33,13 +36,30 @@ struct UserSettings: Codable, Equatable {
         } else {
             appearanceMode = .dark
         }
+        if let raw = try container.decodeIfPresent(String.self, forKey: .language),
+           let lang = AppLanguage(rawValue: raw) {
+            language = lang
+        } else {
+            language = .english
+        }
     }
 
-    init(waterUnit: WaterUnit = .liters, temperatureUnit: TemperatureUnit = .fahrenheit, appearanceMode: AppearanceMode = .dark) {
+    init(waterUnit: WaterUnit = .liters, temperatureUnit: TemperatureUnit = .fahrenheit, appearanceMode: AppearanceMode = .dark, language: AppLanguage = .english) {
         self.waterUnit = waterUnit
         self.temperatureUnit = temperatureUnit
         self.appearanceMode = appearanceMode
+        self.language = language
     }
+}
+
+// MARK: - Language
+
+enum AppLanguage: String, Codable, CaseIterable, Identifiable {
+    case english = "EN"
+    case spanish = "ES"
+
+    var id: String { rawValue }
+    var displayName: String { rawValue }
 }
 
 // MARK: - Appearance Mode
@@ -52,8 +72,8 @@ enum AppearanceMode: String, Codable, CaseIterable, Identifiable {
 
     var displayName: String {
         switch self {
-        case .light: return "Day"
-        case .dark:  return "Dark"
+        case .light: return Strings.dayMode
+        case .dark:  return Strings.darkMode
         }
     }
 }

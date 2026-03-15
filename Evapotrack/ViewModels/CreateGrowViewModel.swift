@@ -49,7 +49,7 @@ final class CreateGrowViewModel {
             let trimmed = growName.trimmingCharacters(in: .whitespaces).lowercased()
             let existingGrows = service.fetchAll()
             if existingGrows.contains(where: { $0.growName.trimmingCharacters(in: .whitespaces).lowercased() == trimmed }) {
-                validationError = "A grow with this name already exists."
+                validationError = Strings.growNameDuplicate
                 return false
             }
         }
@@ -60,7 +60,7 @@ final class CreateGrowViewModel {
     func save() -> Bool {
         guard validate() else { return false }
         guard let service = growService else {
-            validationError = "Unable to save. Please try again."
+            validationError = Strings.unableToSave
             return false
         }
 
@@ -71,7 +71,7 @@ final class CreateGrowViewModel {
         do {
             try service.addGrow(grow)
         } catch {
-            validationError = "Failed to save. Please try again."
+            validationError = Strings.failedToSave
             return false
         }
         showSaveConfirmation = true

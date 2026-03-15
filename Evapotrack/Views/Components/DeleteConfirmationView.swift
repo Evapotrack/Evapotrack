@@ -16,7 +16,7 @@ struct DeleteConfirmationView: View {
     @Environment(\.horizontalSizeClass) private var sizeClass
 
     private var styledMessage: Text {
-        let keyword = "permanently"
+        let keyword = Strings.permanently
         guard let range = message.range(of: keyword) else {
             return Text(message)
         }
@@ -31,7 +31,7 @@ struct DeleteConfirmationView: View {
             Color.evInkBlack.opacity(0.4)
                 .ignoresSafeArea()
                 .onTapGesture { onCancel() }
-                .accessibilityLabel("Dismiss dialog")
+                .accessibilityLabel(Strings.dismissDialog)
                 .accessibilityAddTraits(.isButton)
 
             // Modal card
@@ -55,7 +55,7 @@ struct DeleteConfirmationView: View {
                     Button {
                         onCancel()
                     } label: {
-                        Text("Cancel")
+                        Text(Strings.cancel)
                             .font(.title3.weight(.bold))
                             .foregroundStyle(Color.evSlateGray)
                             .frame(maxWidth: .infinity)
@@ -71,7 +71,7 @@ struct DeleteConfirmationView: View {
                         HapticService.medium()
                         onDelete()
                     } label: {
-                        Text("Delete")
+                        Text(Strings.delete)
                             .font(.title3.weight(.bold))
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)

@@ -18,7 +18,7 @@ struct LimitExceededView: View {
             Color.evInkBlack.opacity(0.4)
                 .ignoresSafeArea()
                 .onTapGesture { onClose() }
-                .accessibilityLabel("Dismiss dialog")
+                .accessibilityLabel(Strings.dismissDialog)
                 .accessibilityAddTraits(.isButton)
 
             VStack(spacing: 20) {
@@ -41,7 +41,7 @@ struct LimitExceededView: View {
                 Button {
                     onClose()
                 } label: {
-                    Text("Close")
+                    Text(Strings.close)
                         .font(.title3.weight(.bold))
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)

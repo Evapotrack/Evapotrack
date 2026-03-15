@@ -44,9 +44,9 @@ struct HistoryView: View {
     private func sectionTitle(for date: Date) -> String {
         let calendar = Calendar.current
         if calendar.isDateInToday(date) {
-            return "Today"
+            return Strings.today
         } else if calendar.isDateInYesterday(date) {
-            return "Yesterday"
+            return Strings.yesterday
         } else {
             return date.shortFormatted
         }
@@ -65,17 +65,17 @@ struct HistoryView: View {
     }
 
     private var chartHeaderTitle: String {
-        var parts = ["Retained"]
-        if showTemperature { parts.append("Temp") }
-        if showHumidity { parts.append("Humidity") }
-        return parts.joined(separator: " · ") + " Over Time"
+        var parts = [Strings.retained]
+        if showTemperature { parts.append(Strings.temp) }
+        if showHumidity { parts.append(Strings.humidity) }
+        return parts.joined(separator: " · ") + Strings.overTime
     }
 
     var body: some View {
         @Bindable var vm = vm
         List {
             if vm.wateringLogs.isEmpty {
-                Text("No watering logs yet.")
+                Text(Strings.noWateringLogsYet)
                     .foregroundStyle(Color.evSecondaryText)
             } else if isShowingChart && vm.wateringLogs.count >= 2 {
                 // Chart mode — replaces log list
@@ -146,7 +146,7 @@ struct HistoryView: View {
                             .foregroundStyle(selectedLogID != nil ? .red : .evSlateGray)
                     }
                     .disabled(selectedLogID == nil)
-                    .accessibilityLabel("Delete Log")
+                    .accessibilityLabel(Strings.deleteLogLabel)
 
                     Button { vm.isShowingAddWatering = true } label: {
                         Image(systemName: "plus")
@@ -154,7 +154,7 @@ struct HistoryView: View {
                             .fontWeight(.bold)
                             .frame(minWidth: 44, minHeight: 44)
                     }
-                    .accessibilityLabel("Add Watering")
+                    .accessibilityLabel(Strings.addWateringLabel)
                 }
             }
             ToolbarItem(placement: .navigationBarLeading) {
@@ -164,7 +164,7 @@ struct HistoryView: View {
                         .fontWeight(.bold)
                         .foregroundStyle(.evPrimaryBlue)
                 }
-                .accessibilityLabel("Back")
+                .accessibilityLabel(Strings.backLabel)
             }
             ToolbarItem(placement: .navigationBarLeading) {
                 NavigationLink {
@@ -175,7 +175,7 @@ struct HistoryView: View {
                         .fontWeight(.bold)
                         .foregroundStyle(.evPrimaryBlue)
                 }
-                .accessibilityLabel("Help")
+                .accessibilityLabel(Strings.helpLabel)
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
@@ -189,7 +189,7 @@ struct HistoryView: View {
                         .foregroundStyle(.evPrimaryBlue)
                 }
                 .disabled(vm.wateringLogs.count < 2)
-                .accessibilityLabel(isShowingChart ? "Show Logs" : "Show Chart")
+                .accessibilityLabel(isShowingChart ? Strings.showLogs : Strings.showChart)
             }
         }
         .sheet(isPresented: $vm.isShowingAddWatering, onDismiss: { vm.loadData() }) {
@@ -201,8 +201,8 @@ struct HistoryView: View {
         .overlay {
             if isShowingDeleteAlert, let log = selectedLog {
                 DeleteConfirmationView(
-                    title: "Delete Log",
-                    message: "Delete the log from \(log.dateTime.longFormatted)? This action cannot be undone.",
+                    title: Strings.deleteLog,
+                    message: Strings.deleteLogMessage(log.dateTime.longFormatted),
                     onDelete: {
                         withAnimation(.easeInOut(duration: 0.2)) {
                             isShowingDeleteAlert = false
@@ -252,15 +252,15 @@ struct HistoryView: View {
         let humidityAvailable = hasHumidityData
 
         HStack(spacing: 8) {
-            chartPill(label: "Retained", color: .evPrimaryBlue, isActive: true, enabled: true) {}
+            chartPill(label: Strings.retained, color: .evPrimaryBlue, isActive: true, enabled: true) {}
 
-            chartPill(label: "Temp", color: .evWarmOrange, isActive: showTemperature, enabled: tempAvailable) {
+            chartPill(label: Strings.temp, color: .evWarmOrange, isActive: showTemperature, enabled: tempAvailable) {
                 withAnimation(.easeInOut(duration: 0.2)) {
                     showTemperature.toggle()
                 }
             }
 
-            chartPill(label: "Humidity", color: .evSoftPurple, isActive: showHumidity, enabled: humidityAvailable) {
+            chartPill(label: Strings.humidity, color: .evSoftPurple, isActive: showHumidity, enabled: humidityAvailable) {
                 withAnimation(.easeInOut(duration: 0.2)) {
                     showHumidity.toggle()
                 }
@@ -298,8 +298,8 @@ struct HistoryView: View {
         .buttonStyle(.plain)
         .disabled(!enabled)
         .opacity(enabled ? 1.0 : 0.4)
-        .accessibilityLabel("\(label) chart line")
-        .accessibilityHint(enabled ? (isActive ? "Active. Double tap to hide." : "Inactive. Double tap to show.") : "No \(label.lowercased()) data available.")
+        .accessibilityLabel(Strings.chartLineName(label))
+        .accessibilityHint(enabled ? (isActive ? Strings.chartLineActive() : Strings.chartLineInactive()) : Strings.chartLineNoData(label.lowercased()))
         .accessibilityAddTraits(isActive ? .isSelected : [])
     }
 
@@ -478,9 +478,9 @@ struct HistoryView: View {
     }
 
     private func chartAccessibilityLabel(dataCount: Int) -> String {
-        var lines = ["Retained water"]
-        if showTemperature { lines.append("temperature") }
-        if showHumidity { lines.append("humidity") }
-        return "\(lines.joined(separator: ", ")) over time chart with \(dataCount) data points"
+        var lines = [Strings.retainedWater]
+        if showTemperature { lines.append(Strings.temperatureLower) }
+        if showHumidity { lines.append(Strings.humidityLower) }
+        return Strings.chartAccessibility(lines, dataCount: dataCount)
     }
 }

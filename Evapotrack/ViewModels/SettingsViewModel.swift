@@ -23,12 +23,14 @@ final class SettingsViewModel {
 
     init() {
         load()
+        Strings.current = settings.language
     }
 
     func load() {
         guard let data = UserDefaults.standard.data(forKey: AppConstants.userSettingsKey) else { return }
         do {
             settings = try JSONDecoder().decode(UserSettings.self, from: data)
+            Strings.current = settings.language
         } catch {
             Logger.viewModel.error("Failed to decode UserSettings: \(error.localizedDescription)")
         }
@@ -38,6 +40,7 @@ final class SettingsViewModel {
         do {
             let data = try JSONEncoder().encode(settings)
             UserDefaults.standard.set(data, forKey: AppConstants.userSettingsKey)
+            Strings.current = settings.language
         } catch {
             Logger.viewModel.error("Failed to encode UserSettings: \(error.localizedDescription)")
         }
@@ -45,6 +48,7 @@ final class SettingsViewModel {
 
     func reset() {
         settings = .default
+        Strings.current = settings.language
         save()
     }
 }

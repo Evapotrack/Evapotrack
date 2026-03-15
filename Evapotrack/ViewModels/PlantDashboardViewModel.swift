@@ -16,7 +16,7 @@ final class PlantDashboardViewModel {
 
     // MARK: - State
 
-    let plant: Plant
+    nonisolated(unsafe) let plant: Plant
     var wateringLogs: [WateringLog] = []
     var isShowingAddWatering = false
     var isShowingSettings = false
@@ -27,7 +27,7 @@ final class PlantDashboardViewModel {
     private var logService: WateringLogService?
     private let dateProvider: DateProviding
 
-    init(plant: Plant, dateProvider: DateProviding = SystemDateProvider()) {
+    nonisolated init(plant: Plant, dateProvider: DateProviding = SystemDateProvider()) {
         self.plant = plant
         self.dateProvider = dateProvider
     }
@@ -76,7 +76,7 @@ final class PlantDashboardViewModel {
             try service.deleteLog(log)
             loadData()
         } catch {
-            deleteError = "Failed to delete log. Please try again."
+            deleteError = Strings.failedDeleteLog
         }
     }
 }

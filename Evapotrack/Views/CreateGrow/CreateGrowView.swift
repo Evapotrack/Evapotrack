@@ -19,12 +19,12 @@ struct CreateGrowView: View {
     var body: some View {
         Form {
             Section {
-                TextField("Grow Name", text: $vm.growName)
+                TextField(Strings.growName, text: $vm.growName)
                     .autocorrectionDisabled()
                     .textLimit($vm.growName, maxLength: AppConstants.maxGrowNameLength)
-                    .accessibilityLabel("Grow Name")
+                    .accessibilityLabel(Strings.growName)
             } header: {
-                Text("Grow Info")
+                Text(Strings.growInfo)
                     .font(.title2.weight(.bold))
                     .foregroundStyle(.evDeepNavy)
                     .textCase(nil)
@@ -32,19 +32,19 @@ struct CreateGrowView: View {
 
             Section {
                 HStack {
-                    Text("Created")
+                    Text(Strings.created)
                         .foregroundStyle(Color.evPrimaryText)
                     Spacer()
                     Text(timestampText)
                         .foregroundStyle(Color.evSecondaryText)
                 }
             } header: {
-                Text("Timestamp")
+                Text(Strings.timestamp)
                     .font(.title2.weight(.bold))
                     .foregroundStyle(.evDeepNavy)
                     .textCase(nil)
             } footer: {
-                Text("This timestamp is recorded when you save the grow.")
+                Text(Strings.timestampFooter)
                     .foregroundStyle(Color.evSecondaryText)
             }
 
@@ -59,16 +59,16 @@ struct CreateGrowView: View {
         .scrollDismissesKeyboard(.interactively)
         .scrollContentBackground(.hidden)
         .background(Color.evBackground)
-        .navigationTitle("Add Grow")
+        .navigationTitle(Strings.addGrow)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
-                Button("Cancel") { dismiss() }
+                Button(Strings.cancel) { dismiss() }
                     .font(.body)
                     .fontWeight(.bold)
             }
             ToolbarItem(placement: .confirmationAction) {
-                Button("Save") {
+                Button(Strings.save) {
                     if vm.save() {
                         HapticService.success()
                         dismissTask = Task {
@@ -96,7 +96,7 @@ struct CreateGrowView: View {
                             Image(systemName: "checkmark.circle.fill")
                                 .font(.system(size: 56))
                                 .foregroundStyle(.evPrimaryBlue)
-                            Text("Saved")
+                            Text(Strings.saved)
                                 .font(.headline.weight(.bold))
                                 .foregroundStyle(Color.evPrimaryText)
                         }
@@ -110,7 +110,7 @@ struct CreateGrowView: View {
                     }
                     .allowsHitTesting(false)
                     .accessibilityAddTraits(.isModal)
-                    .accessibilityLabel("Saved")
+                    .accessibilityLabel(Strings.savedLabel)
             }
         }
         .animation(.easeInOut(duration: 0.3), value: vm.showSaveConfirmation)

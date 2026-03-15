@@ -59,7 +59,7 @@ struct PlantListView: View {
             }
             } header: {
                 HStack {
-                    Text("Plant list")
+                    Text(Strings.plantList)
                         .font(.subheadline.weight(.medium))
                         .foregroundStyle(Color.evSecondaryText)
                         .textCase(nil)
@@ -70,7 +70,7 @@ struct PlantListView: View {
                         .textCase(nil)
                 }
                 .accessibilityElement(children: .combine)
-                .accessibilityLabel("Plants, \(plants.count) of \(AppConstants.maxPlantsPerGrow)")
+                .accessibilityLabel(Strings.plantsCount(plants.count, max: AppConstants.maxPlantsPerGrow))
             }
         }
         .listStyle(.insetGrouped)
@@ -83,7 +83,7 @@ struct PlantListView: View {
             if let plant = plants.first(where: { $0.id == navID.id }) {
                 PlantDashboardView(plant: plant)
             } else {
-                ContentUnavailableView("Plant Not Found", systemImage: "exclamationmark.triangle")
+                ContentUnavailableView(Strings.plantNotFound, systemImage: "exclamationmark.triangle")
             }
         }
         .toolbar {
@@ -99,14 +99,14 @@ struct PlantListView: View {
                             .padding(.leading, 8)
                     }
                     .disabled(selectedPlantID == nil)
-                    .accessibilityLabel("Delete Plant")
+                    .accessibilityLabel(Strings.deletePlantLabel)
 
                     Button {
                         if plants.count >= AppConstants.maxPlantsPerGrow {
-                            limitExceededMessage = "You've reached the maximum of \(AppConstants.maxPlantsPerGrow) plants per grow. Delete a plant to create a new one."
+                            limitExceededMessage = Strings.perGrowPlantLimitMessage(AppConstants.maxPlantsPerGrow)
                             isShowingLimitExceeded = true
                         } else if totalPlantCount() >= AppConstants.maxTotalPlants {
-                            limitExceededMessage = "You've reached the maximum of \(AppConstants.maxTotalPlants) total plants. Delete a plant from any grow to create a new one."
+                            limitExceededMessage = Strings.totalPlantLimitMessage(AppConstants.maxTotalPlants)
                             isShowingLimitExceeded = true
                         } else {
                             isShowingCreatePlant = true
@@ -117,7 +117,7 @@ struct PlantListView: View {
                             .fontWeight(.bold)
                             .frame(minWidth: 44, minHeight: 44)
                     }
-                    .accessibilityLabel(plants.count >= AppConstants.maxPlantsPerGrow ? "Maximum of \(AppConstants.maxPlantsPerGrow) plants reached" : "Add Plant")
+                    .accessibilityLabel(plants.count >= AppConstants.maxPlantsPerGrow ? Strings.maxPlantsReached(AppConstants.maxPlantsPerGrow) : Strings.addPlantLabel)
                 }
             }
             ToolbarItem(placement: .navigationBarLeading) {
@@ -127,7 +127,7 @@ struct PlantListView: View {
                         .fontWeight(.bold)
                         .foregroundStyle(.evPrimaryBlue)
                 }
-                .accessibilityLabel("Back")
+                .accessibilityLabel(Strings.backLabel)
             }
             ToolbarItem(placement: .navigationBarLeading) {
                 Button { isShowingSettings = true } label: {
@@ -136,7 +136,7 @@ struct PlantListView: View {
                         .fontWeight(.bold)
                         .foregroundStyle(.evPrimaryBlue)
                 }
-                .accessibilityLabel("Settings")
+                .accessibilityLabel(Strings.settingsLabel)
             }
             ToolbarItem(placement: .navigationBarLeading) {
                 NavigationLink {
@@ -147,7 +147,7 @@ struct PlantListView: View {
                         .fontWeight(.bold)
                         .foregroundStyle(.evPrimaryBlue)
                 }
-                .accessibilityLabel("Help")
+                .accessibilityLabel(Strings.helpLabel)
             }
         }
         .sheet(isPresented: $isShowingCreatePlant) {
@@ -171,8 +171,8 @@ struct PlantListView: View {
         .overlay {
             if isShowingDeleteAlert, let plant = selectedPlant {
                 DeleteConfirmationView(
-                    title: "Delete Plant",
-                    message: "Are you sure you want to delete \"\(plant.plantName)\"? All watering logs for this plant will be permanently deleted. This action cannot be undone.",
+                    title: Strings.deletePlant,
+                    message: Strings.deletePlantMessage(plant.plantName),
                     onDelete: {
                         withAnimation(.easeInOut(duration: 0.2)) {
                             isShowingDeleteAlert = false
@@ -191,7 +191,7 @@ struct PlantListView: View {
         .overlay {
             if isShowingLimitExceeded {
                 LimitExceededView(
-                    title: "Plant Limit Reached",
+                    title: Strings.plantLimitReached,
                     message: limitExceededMessage,
                     onClose: {
                         withAnimation(.easeInOut(duration: 0.2)) {
@@ -202,11 +202,11 @@ struct PlantListView: View {
             }
         }
         .animation(.easeInOut(duration: 0.2), value: isShowingLimitExceeded)
-        .alert("Error", isPresented: Binding(
+        .alert(Strings.error, isPresented: Binding(
             get: { saveError != nil },
             set: { if !$0 { saveError = nil } }
         )) {
-            Button("OK") { saveError = nil }
+            Button(Strings.ok) { saveError = nil }
         } message: {
             Text(saveError ?? "")
         }
@@ -222,23 +222,23 @@ struct PlantListView: View {
                 .foregroundStyle(Color.evPrimaryBlue)
                 .accessibilityHidden(true)
 
-            Text("No Plants Yet")
+            Text(Strings.noPlantsYet)
                 .font(.title2.weight(.bold))
                 .foregroundStyle(Color.evDeepNavy)
 
             HStack(spacing: 4) {
-                Text("Tap")
+                Text(Strings.tap)
                     .foregroundStyle(Color.evSecondaryText)
                 Image(systemName: "plus")
                     .font(.body.weight(.black))
                     .foregroundStyle(Color.evPrimaryBlue)
                     .accessibilityHidden(true)
-                Text("to add your first plant.")
+                Text(Strings.tapToAddPlant)
                     .foregroundStyle(Color.evSecondaryText)
             }
             .font(.body)
             .accessibilityElement(children: .combine)
-            .accessibilityLabel("Tap plus to add your first plant")
+            .accessibilityLabel(Strings.tapPlusAddPlant)
         }
     }
 
@@ -263,7 +263,7 @@ struct PlantListView: View {
         do {
             try service.deletePlant(plant)
         } catch {
-            saveError = "Failed to delete plant. Please try again."
+            saveError = Strings.failedDeletePlant
         }
         selectedPlantID = nil
     }

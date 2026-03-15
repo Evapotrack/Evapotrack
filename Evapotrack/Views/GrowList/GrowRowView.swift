@@ -24,7 +24,7 @@ struct GrowRowView: View {
                     .foregroundStyle(isSelected ? Color.evPrimaryBlue : Color.evSlateGray)
             }
             .buttonStyle(.plain)
-            .accessibilityLabel(isSelected ? "Deselect \(grow.growName)" : "Select \(grow.growName)")
+            .accessibilityLabel(isSelected ? Strings.deselectItem(grow.growName) : Strings.selectItem(grow.growName))
 
             // Grow info
             VStack(alignment: .leading, spacing: 6) {
@@ -36,7 +36,7 @@ struct GrowRowView: View {
 
                 HStack(spacing: 16) {
                     Label {
-                        Text("\(grow.plants.count) \(grow.plants.count == 1 ? "plant" : "plants")")
+                        Text(Strings.plantCount(grow.plants.count))
                             .fontWeight(.semibold)
                             .foregroundStyle(Color.evPrimaryBlue)
                     } icon: {

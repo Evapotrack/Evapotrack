@@ -24,7 +24,7 @@ struct PlantRowView: View {
                     .foregroundStyle(isSelected ? Color.evPrimaryBlue : Color.evSlateGray)
             }
             .buttonStyle(.plain)
-            .accessibilityLabel(isSelected ? "Deselect \(plant.plantName)" : "Select \(plant.plantName)")
+            .accessibilityLabel(isSelected ? Strings.deselectItem(plant.plantName) : Strings.selectItem(plant.plantName))
 
             // Plant info and status
             Text(plant.plantName)

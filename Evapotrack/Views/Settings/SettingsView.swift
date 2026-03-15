@@ -1,7 +1,7 @@
 // SettingsView.swift
 // Evapotrack
 //
-// Settings screen for water and temperature display units,
+// Settings screen for language, water and temperature display units,
 // appearance mode, and optional per-grow data export.
 // When opened from PlantListView with a grow, shows a
 // Download Data section for that grow. When opened from
@@ -36,11 +36,32 @@ struct SettingsView: View {
         Form {
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Water Unit")
+                    Text(Strings.language)
                         .font(.body)
                         .fontWeight(.semibold)
                         .foregroundStyle(Color.evPrimaryText)
-                    Picker("Water Unit", selection: $settingsVM.settings.waterUnit) {
+                    Picker(Strings.language, selection: $settingsVM.settings.language) {
+                        ForEach(AppLanguage.allCases) { lang in
+                            Text(lang.displayName).tag(lang)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                }
+                .padding(.vertical, 4)
+            } header: {
+                Text(Strings.language)
+                    .font(.title2.weight(.bold))
+                    .foregroundStyle(.evDeepNavy)
+                    .textCase(nil)
+            }
+
+            Section {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(Strings.waterUnit)
+                        .font(.body)
+                        .fontWeight(.semibold)
+                        .foregroundStyle(Color.evPrimaryText)
+                    Picker(Strings.waterUnit, selection: $settingsVM.settings.waterUnit) {
                         ForEach(WaterUnit.allCases) { unit in
                             Text(unit.abbreviation).tag(unit)
                         }
@@ -50,11 +71,11 @@ struct SettingsView: View {
                 .padding(.vertical, 4)
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Temperature Unit")
+                    Text(Strings.temperatureUnit)
                         .font(.body)
                         .fontWeight(.semibold)
                         .foregroundStyle(Color.evPrimaryText)
-                    Picker("Temperature Unit", selection: $settingsVM.settings.temperatureUnit) {
+                    Picker(Strings.temperatureUnit, selection: $settingsVM.settings.temperatureUnit) {
                         ForEach(TemperatureUnit.allCases) { unit in
                             Text(unit.abbreviation).tag(unit)
                         }
@@ -63,22 +84,22 @@ struct SettingsView: View {
                 }
                 .padding(.vertical, 4)
             } header: {
-                Text("Display Units")
+                Text(Strings.displayUnits)
                     .font(.title2.weight(.bold))
                     .foregroundStyle(.evDeepNavy)
                     .textCase(nil)
             } footer: {
-                Text("Changing units updates how values are displayed. Stored data is never modified.")
+                Text(Strings.displayUnitsFooter)
                     .foregroundStyle(Color.evSecondaryText)
             }
 
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Appearance")
+                    Text(Strings.appearance)
                         .font(.body)
                         .fontWeight(.semibold)
                         .foregroundStyle(Color.evPrimaryText)
-                    Picker("Appearance", selection: $settingsVM.settings.appearanceMode) {
+                    Picker(Strings.appearance, selection: $settingsVM.settings.appearanceMode) {
                         ForEach(AppearanceMode.allCases) { mode in
                             Text(mode.displayName).tag(mode)
                         }
@@ -87,12 +108,12 @@ struct SettingsView: View {
                 }
                 .padding(.vertical, 4)
             } header: {
-                Text("Theme")
+                Text(Strings.theme)
                     .font(.title2.weight(.bold))
                     .foregroundStyle(.evDeepNavy)
                     .textCase(nil)
             } footer: {
-                Text("Switch between Day and Dark mode.")
+                Text(Strings.themeFooter)
                     .foregroundStyle(Color.evSecondaryText)
             }
 
@@ -118,7 +139,7 @@ struct SettingsView: View {
                                     .foregroundStyle(Color.evPrimaryText)
                                     .lineLimit(1)
                                     .truncationMode(.tail)
-                                Text("\(grow.plants.count) plant\(grow.plants.count == 1 ? "" : "s")")
+                                Text(Strings.plantCount(grow.plants.count))
                                     .font(.caption)
                                     .foregroundStyle(Color.evSecondaryText)
                             }
@@ -128,14 +149,14 @@ struct SettingsView: View {
                                 .foregroundStyle(.evPrimaryBlue)
                         }
                     }
-                    .accessibilityLabel("Export \(grow.growName) data")
+                    .accessibilityLabel(Strings.exportGrowData(grow.growName))
                 } header: {
-                    Text("Download Data")
+                    Text(Strings.downloadData)
                         .font(.title2.weight(.bold))
                         .foregroundStyle(.evDeepNavy)
                         .textCase(nil)
                 } footer: {
-                    Text("Export grow data as a text file.")
+                    Text(Strings.exportFooter)
                         .foregroundStyle(Color.evSecondaryText)
                 }
             }
@@ -143,7 +164,7 @@ struct SettingsView: View {
             Section {
                 HStack {
                     Spacer()
-                    Button("Reset Settings") {
+                    Button(Strings.resetSettings) {
                         settingsVM.reset()
                     }
                     .font(.body)
@@ -174,11 +195,11 @@ struct SettingsView: View {
         }
         .scrollContentBackground(.hidden)
         .background(Color.evBackground)
-        .navigationTitle("Settings")
+        .navigationTitle(Strings.settings)
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
-                Button("Done") { dismiss() }
+                Button(Strings.done) { dismiss() }
                     .fontWeight(.bold)
             }
         }

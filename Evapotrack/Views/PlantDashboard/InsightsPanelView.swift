@@ -22,21 +22,21 @@ struct InsightsPanelView: View {
         Section {
             if let retained = averageRetained, let recommendation = nextRecommendation {
                 LazyVGrid(columns: columns, alignment: .center, spacing: 12) {
-                    metricCell("Average", DisplayFormatter.water(retained, unit: waterUnit))
-                    metricCell("Next", DisplayFormatter.water(recommendation.next, unit: waterUnit))
+                    metricCell(Strings.average, DisplayFormatter.water(retained, unit: waterUnit))
+                    metricCell(Strings.next, DisplayFormatter.water(recommendation.next, unit: waterUnit))
                     metricCell(
-                        "Goal (\(DisplayFormatter.percent(recommendation.goalRunoffPercent)))",
+                        Strings.goalLabel(DisplayFormatter.percent(recommendation.goalRunoffPercent)),
                         DisplayFormatter.water(recommendation.goalRunoff, unit: waterUnit)
                     )
                 }
                 .padding(.vertical, 4)
             } else {
-                Text("No insights yet. Add watering logs to see recommendations.")
+                Text(Strings.noInsightsYet)
                     .foregroundStyle(Color.evSecondaryText)
             }
         } header: {
             Label {
-                Text("Insights")
+                Text(Strings.insights)
             } icon: {
                 Image(systemName: "lightbulb")
             }

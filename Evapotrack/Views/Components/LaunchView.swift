@@ -25,19 +25,19 @@ struct LaunchView: View {
                     .shadow(color: .evPrimaryBlue.opacity(0.2), radius: 16, y: 6)
                     .accessibilityHidden(true)
 
-                Text("EVAPOTRACK")
+                Text(Strings.evapotrack)
                     .font(.title.weight(.bold))
                     .foregroundStyle(Color.evPrimaryText)
                     .kerning(2)
 
-                Text("Optimize plant watering")
+                Text(Strings.launchSlogan)
                     .font(.subheadline.weight(.medium))
                     .foregroundStyle(Color.evSecondaryText)
                     .opacity(sloganOpacity)
             }
             .opacity(iconOpacity)
             .accessibilityElement(children: .combine)
-            .accessibilityLabel("Evapotrack. Optimize plant watering.")
+            .accessibilityLabel(Strings.launchAccessibility)
         }
         .task {
             // Fade in icon and title

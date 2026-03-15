@@ -27,13 +27,13 @@ final class AddWateringLogViewModel {
 
     // MARK: - Dependencies
 
-    let plant: Plant
+    nonisolated(unsafe) let plant: Plant
     private var logService: WateringLogService?
     private let dateProvider: DateProviding
     var waterUnit: WaterUnit = .liters
     var temperatureUnit: TemperatureUnit = .celsius
 
-    init(plant: Plant, dateProvider: DateProviding = SystemDateProvider()) {
+    nonisolated init(plant: Plant, dateProvider: DateProviding = SystemDateProvider()) {
         self.plant = plant
         self.dateProvider = dateProvider
     }
@@ -57,7 +57,7 @@ final class AddWateringLogViewModel {
         validationError = nil
 
         guard let displayWater = Double(waterAddedText) else {
-            validationError = "Water added must be a number."
+            validationError = Strings.waterAddedMustBeNumber
             return false
         }
 
@@ -68,7 +68,7 @@ final class AddWateringLogViewModel {
         if !waterResult.isValid { validationError = waterResult.errorMessage; return false }
 
         guard let displayRunoff = Double(runoffCollectedText) else {
-            validationError = "Runoff must be a number."
+            validationError = Strings.runoffMustBeNumber
             return false
         }
 
@@ -81,7 +81,7 @@ final class AddWateringLogViewModel {
         let retained = waterLiters - runoffLiters
         let retainedCap = plant.maxRetentionCapacity * AppConstants.maxRetainedFactor
         if retained > retainedCap {
-            validationError = "Retained volume exceeds 105% of Max Retention Capacity. Check your Water Added and Runoff values."
+            validationError = Strings.retainedExceedsCapacity
             return false
         }
 
@@ -95,14 +95,14 @@ final class AddWateringLogViewModel {
             calendar.dateComponents([.year, .month, .day, .hour, .minute], from: log.dateTime) == newMinute
         }
         if hasDuplicate {
-            validationError = "A watering log already exists at this date and time."
+            validationError = Strings.duplicateLogTimestamp
             return false
         }
 
         // Temperature is optional — only validate if the user entered a value
         if !temperatureText.trimmingCharacters(in: .whitespaces).isEmpty {
             guard let displayTemp = Double(temperatureText) else {
-                validationError = "Temperature must be a number."
+                validationError = Strings.temperatureMustBeNumber
                 return false
             }
             let celsius = UnitConversionService.toCelsius(displayTemp, from: temperatureUnit)
@@ -113,7 +113,7 @@ final class AddWateringLogViewModel {
         // Humidity is optional — only validate if the user entered a value
         if !humidityText.trimmingCharacters(in: .whitespaces).isEmpty {
             guard let humidity = Double(humidityText) else {
-                validationError = "Humidity must be a number."
+                validationError = Strings.humidityMustBeNumber
                 return false
             }
             let humResult = ValidationService.validateHumidity(humidity)
@@ -129,7 +129,7 @@ final class AddWateringLogViewModel {
         guard let displayWater = Double(waterAddedText),
               let displayRunoff = Double(runoffCollectedText) else { return false }
         guard let service = logService else {
-            validationError = "Unable to save. Please try again."
+            validationError = Strings.unableToSave
             return false
         }
 
@@ -155,7 +155,7 @@ final class AddWateringLogViewModel {
         do {
             try service.addLog(log, to: plant)
         } catch {
-            validationError = "Failed to save. Please try again."
+            validationError = Strings.failedToSave
             return false
         }
         showSaveConfirmation = true

@@ -51,7 +51,7 @@ struct GrowListView: View {
                 }
                 } header: {
                     HStack {
-                        Text("Grows")
+                        Text(Strings.grows)
                             .font(.subheadline.weight(.medium))
                             .foregroundStyle(Color.evSecondaryText)
                             .textCase(nil)
@@ -62,19 +62,19 @@ struct GrowListView: View {
                             .textCase(nil)
                     }
                     .accessibilityElement(children: .combine)
-                    .accessibilityLabel("Grows, \(grows.count) of \(AppConstants.maxGrowCount)")
+                    .accessibilityLabel(Strings.growsCount(grows.count, max: AppConstants.maxGrowCount))
                 }
             }
             .listStyle(.insetGrouped)
             .scrollContentBackground(.hidden)
             .background(Color.evBackground)
-            .navigationTitle("My Grows")
+            .navigationTitle(Strings.myGrows)
             .navigationBarTitleDisplayMode(.large)
             .navigationDestination(for: GrowNavID.self) { navID in
                 if let grow = grows.first(where: { $0.id == navID.id }) {
                     PlantListView(grow: grow)
                 } else {
-                    ContentUnavailableView("Grow Not Found", systemImage: "exclamationmark.triangle")
+                    ContentUnavailableView(Strings.growNotFound, systemImage: "exclamationmark.triangle")
                 }
             }
             .toolbar {
@@ -90,7 +90,7 @@ struct GrowListView: View {
                                 .padding(.leading, 8)
                         }
                         .disabled(selectedGrowID == nil)
-                        .accessibilityLabel("Delete Grow")
+                        .accessibilityLabel(Strings.deleteGrowLabel)
 
                         Button {
                             if grows.count >= AppConstants.maxGrowCount {
@@ -104,7 +104,7 @@ struct GrowListView: View {
                                 .fontWeight(.bold)
                                 .frame(minWidth: 44, minHeight: 44)
                         }
-                        .accessibilityLabel(grows.count >= AppConstants.maxGrowCount ? "Maximum of \(AppConstants.maxGrowCount) grows reached" : "Add Grow")
+                        .accessibilityLabel(grows.count >= AppConstants.maxGrowCount ? Strings.maxGrowsReached(AppConstants.maxGrowCount) : Strings.addGrowLabel)
                     }
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -114,7 +114,7 @@ struct GrowListView: View {
                             .fontWeight(.bold)
                             .foregroundStyle(.evPrimaryBlue)
                     }
-                    .accessibilityLabel("Settings")
+                    .accessibilityLabel(Strings.settingsLabel)
                 }
                 ToolbarItem(placement: .navigationBarLeading) {
                     NavigationLink {
@@ -125,7 +125,7 @@ struct GrowListView: View {
                             .fontWeight(.bold)
                             .foregroundStyle(.evPrimaryBlue)
                     }
-                    .accessibilityLabel("Help")
+                    .accessibilityLabel(Strings.helpLabel)
                 }
             }
             .sheet(isPresented: $isShowingCreateGrow) {
@@ -149,8 +149,8 @@ struct GrowListView: View {
             .overlay {
                 if isShowingDeleteAlert, let grow = selectedGrow {
                     DeleteConfirmationView(
-                        title: "Delete Grow",
-                        message: "Are you sure you want to delete \"\(grow.growName)\"? All plants and their watering logs in this grow will be permanently deleted. This action cannot be undone.",
+                        title: Strings.deleteGrow,
+                        message: Strings.deleteGrowMessage(grow.growName),
                         onDelete: {
                             withAnimation(.easeInOut(duration: 0.2)) {
                                 isShowingDeleteAlert = false
@@ -169,8 +169,8 @@ struct GrowListView: View {
             .overlay {
                 if isShowingLimitExceeded {
                     LimitExceededView(
-                        title: "Grow Limit Reached",
-                        message: "You've reached the maximum of \(AppConstants.maxGrowCount) grows. Delete a grow to create a new one.",
+                        title: Strings.growLimitReached,
+                        message: Strings.growLimitMessage(AppConstants.maxGrowCount),
                         onClose: {
                             withAnimation(.easeInOut(duration: 0.2)) {
                                 isShowingLimitExceeded = false
@@ -180,11 +180,11 @@ struct GrowListView: View {
                 }
             }
             .animation(.easeInOut(duration: 0.2), value: isShowingLimitExceeded)
-            .alert("Error", isPresented: Binding(
+            .alert(Strings.error, isPresented: Binding(
                 get: { saveError != nil },
                 set: { if !$0 { saveError = nil } }
             )) {
-                Button("OK") { saveError = nil }
+                Button(Strings.ok) { saveError = nil }
             } message: {
                 Text(saveError ?? "")
             }
@@ -201,29 +201,29 @@ struct GrowListView: View {
                 .foregroundStyle(Color.evPrimaryBlue)
                 .accessibilityHidden(true)
 
-            Text("No Grows Created")
+            Text(Strings.noGrowsCreated)
                 .font(.title2.weight(.bold))
                 .foregroundStyle(Color.evDeepNavy)
 
             HStack(spacing: 4) {
-                Text("Tap")
+                Text(Strings.tap)
                     .foregroundStyle(Color.evSecondaryText)
                 Image(systemName: "plus")
                     .font(.body.weight(.black))
                     .foregroundStyle(Color.evPrimaryBlue)
                     .accessibilityHidden(true)
-                Text("to create your first grow.")
+                Text(Strings.tapToCreateGrow)
                     .foregroundStyle(Color.evSecondaryText)
             }
             .font(.body)
             .accessibilityElement(children: .combine)
-            .accessibilityLabel("Tap plus to create your first grow")
+            .accessibilityLabel(Strings.tapPlusCreateGrow)
 
             VStack(alignment: .leading, spacing: 8) {
                 NavigationLink {
                     HowToView(context: .general)
                 } label: {
-                    Label("How to Get Started", systemImage: "questionmark.circle")
+                    Label(Strings.howToGetStarted, systemImage: "questionmark.circle")
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(Color.evPrimaryBlue)
                 }
@@ -231,12 +231,12 @@ struct GrowListView: View {
                 Button {
                     loadExampleData()
                 } label: {
-                    Label("Try Example Data", systemImage: "tray.and.arrow.down")
+                    Label(Strings.tryExampleData, systemImage: "tray.and.arrow.down")
                         .font(.subheadline.weight(.semibold))
                         .foregroundStyle(Color.evPrimaryBlue)
                 }
                 .disabled(exampleDataLoaded)
-                .accessibilityLabel("Load example grow with sample watering data")
+                .accessibilityLabel(Strings.loadExampleData)
             }
             .padding(.top, 4)
         }
@@ -254,11 +254,11 @@ struct GrowListView: View {
     }
 
     private func loadExampleData() {
-        let grow = Grow(growName: "Example Grow")
+        let grow = Grow(growName: Strings.exampleGrow)
         modelContext.insert(grow)
 
         let plant = Plant(
-            plantName: "Example Plant",
+            plantName: Strings.examplePlant,
             potSize: "Fabric 3 gal",
             mediumType: "soil",
             maxRetentionCapacity: 1.6,
@@ -303,7 +303,7 @@ struct GrowListView: View {
         do {
             try service.deleteGrow(grow)
         } catch {
-            saveError = "Failed to delete grow. Please try again."
+            saveError = Strings.failedDeleteGrow
         }
         selectedGrowID = nil
     }

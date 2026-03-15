@@ -26,32 +26,32 @@ struct AddWateringLogView: View {
         Form {
             Section {
                 TextField(
-                    "Water Added (\(waterUnit.abbreviation))",
+                    Strings.waterAddedField(waterUnit.abbreviation),
                     text: $vm.waterAddedText
                 )
                 .keyboardType(.decimalPad)
                 .textLimit($vm.waterAddedText, maxLength: AppConstants.maxNumericInputLength)
-                .accessibilityLabel("Water Added in \(waterUnit.abbreviation)")
+                .accessibilityLabel(Strings.waterAddedAccessibility(waterUnit.abbreviation))
 
                 TextField(
-                    "Runoff Collected (\(waterUnit.abbreviation))",
+                    Strings.runoffCollectedField(waterUnit.abbreviation),
                     text: $vm.runoffCollectedText
                 )
                 .keyboardType(.decimalPad)
                 .textLimit($vm.runoffCollectedText, maxLength: AppConstants.maxNumericInputLength)
-                .accessibilityLabel("Runoff Collected in \(waterUnit.abbreviation)")
+                .accessibilityLabel(Strings.runoffCollectedAccessibility(waterUnit.abbreviation))
             } header: {
-                Text("Water")
+                Text(Strings.water)
                     .font(.title2.weight(.bold))
                     .foregroundStyle(.evDeepNavy)
                     .textCase(nil)
             }
 
             Section {
-                DatePicker("Date", selection: $vm.dateTime, in: ...Date.now, displayedComponents: .date)
-                DatePicker("Time", selection: $vm.dateTime, in: ...Date.now, displayedComponents: .hourAndMinute)
+                DatePicker(Strings.date, selection: $vm.dateTime, in: ...Date.now, displayedComponents: .date)
+                DatePicker(Strings.time, selection: $vm.dateTime, in: ...Date.now, displayedComponents: .hourAndMinute)
             } header: {
-                Text("Date & Time")
+                Text(Strings.dateAndTime)
                     .font(.title2.weight(.bold))
                     .foregroundStyle(.evDeepNavy)
                     .textCase(nil)
@@ -59,21 +59,21 @@ struct AddWateringLogView: View {
 
             Section {
                 TextField(
-                    "Temperature (\(tempUnit.abbreviation), optional)",
+                    Strings.temperatureField(tempUnit.abbreviation),
                     text: $vm.temperatureText
                 )
                 .keyboardType(.decimalPad)
                 .textLimit($vm.temperatureText, maxLength: AppConstants.maxNumericInputLength)
-                .accessibilityLabel("Temperature in \(tempUnit.abbreviation)")
-                .accessibilityHint("Optional")
+                .accessibilityLabel(Strings.temperatureAccessibility(tempUnit.abbreviation))
+                .accessibilityHint(Strings.optional)
 
-                TextField("Humidity (%, optional)", text: $vm.humidityText)
+                TextField(Strings.humidityField, text: $vm.humidityText)
                     .keyboardType(.decimalPad)
                     .textLimit($vm.humidityText, maxLength: AppConstants.maxNumericInputLength)
-                    .accessibilityLabel("Humidity percent")
-                    .accessibilityHint("Optional")
+                    .accessibilityLabel(Strings.humidityPercent)
+                    .accessibilityHint(Strings.optional)
             } header: {
-                Text("Environment")
+                Text(Strings.environment)
                     .font(.title2.weight(.bold))
                     .foregroundStyle(.evDeepNavy)
                     .textCase(nil)
@@ -104,7 +104,7 @@ struct AddWateringLogView: View {
                     }
                 }
                 .buttonStyle(.plain)
-                .accessibilityLabel("Help")
+                .accessibilityLabel(Strings.helpLabel)
                 .listRowBackground(Color.clear)
                 .listRowInsets(EdgeInsets())
             }
@@ -112,16 +112,16 @@ struct AddWateringLogView: View {
         .scrollDismissesKeyboard(.interactively)
         .scrollContentBackground(.hidden)
         .background(Color.evBackground)
-        .navigationTitle("Add Watering Event")
+        .navigationTitle(Strings.addWateringEvent)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
-                Button("Cancel") { dismiss() }
+                Button(Strings.cancel) { dismiss() }
                     .font(.body)
                     .fontWeight(.bold)
             }
             ToolbarItem(placement: .confirmationAction) {
-                Button("Save") {
+                Button(Strings.save) {
                     if vm.save() {
                         HapticService.success()
                         dismissTask = Task {
@@ -155,7 +155,7 @@ struct AddWateringLogView: View {
                             Image(systemName: "checkmark.circle.fill")
                                 .font(.system(size: 56))
                                 .foregroundStyle(.evPrimaryBlue)
-                            Text("Saved")
+                            Text(Strings.saved)
                                 .font(.headline.weight(.bold))
                                 .foregroundStyle(Color.evPrimaryText)
                         }
@@ -169,7 +169,7 @@ struct AddWateringLogView: View {
                     }
                     .allowsHitTesting(false)
                     .accessibilityAddTraits(.isModal)
-                    .accessibilityLabel("Saved")
+                    .accessibilityLabel(Strings.savedLabel)
             }
         }
         .animation(.easeInOut(duration: 0.3), value: vm.showSaveConfirmation)

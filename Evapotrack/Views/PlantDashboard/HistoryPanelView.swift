@@ -25,7 +25,7 @@ struct HistoryPanelView: View {
                         .foregroundStyle(.evPrimaryBlue)
                         .font(.body.weight(.semibold))
                         .accessibilityHidden(true)
-                    Text("View All Logs")
+                    Text(Strings.viewAllLogs)
                         .fontWeight(.semibold)
                         .foregroundStyle(.evPrimaryBlue)
                     Spacer()
@@ -34,10 +34,10 @@ struct HistoryPanelView: View {
                         .foregroundStyle(.evPrimaryBlue)
                 }
             }
-            .accessibilityLabel("View All Logs, \(vm.wateringLogs.count) total")
+            .accessibilityLabel(Strings.viewAllLogsCount(vm.wateringLogs.count))
         } header: {
             Label {
-                Text("History")
+                Text(Strings.history)
             } icon: {
                 Image(systemName: "clock")
             }
