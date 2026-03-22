@@ -320,6 +320,7 @@ enum Strings {
 
     static var exampleGrow: String { es ? "Cultivo de Ejemplo" : "Example Grow" }
     static var examplePlant: String { es ? "Planta de Ejemplo" : "Example Plant" }
+    static var examplePlant2: String { es ? "Planta de Ejemplo 2" : "Example Plant 2" }
 
     // MARK: - Error Messages
 

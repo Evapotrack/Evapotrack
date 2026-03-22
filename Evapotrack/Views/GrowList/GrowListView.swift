@@ -294,6 +294,42 @@ struct GrowListView: View {
         }
 
         WateringCalculationService.recalculateIntervalHours(for: plant.wateringLogs)
+
+        let plant2 = Plant(
+            plantName: Strings.examplePlant2,
+            potSize: "Plastic 5 gal",
+            mediumType: "coco",
+            maxRetentionCapacity: 2.1,
+            goalRunoffPercent: 20.0,
+            grow: grow
+        )
+        modelContext.insert(plant2)
+
+        let logData2: [(month: Int, day: Int, hour: Int, minute: Int, water: Double, runoff: Double, tempF: Double, humidity: Double)] = [
+            (2, 11, 7, 15, 1.80, 0.35, 74.0, 52.0),
+            (2, 13, 8, 50, 1.60, 0.28, 76.0, 49.0),
+            (2, 15, 11, 10, 1.70, 0.40, 82.0, 55.0),
+            (2, 17, 17, 22, 1.40, 0.25, 88.0, 58.0),
+            (2, 19, 14, 35, 1.50, 0.30, 80.0, 62.0),
+            (2, 22, 9, 45, 1.30, 0.15, 71.0, 60.0)
+        ]
+
+        for entry in logData2 {
+            let components = DateComponents(year: 2026, month: entry.month, day: entry.day, hour: entry.hour, minute: entry.minute)
+            let date = calendar.date(from: components) ?? Date()
+            let tempC = UnitConversionService.toCelsius(entry.tempF, from: .fahrenheit)
+            let log = WateringLog(
+                waterAdded: entry.water,
+                runoffCollected: entry.runoff,
+                dateTime: date,
+                temperatureCelsius: tempC,
+                humidityPercent: entry.humidity
+            )
+            log.plant = plant2
+            modelContext.insert(log)
+        }
+
+        WateringCalculationService.recalculateIntervalHours(for: plant2.wateringLogs)
         try? modelContext.save()
         HapticService.success()
     }
