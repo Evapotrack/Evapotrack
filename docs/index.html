@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evapotrack - Optimize Plant Watering</title>
+    <meta name="description" content="Log each watering event, track how much water your plants retain, and get smart recommendations for your next watering.">
+    <link rel="icon" type="image/png" href="app-icon.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0e1a;
+            color: #e2e8f0;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Hero */
+        .hero {
+            text-align: center;
+            padding: 100px 20px 80px;
+            background: linear-gradient(180deg, #0f1629 0%, #0a0e1a 100%);
+        }
+
+        .hero-icon {
+            width: 128px;
+            height: 128px;
+            border-radius: 28px;
+            margin-bottom: 28px;
+            box-shadow: 0 8px 32px rgba(74, 144, 226, 0.2);
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .hero .subtitle {
+            font-size: 1.2rem;
+            color: #5da3f5;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .hero .tagline {
+            font-size: 1.05rem;
+            color: #94a3b8;
+            max-width: 520px;
+            margin: 0 auto 36px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: transparent;
+            border: 2px solid #5da3f5;
+            color: #5da3f5;
+            padding: 12px 32px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Screenshots */
+        .screenshots {
+            padding: 80px 20px;
+            border-top: 1px solid #1e293b;
+        }
+
+        .screenshots h2 {
+            text-align: center;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 48px;
+        }
+
+        .screenshot-row {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            overflow-x: auto;
+            padding: 0 20px 16px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .screenshot-row img {
+            height: 480px;
+            width: auto;
+            border-radius: 20px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Features */
+        .features {
+            padding: 80px 20px;
+            background: #0f1629;
+            border-top: 1px solid #1e293b;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 48px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            max-width: 920px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: #141c30;
+            border: 1px solid #1e293b;
+            border-radius: 12px;
+            padding: 28px;
+        }
+
+        .feature-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #5da3f5;
+            margin-bottom: 6px;
+        }
+
+        .feature-card p {
+            font-size: 0.92rem;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+
+        /* Privacy */
+        .privacy-banner {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .privacy-banner h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 12px;
+        }
+
+        .privacy-banner p {
+            font-size: 1rem;
+            color: #94a3b8;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 36px 20px;
+            border-top: 1px solid #1e293b;
+        }
+
+        footer .links {
+            margin-bottom: 12px;
+        }
+
+        footer a {
+            color: #5da3f5;
+            text-decoration: none;
+            margin: 0 16px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        footer .copyright {
+            color: #475569;
+            font-size: 0.8rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .hero {
+                padding: 64px 20px 56px;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+                letter-spacing: 2px;
+            }
+
+            .hero .subtitle {
+                font-size: 1.05rem;
+            }
+
+            .screenshot-row img {
+                height: 360px;
+            }
+
+            .features, .screenshots, .privacy-banner {
+                padding: 56px 20px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero -->
+    <section class="hero">
+        <img src="./app-icon-256.png" alt="Evapotrack app icon" class="hero-icon">
+        <h1>EVAPOTRACK</h1>
+        <p class="subtitle">Optimize plant watering</p>
+        <p class="tagline">Log each watering event, track how much water your plants retain, and get smart recommendations for your next watering &mdash; all offline, all on your device.</p>
+        <span class="badge">Coming Soon to the App Store</span>
+    </section>
+
+    <!-- Screenshots -->
+    <section class="screenshots">
+        <h2>See It in Action</h2>
+        <div class="screenshot-row">
+            <img src="screenshots/01-grow-list.png" alt="Grow list screen">
+            <img src="screenshots/06-plant-dashboard.png" alt="Plant dashboard with summary and insights">
+            <img src="screenshots/09-chart-retained.png" alt="Retained water chart">
+            <img src="screenshots/07-history-list.png" alt="Watering history log">
+            <img src="screenshots/02-settings-global.png" alt="Settings screen">
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features">
+        <h2>Features</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3>Organize Your Grows</h3>
+                <p>Group plants into grows with custom names, pot sizes, and medium types. Track up to 30 grows with 25 plants each.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Log Every Watering</h3>
+                <p>Record water added, runoff collected, temperature, and humidity. Retention and runoff percentages calculated automatically.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Smart Recommendations</h3>
+                <p>Get next watering recommendations based on historical patterns and your target runoff percentage.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Visualize Trends</h3>
+                <p>Track retained water, temperature, and humidity over time with interactive charts and overlay toggles.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Capacity Tracking</h3>
+                <p>Monitor plant saturation levels with capacity percentage tracking against your medium's max retention.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Export Your Data</h3>
+                <p>Download grow data as a formatted text file for your records, with all values in your preferred display units.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Flexible Units</h3>
+                <p>Milliliters, liters, and gallons. Fahrenheit and Celsius. Day and Dark mode. English and Spanish.</p>
+            </div>
+            <div class="feature-card">
+                <h3>iPhone &amp; iPad</h3>
+                <p>Designed for both iPhone and iPad with adaptive layouts. Portrait optimized for quick, one-handed logging.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Privacy -->
+    <section class="privacy-banner">
+        <h2>Your Data Stays Yours</h2>
+        <p>No accounts. No cloud. No tracking. All data is stored locally on your device. Evapotrack makes zero network connections.</p>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="links">
+            <a href="privacy-policy.html">Privacy Policy</a>
+            <a href="support.html">Support</a>
+        </div>
+        <p class="copyright">&copy; 2026 Evapotrack. All rights reserved.</p>
+    </footer>
+</body>
+</html>
