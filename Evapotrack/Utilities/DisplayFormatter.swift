@@ -1,3 +1,4 @@
+// © 2026 Evapotrack. All rights reserved.
 // DisplayFormatter.swift
 // Evapotrack
 //

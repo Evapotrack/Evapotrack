@@ -1,3 +1,4 @@
+// © 2026 Evapotrack. All rights reserved.
 // DateProvider.swift
 // Evapotrack
 //

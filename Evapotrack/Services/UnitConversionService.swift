@@ -1,3 +1,4 @@
+// © 2026 Evapotrack. All rights reserved.
 // UnitConversionService.swift
 // Evapotrack
 //

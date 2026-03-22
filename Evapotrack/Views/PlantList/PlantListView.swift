@@ -1,3 +1,4 @@
+// © 2026 Evapotrack. All rights reserved.
 // PlantListView.swift
 // Evapotrack
 //
