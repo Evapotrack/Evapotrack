@@ -294,7 +294,7 @@ Chronological record of Evapotrack's development from initial commit to current 
 - Standard Character Mark, Class 009 (Computer Software)
 - Section 1(b) Intent to Use basis
 - Free-form goods/services description: "Downloadable mobile application software for tracking plant watering, monitoring water retention, and providing watering recommendations"
-- Filing fee: $550 (includes $200 free-form surcharge)
+- Filing fee paid (includes free-form surcharge)
 - After app launches: file Allegation of Use with App Store screenshot as specimen
 
 ### Development Time
@@ -304,8 +304,8 @@ Chronological record of Evapotrack's development from initial commit to current 
 
 1. ~~Upload copyright deposit~~ — **DONE** (confirmed received 2026-03-21)
 2. ~~Build pre-launch website~~ — **DONE** (live at https://evapotrack.com)
-3. ~~Submit trademark~~ — **DONE** (USPTO application filed 2026-03-22, $550)
-4. **Bundle ID** — **BLOCKED**: Apple Developer enrollment stuck on "Pending" (Order W1452447162, March 18, 4+ days elapsed). Support ticket submitted March 22. Do not re-purchase. Xcode account added. Once resolved: Register in Certificates, Identifiers & Profiles → Identifiers → App IDs; update Xcode bundle identifier from `Evapotrack.EvapotrackDev` to registered ID (e.g., `com.evapotrack.app`)
+3. ~~Submit trademark~~ — **DONE** (USPTO application filed 2026-03-22)
+4. **Bundle ID** — **BLOCKED**: Apple Developer enrollment stuck on "Pending" (4+ days elapsed). Support ticket submitted March 22. Do not re-purchase. Xcode account added. Once resolved: Register in Certificates, Identifiers & Profiles → Identifiers → App IDs; update Xcode bundle identifier from `Evapotrack.EvapotrackDev` to registered ID (e.g., `com.evapotrack.app`)
 5. **Configure Signing** — Xcode → Signing & Capabilities → select Team, enable "Automatically manage signing"
 6. **TestFlight Build & Testing** — Xcode: Product → Archive → Distribute App → App Store Connect; install via TestFlight on physical devices; run full device testing checklist
 7. **App Store Connect Listing** — Create app (appstoreconnect.apple.com → My Apps → +); fill all metadata, screenshots, build selection
