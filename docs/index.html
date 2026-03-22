@@ -189,10 +189,14 @@
 
         .video video,
         .video iframe {
+            display: block;
+            margin: 0 auto;
             max-width: 100%;
             width: 560px;
+            height: auto;
             border-radius: 10px;
             box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+            background: #000;
         }
 
         /* Privacy */
@@ -342,7 +346,7 @@
 
     <section class="video">
         <h2>Watch the Walkthrough</h2>
-        <video controls preload="metadata" playsinline poster="">
+        <video controls preload="metadata" playsinline>
             <source src="walkthrough.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
