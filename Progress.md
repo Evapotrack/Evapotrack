@@ -245,7 +245,7 @@ Chronological record of Evapotrack's development from initial commit to current 
 - [x] **Apple Developer Program** — enrolled (March 18)
 - [x] **Domains purchased** — evapotrack.com and evapotrack.app on Namecheap (March 18)
 - [x] **Copyright submitted** — U.S. Copyright Office confirmed receipt (March 21)
-- [x] **Trademark submitted** — USPTO application filed, Standard Character Mark, Class 009, $550 (March 22)
+- [x] **Trademark submitted** — USPTO application filed, Standard Character Mark, Class 009 (March 22)
 
 ## Phase 9: Copyright & Documentation (March 21, 2026)
 

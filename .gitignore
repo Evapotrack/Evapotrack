@@ -12,3 +12,9 @@ build/
 
 # Claude Code
 .claude/
+
+# Private business documents (costs, marketing, metrics)
+private/
+
+# Copyright deposit materials (submitted to U.S. Copyright Office)
+copyright-deposit/
