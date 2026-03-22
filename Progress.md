@@ -238,18 +238,34 @@ Chronological record of Evapotrack's development from initial commit to current 
 - [x] Domains — evapotrack.com and evapotrack.app purchased March 18
 - [x] Trademark account — created March 18 (pending submission)
 - [x] Copyright account — created March 18 (pending submission)
+- [x] Dark mode screenshots — 16 images in `screenshots/dark-mode/`
+- [x] Copyright notices — added to all 51 Swift source and test files
+- [x] Copyright deposit prepared — source code + screenshots zip ready
 
 ## Completed Business & Legal (March 18, 2026)
 
 - [x] **Apple ID created** — dedicated Evapotrack Apple ID
 - [x] **Apple Developer Program** — enrolled
-- [x] **Domains purchased** — evapotrack.com and evapotrack.app
+- [x] **Domains purchased** — evapotrack.com and evapotrack.app (Namecheap)
 - [x] **Trademark account created** — not yet submitted
 - [x] **Copyright account created** — not yet submitted
 
+## Phase 9: Copyright & Documentation (March 21, 2026)
+
+- Added `© 2026 Evapotrack. All rights reserved.` copyright notice to all 51 Swift files
+- Captured 16 dark mode screenshots in `screenshots/dark-mode/`
+- Moved Progress.md and AppStoreMetadata.md out of `docs/` (not public GitHub Pages)
+- Scrubbed sensitive business details from Progress.md
+- Documented March 18 business milestones (Apple ID, Developer Program, domains, trademark, copyright)
+- Prepared copyright deposit materials (`copyright-deposit/evapotrack-copyright-deposit.zip`)
+  - Source code: first/last 25 pages (2,503 lines) with copyright headers
+  - 16 dark mode screenshots
+- Copyright application filled out on eCO (copyright.gov) — Standard Application, Literary Work
+  - Upload blocked by scheduled maintenance (Sat 10pm–Sun 6am ET)
+
 ## Next Steps (In Order)
 
-1. **Submit copyright** — finalize and submit copyright registration
+1. **Upload copyright deposit** — return to eCO after Sunday 6am ET, upload `copyright-deposit/evapotrack-copyright-deposit.zip`, pay fee, submit
 2. **Build pre-launch website** — deploy to evapotrack.com and evapotrack.app domains
 3. **Submit trademark** — file trademark application
 4. **Bundle ID** — Register in Apple Developer portal (Certificates, Identifiers & Profiles → Identifiers → App IDs); update Xcode bundle identifier from `Evapotrack.EvapotrackDev` to registered ID (e.g., `com.evapotrack.app`)
