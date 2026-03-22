@@ -48,7 +48,7 @@
 |-------|------|----------|-------|
 | id | UUID | Yes | @Attribute(.unique), auto-generated |
 | waterAdded | Double | Yes | Liters, clamped >= 0.001 |
-| runoffCollected | Double | Yes | Liters, >= 0 and < waterAdded |
+| runoffCollected | Double | Yes | Liters, >= 0 and <= waterAdded |
 | dateTime | Date | Yes | Not future, unique per plant (minute) |
 | temperatureCelsius | Double? | No | -50 to 60 C |
 | humidityPercent | Double? | No | 0-100% |

@@ -49,7 +49,7 @@ ViewModels use a `configure(modelContext:)` method called from `.onAppear` rathe
 | Medium type | Not blank | - |
 | Max retention | 0.001-100 liters | maxRetentionCapacityRange |
 | Water added | 0.001-100 liters | waterAddedRange |
-| Runoff | >= 0 and < water added | - |
+| Runoff | >= 0 and <= water added | - |
 | Retained | <= 105% of max retention capacity | maxRetainedFactor |
 | Temperature | -50 to 60 C (optional) | - |
 | Humidity | 0-100% (optional) | humidityRange |
