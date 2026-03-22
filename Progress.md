@@ -226,26 +226,37 @@ Chronological record of Evapotrack's development from initial commit to current 
 - [x] Privacy policy — `docs/privacy-policy.html` (live at https://evapotrack.github.io/Evapotrack/privacy-policy.html)
 - [x] Support page — `docs/support.html` (live at https://evapotrack.github.io/Evapotrack/support.html)
 - [x] GitHub Pages — repo public, pages deployed from main/docs
-- [x] App Store metadata — `docs/AppStoreMetadata.md` (name, subtitle, description, keywords, categories)
+- [x] App Store metadata — `AppStoreMetadata.md` (name, subtitle, description, keywords, categories)
 - [x] Privacy manifest — no tracking, no data collection, UserDefaults only
 - [x] Export compliance — ITSAppUsesNonExemptEncryption = NO in Info.plist
 - [x] App display name — "Evapotrack" (not "EvapotrackDev")
 - [x] Light mode screenshots — 19 images in `screenshots/light-mode/`
 - [x] Full code audit — 111 tests passing, no dead code, no debug artifacts, no security issues
 - [x] Localization — EN/ES in-app switching complete
+- [x] Apple ID — created March 18
+- [x] Apple Developer Program — enrolled March 18
+- [x] Domains — evapotrack.com and evapotrack.app purchased March 18
+- [x] Trademark account — created March 18 (pending submission)
+- [x] Copyright account — created March 18 (pending submission)
+
+## Completed Business & Legal (March 18, 2026)
+
+- [x] **Apple ID created** — dedicated Evapotrack Apple ID
+- [x] **Apple Developer Program** — enrolled
+- [x] **Domains purchased** — evapotrack.com and evapotrack.app
+- [x] **Trademark account created** — not yet submitted
+- [x] **Copyright account created** — not yet submitted
 
 ## Next Steps (In Order)
 
-1. **Create Apple ID** — appleid.apple.com with Evapotrack phone number; enable two-factor authentication
-   - *Status: BLOCKED — rate limiting from March 14 attempts; retry March 15 from different device/network or call Apple Support at 1-800-275-2273*
-2. **Apple Developer Program** — Enroll at developer.apple.com/programs/enroll ($99/year), Individual enrollment, identity verification (up to 48 hrs)
-3. **Bundle ID** — Register in Apple Developer portal (Certificates, Identifiers & Profiles → Identifiers → App IDs); update Xcode bundle identifier from `Evapotrack.EvapotrackDev` to registered ID (e.g., `com.evapotrack.app`)
-4. **Configure Signing** — Xcode → Signing & Capabilities → select Team, enable "Automatically manage signing"
-5. **TestFlight Build** — Xcode: Product → Archive → Distribute App → App Store Connect; wait for processing (~10-30 min); add self as internal tester; install via TestFlight app on physical devices
-6. **Physical Device Testing** — Full checklist: launch, create/delete flow, data persistence, Dark/Light mode, EN/ES switching, export, portrait lock, chart overlays, VoiceOver, Dynamic Type
-7. **App Store Connect Listing** — Create app (appstoreconnect.apple.com → My Apps → +); fill: name, subtitle, category (Utilities/Lifestyle), age rating (4+), pricing (Free), privacy ("does not collect data"), privacy policy URL, support URL, description, keywords, screenshots, build selection, export compliance (No)
-8. **Screenshots** — Verify light mode set matches required dimensions (6.7" iPhone: 1290×2796, iPad Pro 13": 2048×2732); capture additional sizes if needed
-9. **Submit for Review** — Select TestFlight build, verify all fields complete, submit; typical review: 24-48 hrs
+1. **Submit copyright** — finalize and submit copyright registration
+2. **Build pre-launch website** — deploy to evapotrack.com and evapotrack.app domains
+3. **Submit trademark** — file trademark application
+4. **Bundle ID** — Register in Apple Developer portal (Certificates, Identifiers & Profiles → Identifiers → App IDs); update Xcode bundle identifier from `Evapotrack.EvapotrackDev` to registered ID (e.g., `com.evapotrack.app`)
+5. **Configure Signing** — Xcode → Signing & Capabilities → select Team, enable "Automatically manage signing"
+6. **TestFlight Build & Testing** — Xcode: Product → Archive → Distribute App → App Store Connect; install via TestFlight on physical devices; run full device testing checklist
+7. **App Store Connect Listing** — Create app (appstoreconnect.apple.com → My Apps → +); fill all metadata, screenshots, build selection
+8. **Submit for App Store Review** — Select TestFlight build, verify all fields complete, submit; typical review: 24-48 hrs
 
 ## Optional Enhancements (Not Blocking v1)
 
