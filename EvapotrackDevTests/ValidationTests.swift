@@ -111,8 +111,8 @@ final class ValidationTests: XCTestCase {
         XCTAssertTrue(Validators.isValidRunoff(0.3, waterAdded: 1.0))
     }
 
-    func test_runoff_equalToWaterAdded_isInvalid() {
-        XCTAssertFalse(Validators.isValidRunoff(1.0, waterAdded: 1.0))
+    func test_runoff_equalToWaterAdded_isValid() {
+        XCTAssertTrue(Validators.isValidRunoff(1.0, waterAdded: 1.0))
     }
 
     func test_runoff_greaterThanWaterAdded_isInvalid() {
@@ -282,10 +282,10 @@ final class ValidationTests: XCTestCase {
         XCTAssertEqual(ValidationService.validateRunoff(0.3, waterAdded: 1.0), .valid)
     }
 
-    func test_validateRunoff_equalToWater_returnsInvalidWithMessage() {
+    func test_validateRunoff_equalToWater_returnsValid() {
         XCTAssertEqual(
             ValidationService.validateRunoff(1.0, waterAdded: 1.0),
-            .invalid("Runoff must be ≥ 0 and less than water added.")
+            .valid
         )
     }
 

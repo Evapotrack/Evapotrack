@@ -48,9 +48,9 @@ enum Validators {
         AppConstants.waterAddedRange.contains(value)
     }
 
-    /// Runoff must be ≥ 0 and < waterAdded.
+    /// Runoff must be ≥ 0 and ≤ waterAdded.
     static func isValidRunoff(_ runoff: Double, waterAdded: Double) -> Bool {
-        runoff >= 0 && runoff < waterAdded
+        runoff >= 0 && runoff <= waterAdded
     }
 
     /// Temperature in Celsius must be within the allowed range.

@@ -344,7 +344,7 @@ enum Strings {
     static var mediumTypeBlank: String { es ? "El tipo de medio no debe estar en blanco." : "Medium type must not be blank." }
     static var maxRetentionRange: String { es ? "La capacidad máx. de retención debe estar entre 0.001 y 100 litros." : "Max retention capacity must be between 0.001 and 100 liters." }
     static var waterAddedRange: String { es ? "El agua agregada debe estar entre 0.001 y 100 litros." : "Water added must be between 0.001 and 100 liters." }
-    static var runoffRange: String { es ? "El drenaje debe ser ≥ 0 y menor que el agua agregada." : "Runoff must be ≥ 0 and less than water added." }
+    static var runoffRange: String { es ? "El drenaje debe ser ≥ 0 y ≤ al agua agregada." : "Runoff must be ≥ 0 and ≤ water added." }
     static var temperatureRange: String { es ? "La temperatura debe estar entre -50 y 60 °C." : "Temperature must be between -50 and 60 °C." }
     static var humidityRange: String { es ? "La humedad debe estar entre 0 y 100%." : "Humidity must be between 0 and 100%." }
     static var dateInFuture: String { es ? "La fecha no puede ser en el futuro." : "Date cannot be in the future." }

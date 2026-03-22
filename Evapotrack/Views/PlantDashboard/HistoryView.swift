@@ -424,13 +424,15 @@ struct HistoryView: View {
     private func temperatureChart(chartData: [WateringLog], tempUnit: TemperatureUnit, xDomain: ClosedRange<Date>, showAxis: Bool) -> some View {
         Chart {
             ForEach(chartData.filter { $0.temperatureCelsius != nil }, id: \.id) { log in
-                LineMark(
-                    x: .value("Date", log.dateTime),
-                    y: .value("Temp", UnitConversionService.fromCelsius(log.temperatureCelsius!, to: tempUnit))
-                )
-                .foregroundStyle(Color.evWarmOrange)
-                .lineStyle(StrokeStyle(lineWidth: 1.5))
-                .interpolationMethod(.catmullRom)
+                if let tempC = log.temperatureCelsius {
+                    LineMark(
+                        x: .value("Date", log.dateTime),
+                        y: .value("Temp", UnitConversionService.fromCelsius(tempC, to: tempUnit))
+                    )
+                    .foregroundStyle(Color.evWarmOrange)
+                    .lineStyle(StrokeStyle(lineWidth: 1.5))
+                    .interpolationMethod(.catmullRom)
+                }
             }
         }
         .chartYAxis {
@@ -451,13 +453,15 @@ struct HistoryView: View {
     private func humidityChart(chartData: [WateringLog], xDomain: ClosedRange<Date>, showAxis: Bool) -> some View {
         Chart {
             ForEach(chartData.filter { $0.humidityPercent != nil }, id: \.id) { log in
-                LineMark(
-                    x: .value("Date", log.dateTime),
-                    y: .value("Humidity", log.humidityPercent!)
-                )
-                .foregroundStyle(Color.evSoftPurple)
-                .lineStyle(StrokeStyle(lineWidth: 1.5))
-                .interpolationMethod(.catmullRom)
+                if let humidity = log.humidityPercent {
+                    LineMark(
+                        x: .value("Date", log.dateTime),
+                        y: .value("Humidity", humidity)
+                    )
+                    .foregroundStyle(Color.evSoftPurple)
+                    .lineStyle(StrokeStyle(lineWidth: 1.5))
+                    .interpolationMethod(.catmullRom)
+                }
             }
         }
         .chartYAxis {
