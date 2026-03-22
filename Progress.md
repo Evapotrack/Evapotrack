@@ -305,7 +305,7 @@ Chronological record of Evapotrack's development from initial commit to current 
 1. ~~Upload copyright deposit~~ — **DONE** (confirmed received 2026-03-21)
 2. ~~Build pre-launch website~~ — **DONE** (live at https://evapotrack.com)
 3. ~~Submit trademark~~ — **DONE** (USPTO application filed 2026-03-22, $550)
-4. **Bundle ID** — Register in Apple Developer portal (Certificates, Identifiers & Profiles → Identifiers → App IDs); update Xcode bundle identifier from `Evapotrack.EvapotrackDev` to registered ID (e.g., `com.evapotrack.app`)
+4. **Bundle ID** — **BLOCKED**: Apple Developer portal not recognizing enrollment despite confirmed purchase (Order W1452447162, March 18). Support ticket submitted March 22. Once resolved: Register in Certificates, Identifiers & Profiles → Identifiers → App IDs; update Xcode bundle identifier from `Evapotrack.EvapotrackDev` to registered ID (e.g., `com.evapotrack.app`)
 5. **Configure Signing** — Xcode → Signing & Capabilities → select Team, enable "Automatically manage signing"
 6. **TestFlight Build & Testing** — Xcode: Product → Archive → Distribute App → App Store Connect; install via TestFlight on physical devices; run full device testing checklist
 7. **App Store Connect Listing** — Create app (appstoreconnect.apple.com → My Apps → +); fill all metadata, screenshots, build selection
