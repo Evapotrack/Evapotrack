@@ -11,6 +11,7 @@
     <meta property="og:url" content="https://evapotrack.com">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary">
+    <meta name="keywords" content="plant watering tracker, runoff tracking, water retention, hydroponics app, drain to waste, grow tracker, coco coir, iPhone, iPad">
     <link rel="icon" type="image/png" href="app-icon-256.png">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -145,6 +146,53 @@
             line-height: 1.45;
         }
 
+        /* About */
+        .about {
+            padding: 48px 24px;
+            max-width: 680px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .about h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 16px;
+        }
+
+        .about p {
+            font-size: 0.95rem;
+            color: #8896ab;
+            line-height: 1.7;
+        }
+
+        /* Video */
+        .video {
+            padding: 48px 24px;
+            text-align: center;
+            background: #1a2540;
+            border-top: 1px solid #2a3a58;
+        }
+
+        .video h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 24px;
+        }
+
+        .video .video-placeholder {
+            color: #8896ab;
+            font-size: 0.9rem;
+        }
+
+        .video iframe {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+        }
+
         /* Privacy */
         .privacy-banner {
             text-align: center;
@@ -165,6 +213,30 @@
             color: #8896ab;
             max-width: 440px;
             margin: 0 auto;
+        }
+
+        /* Donate */
+        .donate {
+            text-align: center;
+            padding: 40px 24px;
+        }
+
+        .donate h2 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+
+        .donate p {
+            font-size: 0.85rem;
+            color: #8896ab;
+        }
+
+        .donate .address {
+            font-family: 'SF Mono', 'Menlo', monospace;
+            color: #5da3f5;
+            font-size: 0.85rem;
         }
 
         /* Footer */
@@ -261,10 +333,29 @@
         </div>
     </section>
 
+    <section class="about">
+        <h2>What Is Evapotrack?</h2>
+        <p>Evapotrack is a plant watering tracker for iPhone and iPad. It measures water input and runoff to calculate how much water your plants actually retain. Built for drain-to-waste growers running coco, soil, or any medium where tracking runoff matters. Log each watering, monitor retention and capacity over time, and get data-driven recommendations for your next watering — all offline, all stored locally on your device.</p>
+    </section>
+
+    <section class="video">
+        <h2>Watch the Walkthrough</h2>
+        <!-- Replace with YouTube embed after upload: <iframe width="560" height="315" src="https://www.youtube.com/embed/VIDEO_ID" frameborder="0" allowfullscreen></iframe> -->
+        <p class="video-placeholder">Video coming soon.</p>
+    </section>
+
     <section class="privacy-banner">
         <h2>Your Data Stays Yours</h2>
         <p>No accounts. No cloud. No tracking. All data is stored locally on your device. Evapotrack makes zero network connections.</p>
     </section>
+
+    <!-- Uncomment after Strike account is set up:
+    <section class="donate">
+        <h2>Support Development</h2>
+        <p>Evapotrack is built by a solo developer. If you find it useful, tips are appreciated.</p>
+        <p class="address">⚡ evapotrack@strike.me</p>
+    </section>
+    -->
 
     <footer>
         <div class="links">
