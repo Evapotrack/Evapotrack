@@ -4,19 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Evapotrack - Optimize Plant Watering</title>
-    <meta name="description" content="Log each watering event, track how much water your plants retain, and get smart recommendations for your next watering.">
-    <link rel="icon" type="image/png" href="app-icon.png">
+    <meta name="description" content="Monitor plant water retention and get data-driven watering recommendations. Offline and stored locally on your device.">
+    <meta property="og:title" content="Evapotrack - Optimize Plant Watering">
+    <meta property="og:description" content="Monitor plant water retention and get data-driven watering recommendations. Offline and stored locally on your device.">
+    <meta property="og:image" content="app-icon-256.png">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
+    <link rel="icon" type="image/png" href="app-icon-256.png">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0a0e1a;
-            color: #e2e8f0;
+            background: #141d2f;
+            color: #cbd5e1;
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
         }
@@ -24,227 +25,203 @@
         /* Hero */
         .hero {
             text-align: center;
-            padding: 100px 20px 80px;
-            background: linear-gradient(180deg, #0f1629 0%, #0a0e1a 100%);
+            padding: 80px 24px 64px;
         }
 
         .hero-icon {
-            width: 128px;
-            height: 128px;
-            border-radius: 28px;
-            margin-bottom: 28px;
-            box-shadow: 0 8px 32px rgba(74, 144, 226, 0.2);
+            width: 120px;
+            height: 120px;
+            border-radius: 26px;
+            margin-bottom: 24px;
+            box-shadow: 0 6px 28px rgba(93, 163, 245, 0.18);
         }
 
         .hero h1 {
-            font-size: 2.8rem;
+            font-size: 2.6rem;
             font-weight: 700;
             letter-spacing: 3px;
             color: #ffffff;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .hero .subtitle {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             color: #5da3f5;
             font-weight: 500;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .hero .tagline {
-            font-size: 1.05rem;
-            color: #94a3b8;
-            max-width: 520px;
-            margin: 0 auto 36px;
+            font-size: 1rem;
+            color: #8896ab;
+            max-width: 460px;
+            margin: 0 auto 32px;
         }
 
         .badge {
             display: inline-block;
-            background: transparent;
-            border: 2px solid #5da3f5;
+            border: 1.5px solid #5da3f5;
             color: #5da3f5;
-            padding: 12px 32px;
+            padding: 10px 28px;
             border-radius: 10px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 600;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
         }
 
         /* Screenshots */
         .screenshots {
-            padding: 80px 20px;
-            border-top: 1px solid #1e293b;
+            padding: 48px 0 56px;
+            background: #1a2540;
+            border-top: 1px solid #2a3a58;
         }
 
         .screenshots h2 {
             text-align: center;
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             font-weight: 700;
             color: #ffffff;
-            margin-bottom: 48px;
+            margin-bottom: 32px;
         }
 
         .screenshot-row {
             display: flex;
-            gap: 20px;
+            gap: 16px;
             justify-content: center;
             overflow-x: auto;
-            padding: 0 20px 16px;
+            padding: 0 24px 12px;
             -webkit-overflow-scrolling: touch;
         }
 
+        .screenshot-row::-webkit-scrollbar { display: none; }
+
         .screenshot-row img {
-            height: 480px;
+            height: 380px;
             width: auto;
-            border-radius: 20px;
+            border-radius: 12px;
             flex-shrink: 0;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 24px rgba(93, 163, 245, 0.12), 0 8px 32px rgba(0, 0, 0, 0.4);
         }
 
         /* Features */
         .features {
-            padding: 80px 20px;
-            background: #0f1629;
-            border-top: 1px solid #1e293b;
-            border-bottom: 1px solid #1e293b;
+            padding: 56px 24px;
+            max-width: 880px;
+            margin: 0 auto;
         }
 
         .features h2 {
             text-align: center;
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             font-weight: 700;
             color: #ffffff;
-            margin-bottom: 48px;
+            margin-bottom: 36px;
         }
 
         .feature-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 20px;
-            max-width: 920px;
-            margin: 0 auto;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
         }
 
         .feature-card {
-            background: #141c30;
-            border: 1px solid #1e293b;
-            border-radius: 12px;
-            padding: 28px;
+            background: #1a2540;
+            border: 1px solid #2a3a58;
+            border-radius: 10px;
+            padding: 22px;
         }
 
         .feature-card h3 {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             color: #5da3f5;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .feature-card p {
-            font-size: 0.92rem;
-            color: #94a3b8;
-            line-height: 1.5;
+            font-size: 0.88rem;
+            color: #8896ab;
+            line-height: 1.45;
         }
 
         /* Privacy */
         .privacy-banner {
             text-align: center;
-            padding: 80px 20px;
+            padding: 56px 24px;
+            background: #1a2540;
+            border-top: 1px solid #1c2940;
         }
 
         .privacy-banner h2 {
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             font-weight: 700;
             color: #ffffff;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .privacy-banner p {
-            font-size: 1rem;
-            color: #94a3b8;
-            max-width: 480px;
+            font-size: 0.95rem;
+            color: #8896ab;
+            max-width: 440px;
             margin: 0 auto;
         }
 
         /* Footer */
         footer {
             text-align: center;
-            padding: 36px 20px;
-            border-top: 1px solid #1e293b;
+            padding: 32px 24px;
+            border-top: 1px solid #1c2940;
         }
 
-        footer .links {
-            margin-bottom: 12px;
-        }
+        footer .links { margin-bottom: 10px; }
 
         footer a {
             color: #5da3f5;
             text-decoration: none;
-            margin: 0 16px;
-            font-size: 0.9rem;
+            margin: 0 14px;
+            font-size: 0.85rem;
             font-weight: 500;
         }
 
-        footer a:hover {
-            text-decoration: underline;
-        }
+        footer a:hover { text-decoration: underline; }
 
         footer .copyright {
-            color: #475569;
-            font-size: 0.8rem;
+            color: #3e4a5c;
+            font-size: 0.78rem;
         }
 
-        /* Responsive */
+        /* Mobile */
         @media (max-width: 640px) {
-            .hero {
-                padding: 64px 20px 56px;
-            }
-
-            .hero h1 {
-                font-size: 2rem;
-                letter-spacing: 2px;
-            }
-
-            .hero .subtitle {
-                font-size: 1.05rem;
-            }
-
-            .screenshot-row img {
-                height: 360px;
-            }
-
-            .features, .screenshots, .privacy-banner {
-                padding: 56px 20px;
-            }
-
-            .feature-grid {
-                grid-template-columns: 1fr;
-            }
+            .hero { padding: 56px 20px 48px; }
+            .hero h1 { font-size: 1.9rem; letter-spacing: 2px; }
+            .hero .subtitle { font-size: 1rem; }
+            .screenshot-row img { height: 320px; }
+            .feature-grid { grid-template-columns: 1fr; }
+            .features, .privacy-banner { padding: 40px 20px; }
         }
     </style>
 </head>
 <body>
-    <!-- Hero -->
+
     <section class="hero">
         <img src="./app-icon-256.png" alt="Evapotrack app icon" class="hero-icon">
         <h1>EVAPOTRACK</h1>
         <p class="subtitle">Optimize plant watering</p>
-        <p class="tagline">Log each watering event, track how much water your plants retain, and get smart recommendations for your next watering &mdash; all offline, all on your device.</p>
+        <p class="tagline">Monitor plant water retention and get data-driven watering recommendations.</p>
         <span class="badge">Coming Soon to the App Store</span>
     </section>
 
-    <!-- Screenshots -->
     <section class="screenshots">
         <h2>See It in Action</h2>
         <div class="screenshot-row">
-            <img src="screenshots/01-grow-list.png" alt="Grow list screen">
-            <img src="screenshots/06-plant-dashboard.png" alt="Plant dashboard with summary and insights">
-            <img src="screenshots/09-chart-retained.png" alt="Retained water chart">
-            <img src="screenshots/07-history-list.png" alt="Watering history log">
-            <img src="screenshots/02-settings-global.png" alt="Settings screen">
+            <img src="./screenshots/01-grow-list.png" alt="Grow list">
+            <img src="./screenshots/06-plant-dashboard.png" alt="Plant dashboard">
+            <img src="./screenshots/09-chart-retained.png" alt="Retained water chart">
+            <img src="./screenshots/07-history-list.png" alt="Watering history">
+            <img src="./screenshots/02-settings-global.png" alt="Settings">
         </div>
     </section>
 
-    <!-- Features -->
     <section class="features">
         <h2>Features</h2>
         <div class="feature-grid">
@@ -283,13 +260,11 @@
         </div>
     </section>
 
-    <!-- Privacy -->
     <section class="privacy-banner">
         <h2>Your Data Stays Yours</h2>
         <p>No accounts. No cloud. No tracking. All data is stored locally on your device. Evapotrack makes zero network connections.</p>
     </section>
 
-    <!-- Footer -->
     <footer>
         <div class="links">
             <a href="privacy-policy.html">Privacy Policy</a>
@@ -297,5 +272,6 @@
         </div>
         <p class="copyright">&copy; 2026 Evapotrack. All rights reserved.</p>
     </footer>
+
 </body>
 </html>
