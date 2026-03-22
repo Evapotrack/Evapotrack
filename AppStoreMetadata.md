@@ -24,6 +24,7 @@ Features:
 - Support for milliliters, liters, and gallons
 - Fahrenheit and Celsius display options
 - Day and Dark mode
+- English and Spanish language support
 - Designed for iPhone and iPad
 
 All data is stored locally on your device. No accounts, no cloud, no tracking.
@@ -36,3 +37,8 @@ Utilities
 
 ## Secondary Category
 Lifestyle
+
+## URLs
+- Privacy Policy: https://evapotrack.com/privacy-policy.html
+- Support: https://evapotrack.com/support.html
+- Website: https://evapotrack.com

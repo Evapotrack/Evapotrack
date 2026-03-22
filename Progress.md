@@ -209,8 +209,8 @@ Chronological record of Evapotrack's development from initial commit to current 
 
 ## Development Time
 
-- **~29 hours** of active Claude Code development time (accounting for session overlap)
-- **15 sessions** across 15 calendar days (March 1–15, 2026)
+- **~35 hours** of active Claude Code development time (accounting for session overlap)
+- **17 sessions** across 22 calendar days (March 1–22, 2026)
 - **Phase 1 (March 1–2):** ~12 hrs — foundation, core features, settings, UI, polish, tests
 - **Phase 2 (March 6):** ~3 hrs — data integrity, limits, export, code review
 - **Phase 3 (March 12–13):** ~4 hrs — light mode, accessibility, Dynamic Type, App Store prep, iPad layout, code review, App Store prep docs
@@ -219,36 +219,33 @@ Chronological record of Evapotrack's development from initial commit to current 
 - **Phase 6 (March 14):** ~3 hrs — EN/ES localization, actor isolation fixes, app display name, code review
 - **Phase 7 (March 14–15):** ~1 hr — example data fix, How To chart sections, Settings layout
 - **Phase 8 (March 15):** ~1 hr — dashboard layout fix, full audit, App Store preparedness docs
+- **Phase 9 (March 21):** ~2 hrs — copyright notices, dark screenshots, copyright deposit, documentation
+- **Phase 10 (March 21–22):** ~4 hrs — pre-launch website, screenshot processing, DNS config, copyright/trademark
 
 ## Completed Pre-Submission Items
 
 - [x] App icon (1024x1024) — in asset catalog
-- [x] Privacy policy — `docs/privacy-policy.html` (live at https://evapotrack.github.io/Evapotrack/privacy-policy.html)
-- [x] Support page — `docs/support.html` (live at https://evapotrack.github.io/Evapotrack/support.html)
+- [x] Privacy policy — `docs/privacy-policy.html` (live at https://evapotrack.com/privacy-policy.html)
+- [x] Support page — `docs/support.html` (live at https://evapotrack.com/support.html)
 - [x] GitHub Pages — repo public, pages deployed from main/docs
 - [x] App Store metadata — `AppStoreMetadata.md` (name, subtitle, description, keywords, categories)
 - [x] Privacy manifest — no tracking, no data collection, UserDefaults only
 - [x] Export compliance — ITSAppUsesNonExemptEncryption = NO in Info.plist
 - [x] App display name — "Evapotrack" (not "EvapotrackDev")
 - [x] Light mode screenshots — 19 images in `screenshots/light-mode/`
+- [x] Dark mode screenshots — 16 images in `screenshots/dark-mode/`, 5 processed with bezels in `docs/screenshots/`
 - [x] Full code audit — 111 tests passing, no dead code, no debug artifacts, no security issues
 - [x] Localization — EN/ES in-app switching complete
-- [x] Apple ID — created March 18
-- [x] Apple Developer Program — enrolled March 18
-- [x] Domains — evapotrack.com and evapotrack.app purchased March 18
-- [x] Trademark account — created March 18 (pending submission)
-- [x] Copyright account — created March 18 (pending submission)
-- [x] Dark mode screenshots — 16 images in `screenshots/dark-mode/`
-- [x] Copyright notices — added to all 51 Swift source and test files
-- [x] Copyright deposit prepared — source code + screenshots zip ready
+- [x] Pre-launch website — live at https://evapotrack.com (dark theme, 5 screenshots, feature cards)
+- [x] DNS configured — evapotrack.com pointing to GitHub Pages (A records + CNAME)
 
-## Completed Business & Legal (March 18, 2026)
+## Completed Business & Legal
 
-- [x] **Apple ID created** — dedicated Evapotrack Apple ID
-- [x] **Apple Developer Program** — enrolled
-- [x] **Domains purchased** — evapotrack.com and evapotrack.app (Namecheap)
-- [x] **Trademark account created** — not yet submitted
-- [x] **Copyright account created** — not yet submitted
+- [x] **Apple ID created** — dedicated Evapotrack Apple ID (March 18)
+- [x] **Apple Developer Program** — enrolled (March 18)
+- [x] **Domains purchased** — evapotrack.com and evapotrack.app on Namecheap (March 18)
+- [x] **Copyright submitted** — U.S. Copyright Office confirmed receipt (March 21)
+- [x] **Trademark submitted** — USPTO application filed, Standard Character Mark, Class 009, $550 (March 22)
 
 ## Phase 9: Copyright & Documentation (March 21, 2026)
 
@@ -263,11 +260,51 @@ Chronological record of Evapotrack's development from initial commit to current 
 - Copyright application filled out on eCO (copyright.gov) — Standard Application, Literary Work
   - Upload blocked by scheduled maintenance (Sat 10pm–Sun 6am ET)
 
+## Phase 10: Website, DNS, Copyright & Trademark (March 21–22, 2026)
+
+### Pre-Launch Website
+- Built dark-themed landing page at `docs/index.html`
+- 5 dark mode screenshots with iPhone-style bezel frames (cropped from Xcode simulator, 680x1468px each)
+- 8 feature cards highlighting core capabilities
+- Privacy and support pages converted from light to dark theme with back navigation links
+- Open Graph + Twitter Card meta tags for social sharing previews
+- Responsive design with mobile breakpoint at 640px
+- "Coming Soon to the App Store" badge
+
+### Screenshot Processing
+- Source: `screenshots/dark-mode/` (970x1836px Xcode simulator captures)
+- Cropped to screen content: (157, 229, 813, 1673) → 656x1444px
+- Added iPhone-style bezel frame (12px, gray-blue #374158/#4b5870)
+- Rounded corners (38px radius)
+- Final: 5 processed PNGs in `docs/screenshots/`, total 856KB
+
+### DNS Configuration
+- **evapotrack.com** — 4 A records (185.199.108–111.153) + www CNAME → evapotrack.github.io on Namecheap
+- **evapotrack.app** — A records set but reserved for brand protection only (.app TLD enforces HTTPS via HSTS preload; Namecheap redirect won't work)
+- CNAME file added to `docs/CNAME` pointing to evapotrack.com
+- Site live at https://evapotrack.com
+
+### Copyright Confirmed
+- U.S. Copyright Office confirmed receipt of application and payment on 2026-03-21 at 9:51 PM ET
+- Standard Application, Literary Work, Computer Program
+- Deposit: `copyright-deposit/evapotrack-copyright-deposit.zip`
+
+### Trademark Submitted
+- USPTO trademark application filed for "EVAPOTRACK" on 2026-03-22
+- Standard Character Mark, Class 009 (Computer Software)
+- Section 1(b) Intent to Use basis
+- Free-form goods/services description: "Downloadable mobile application software for tracking plant watering, monitoring water retention, and providing watering recommendations"
+- Filing fee: $550 (includes $200 free-form surcharge)
+- After app launches: file Allegation of Use with App Store screenshot as specimen
+
+### Development Time
+- ~4 hrs — website build, screenshot processing, DNS config, copyright/trademark documentation
+
 ## Next Steps (In Order)
 
-1. **Upload copyright deposit** — return to eCO after Sunday 6am ET, upload `copyright-deposit/evapotrack-copyright-deposit.zip`, pay fee, submit
-2. **Build pre-launch website** — deploy to evapotrack.com and evapotrack.app domains
-3. **Submit trademark** — file trademark application
+1. ~~Upload copyright deposit~~ — **DONE** (confirmed received 2026-03-21)
+2. ~~Build pre-launch website~~ — **DONE** (live at https://evapotrack.com)
+3. ~~Submit trademark~~ — **DONE** (USPTO application filed 2026-03-22, $550)
 4. **Bundle ID** — Register in Apple Developer portal (Certificates, Identifiers & Profiles → Identifiers → App IDs); update Xcode bundle identifier from `Evapotrack.EvapotrackDev` to registered ID (e.g., `com.evapotrack.app`)
 5. **Configure Signing** — Xcode → Signing & Capabilities → select Team, enable "Automatically manage signing"
 6. **TestFlight Build & Testing** — Xcode: Product → Archive → Distribute App → App Store Connect; install via TestFlight on physical devices; run full device testing checklist
@@ -276,9 +313,9 @@ Chronological record of Evapotrack's development from initial commit to current 
 
 ## Optional Enhancements (Not Blocking v1)
 
-- **Dark mode screenshots** — Capture matching set of 19 screenshots in dark mode for `screenshots/dark-mode/`
 - **App Store preview video** — 15-30 sec screen recording of core flow
 - **Additional test coverage** — Services, ViewModels, DataExportService (~6-8 hrs)
+- **evapotrack.app redirect** — Consider Cloudflare if redirect from .app to .com needed later
 
 ## Phase 7: Post-Localization Polish (March 14–15, 2026)
 
