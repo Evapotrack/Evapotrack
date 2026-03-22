@@ -54,4 +54,52 @@ extension View {
             }
         }
     }
+
+    /// Adds extra top padding on iPad for visual breathing room.
+    func iPadTopPadding(_ amount: CGFloat = 20) -> some View {
+        modifier(IPadTopPaddingModifier(amount: amount))
+    }
+
+    /// Presents a sheet on iPhone and a fullScreenCover on iPad so form content fits without scrolling.
+    func adaptiveSheet<Content: View>(
+        isPresented: Binding<Bool>,
+        onDismiss: (() -> Void)? = nil,
+        @ViewBuilder content: @escaping () -> Content
+    ) -> some View {
+        modifier(AdaptiveSheetModifier(isPresented: isPresented, onDismiss: onDismiss, sheetContent: content))
+    }
+}
+
+// MARK: - IPadTopPaddingModifier
+
+private struct IPadTopPaddingModifier: ViewModifier {
+    @Environment(\.horizontalSizeClass) private var sizeClass
+    let amount: CGFloat
+
+    func body(content: Content) -> some View {
+        if sizeClass == .regular {
+            content.safeAreaInset(edge: .top, spacing: 0) {
+                Spacer().frame(height: amount)
+            }
+        } else {
+            content
+        }
+    }
+}
+
+// MARK: - AdaptiveSheetModifier
+
+private struct AdaptiveSheetModifier<SheetContent: View>: ViewModifier {
+    @Environment(\.horizontalSizeClass) private var sizeClass
+    @Binding var isPresented: Bool
+    let onDismiss: (() -> Void)?
+    @ViewBuilder let sheetContent: () -> SheetContent
+
+    func body(content: Content) -> some View {
+        if sizeClass == .regular {
+            content.fullScreenCover(isPresented: $isPresented, onDismiss: onDismiss, content: sheetContent)
+        } else {
+            content.sheet(isPresented: $isPresented, onDismiss: onDismiss, content: sheetContent)
+        }
+    }
 }

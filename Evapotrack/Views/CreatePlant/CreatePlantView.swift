@@ -18,7 +18,11 @@ struct CreatePlantView: View {
     @State private var dismissTask: Task<Void, Never>?
     var grow: Grow? = nil
 
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     private var waterUnit: WaterUnit { settingsVM.settings.waterUnit }
+    private var sectionHeaderFont: Font {
+        horizontalSizeClass == .regular ? .headline.weight(.bold) : .title2.weight(.bold)
+    }
 
     var body: some View {
         Form {
@@ -37,7 +41,7 @@ struct CreatePlantView: View {
                     .accessibilityLabel(Strings.mediumType)
             } header: {
                 Text(Strings.plantInfo)
-                    .font(.title2.weight(.bold))
+                    .font(sectionHeaderFont)
                     .foregroundStyle(.evDeepNavy)
                     .textCase(nil)
             }
@@ -56,7 +60,7 @@ struct CreatePlantView: View {
                     .foregroundStyle(Color.evSecondaryText)
             } header: {
                 Text(Strings.capacity)
-                    .font(.title2.weight(.bold))
+                    .font(sectionHeaderFont)
                     .foregroundStyle(.evDeepNavy)
                     .textCase(nil)
             }
@@ -127,7 +131,7 @@ struct CreatePlantView: View {
                     .foregroundStyle(Color.evSecondaryText)
             } header: {
                 Text(Strings.goalRunoffSection)
-                    .font(.title2.weight(.bold))
+                    .font(sectionHeaderFont)
                     .foregroundStyle(.evDeepNavy)
                     .textCase(nil)
             }

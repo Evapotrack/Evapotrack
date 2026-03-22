@@ -78,6 +78,7 @@ struct PlantListView: View {
         .id(settingsVM.settings.language)
         .scrollContentBackground(.hidden)
         .background(Color.evBackground)
+        .iPadTopPadding()
         .navigationTitle(grow.growName)
         .navigationBarTitleDisplayMode(.large)
         .navigationBarBackButtonHidden(true)
@@ -152,13 +153,13 @@ struct PlantListView: View {
                 .accessibilityLabel(Strings.helpLabel)
             }
         }
-        .sheet(isPresented: $isShowingCreatePlant) {
+        .adaptiveSheet(isPresented: $isShowingCreatePlant) {
             NavigationStack {
                 CreatePlantView(grow: grow)
             }
             .preferredColorScheme(settingsVM.colorScheme)
         }
-        .sheet(isPresented: $isShowingSettings) {
+        .adaptiveSheet(isPresented: $isShowingSettings) {
             NavigationStack {
                 SettingsView(grow: grow)
             }

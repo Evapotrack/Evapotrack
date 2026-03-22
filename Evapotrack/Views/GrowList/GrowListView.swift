@@ -69,6 +69,7 @@ struct GrowListView: View {
             .id(settingsVM.settings.language)
             .scrollContentBackground(.hidden)
             .background(Color.evBackground)
+            .iPadTopPadding()
             .navigationTitle(Strings.myGrows)
             .navigationBarTitleDisplayMode(.large)
             .navigationDestination(for: GrowNavID.self) { navID in
@@ -129,13 +130,13 @@ struct GrowListView: View {
                     .accessibilityLabel(Strings.helpLabel)
                 }
             }
-            .sheet(isPresented: $isShowingCreateGrow) {
+            .adaptiveSheet(isPresented: $isShowingCreateGrow) {
                 NavigationStack {
                     CreateGrowView()
                 }
                 .preferredColorScheme(settingsVM.colorScheme)
             }
-            .sheet(isPresented: $isShowingSettings) {
+            .adaptiveSheet(isPresented: $isShowingSettings) {
                 NavigationStack {
                     SettingsView()
                 }

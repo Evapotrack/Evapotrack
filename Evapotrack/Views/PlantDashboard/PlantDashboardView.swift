@@ -83,6 +83,7 @@ struct PlantDashboardView: View {
         .id(settingsVM.settings.language)
         .scrollContentBackground(.hidden)
         .background(Color.evBackground)
+        .iPadTopPadding()
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
@@ -144,13 +145,13 @@ struct PlantDashboardView: View {
                 .accessibilityLabel(Strings.chartLabel)
             }
         }
-        .sheet(isPresented: $vm.isShowingAddWatering, onDismiss: { vm.loadData() }) {
+        .adaptiveSheet(isPresented: $vm.isShowingAddWatering, onDismiss: { vm.loadData() }) {
             NavigationStack {
                 AddWateringLogView(plant: vm.plant)
             }
             .preferredColorScheme(settingsVM.colorScheme)
         }
-        .sheet(isPresented: $vm.isShowingSettings) {
+        .adaptiveSheet(isPresented: $vm.isShowingSettings) {
             NavigationStack {
                 SettingsView()
             }

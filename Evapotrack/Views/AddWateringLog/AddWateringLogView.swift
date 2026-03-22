@@ -20,8 +20,12 @@ struct AddWateringLogView: View {
         _vm = State(wrappedValue: AddWateringLogViewModel(plant: plant))
     }
 
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     private var waterUnit: WaterUnit { settingsVM.settings.waterUnit }
     private var tempUnit: TemperatureUnit { settingsVM.settings.temperatureUnit }
+    private var sectionHeaderFont: Font {
+        horizontalSizeClass == .regular ? .headline.weight(.bold) : .title2.weight(.bold)
+    }
 
     var body: some View {
         Form {
@@ -43,7 +47,7 @@ struct AddWateringLogView: View {
                 .accessibilityLabel(Strings.runoffCollectedAccessibility(waterUnit.abbreviation))
             } header: {
                 Text(Strings.water)
-                    .font(.title2.weight(.bold))
+                    .font(sectionHeaderFont)
                     .foregroundStyle(.evDeepNavy)
                     .textCase(nil)
             }
@@ -53,7 +57,7 @@ struct AddWateringLogView: View {
                 DatePicker(Strings.time, selection: $vm.dateTime, in: ...Date.now, displayedComponents: .hourAndMinute)
             } header: {
                 Text(Strings.dateAndTime)
-                    .font(.title2.weight(.bold))
+                    .font(sectionHeaderFont)
                     .foregroundStyle(.evDeepNavy)
                     .textCase(nil)
             }
@@ -75,7 +79,7 @@ struct AddWateringLogView: View {
                     .accessibilityHint(Strings.optional)
             } header: {
                 Text(Strings.environment)
-                    .font(.title2.weight(.bold))
+                    .font(sectionHeaderFont)
                     .foregroundStyle(.evDeepNavy)
                     .textCase(nil)
             }

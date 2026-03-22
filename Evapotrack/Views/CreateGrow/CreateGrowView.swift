@@ -13,6 +13,10 @@ struct CreateGrowView: View {
     @State private var currentTime = Date()
     @State private var dismissTask: Task<Void, Never>?
 
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    private var sectionHeaderFont: Font {
+        horizontalSizeClass == .regular ? .headline.weight(.bold) : .title2.weight(.bold)
+    }
     private var timestampText: String {
         currentTime.formatted(date: .abbreviated, time: .shortened)
     }
@@ -26,7 +30,7 @@ struct CreateGrowView: View {
                     .accessibilityLabel(Strings.growName)
             } header: {
                 Text(Strings.growInfo)
-                    .font(.title2.weight(.bold))
+                    .font(sectionHeaderFont)
                     .foregroundStyle(.evDeepNavy)
                     .textCase(nil)
             }
@@ -41,7 +45,7 @@ struct CreateGrowView: View {
                 }
             } header: {
                 Text(Strings.timestamp)
-                    .font(.title2.weight(.bold))
+                    .font(sectionHeaderFont)
                     .foregroundStyle(.evDeepNavy)
                     .textCase(nil)
             } footer: {

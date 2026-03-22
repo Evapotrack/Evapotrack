@@ -133,6 +133,7 @@ struct HistoryView: View {
         .id(settingsVM.settings.language)
         .scrollContentBackground(.hidden)
         .background(Color.evBackground)
+        .iPadTopPadding()
         .navigationTitle("")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
@@ -194,7 +195,7 @@ struct HistoryView: View {
                 .accessibilityLabel(isShowingChart ? Strings.showLogs : Strings.showChart)
             }
         }
-        .sheet(isPresented: $vm.isShowingAddWatering, onDismiss: { vm.loadData() }) {
+        .adaptiveSheet(isPresented: $vm.isShowingAddWatering, onDismiss: { vm.loadData() }) {
             NavigationStack {
                 AddWateringLogView(plant: vm.plant)
             }
@@ -323,8 +324,8 @@ struct HistoryView: View {
     private var retainedChart: some View {
         let chartData = vm.wateringLogs.sorted { $0.dateTime < $1.dateTime }
         let dotIndices = Self.evenlySpacedIndices(count: chartData.count, max: 10)
-        let firstDate = chartData.first!.dateTime
-        let lastDate = chartData.last!.dateTime
+        let firstDate = chartData.first?.dateTime ?? Date()
+        let lastDate = chartData.last?.dateTime ?? Date()
         let xDomain = firstDate...max(lastDate, firstDate.addingTimeInterval(60))
         let chartHeight: CGFloat = sizeClass == .regular ? 260 : 180
 
