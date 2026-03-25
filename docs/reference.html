@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evapotrack - Water Retention Reference</title>
+    <meta name="description" content="Estimated water retention by pot size and growing medium. Use as a starting point for Evapotrack's Max Retention Capacity.">
+    <meta property="og:title" content="Evapotrack - Water Retention Reference">
+    <meta property="og:description" content="Estimated water retention by pot size and growing medium. Use as a starting point for Evapotrack's Max Retention Capacity.">
+    <meta property="og:image" content="https://evapotrack.com/app-icon-256.png">
+    <meta property="og:url" content="https://evapotrack.com/reference.html">
+    <link rel="icon" type="image/png" href="app-icon-256.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #141d2f;
+            color: #cbd5e1;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 40px 20px 60px;
+        }
+
+        a.back {
+            color: #5da3f5;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: inline-block;
+            margin-bottom: 24px;
+        }
+        a.back:hover { text-decoration: underline; }
+
+        h1 {
+            font-size: 1.8rem;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            color: #8896ab;
+            font-size: 0.95rem;
+            margin-bottom: 32px;
+        }
+
+        .intro {
+            font-size: 0.95rem;
+            color: #cbd5e1;
+            margin-bottom: 32px;
+            line-height: 1.7;
+        }
+
+        /* Table */
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 32px;
+            border-radius: 10px;
+            border: 1px solid #2a3a58;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 540px;
+            background: #1a2540;
+        }
+
+        thead th {
+            background: #1e2d4a;
+            color: #ffffff;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 12px 14px;
+            text-align: center;
+            border-bottom: 1px solid #2a3a58;
+        }
+
+        thead th.medium-header {
+            border-bottom: 1px solid #2a3a58;
+            font-size: 0.9rem;
+            letter-spacing: 0.3px;
+        }
+
+        thead th.unit-header {
+            background: #1a2540;
+            color: #5da3f5;
+            font-size: 0.78rem;
+            font-weight: 500;
+            padding: 8px 14px;
+        }
+
+        thead th.pot-header {
+            text-align: left;
+            vertical-align: bottom;
+        }
+
+        /* Column group borders */
+        thead th.group-start {
+            border-left: 1px solid #2a3a58;
+        }
+
+        tbody td {
+            padding: 10px 14px;
+            font-size: 0.88rem;
+            text-align: center;
+            border-bottom: 1px solid #1e2d4a;
+            color: #cbd5e1;
+        }
+
+        tbody td.pot-cell {
+            text-align: left;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        tbody td.group-start {
+            border-left: 1px solid #2a3a58;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr:hover {
+            background: #1e2d4a;
+        }
+
+        /* Notes */
+        .notes {
+            font-size: 0.88rem;
+            color: #8896ab;
+            line-height: 1.7;
+        }
+
+        .notes strong {
+            color: #cbd5e1;
+        }
+
+        .tip {
+            margin-top: 20px;
+            padding: 16px 20px;
+            background: #1a2540;
+            border: 1px solid #2a3a58;
+            border-left: 3px solid #5da3f5;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 32px 24px;
+            border-top: 1px solid #1c2940;
+            margin-top: 40px;
+        }
+
+        footer .links { margin-bottom: 10px; }
+
+        footer a {
+            color: #5da3f5;
+            text-decoration: none;
+            margin: 0 14px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        footer a:hover { text-decoration: underline; }
+
+        footer .copyright {
+            color: #3e4a5c;
+            font-size: 0.78rem;
+        }
+
+        /* Mobile */
+        @media (max-width: 640px) {
+            .container { padding: 32px 16px 48px; }
+            h1 { font-size: 1.5rem; }
+            .subtitle { font-size: 0.88rem; }
+            thead th { padding: 10px 8px; font-size: 0.78rem; }
+            thead th.unit-header { padding: 6px 8px; font-size: 0.72rem; }
+            tbody td { padding: 8px 8px; font-size: 0.82rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="index.html" class="back">&larr; Back to Evapotrack</a>
+        <h1>Water Retention Reference</h1>
+        <p class="subtitle">Estimated retention by pot size and growing medium</p>
+
+        <p class="intro">Use this table to estimate your <strong>Max Retention Capacity</strong> in Evapotrack — the maximum volume of water your medium can hold before runoff begins. These values represent water retained after drainage (field capacity), not full saturation.</p>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="pot-header" rowspan="2">Pot Size</th>
+                        <th class="medium-header group-start" colspan="2">Coco/Perlite 70/30</th>
+                        <th class="medium-header group-start" colspan="2">Coco 100%</th>
+                        <th class="medium-header group-start" colspan="2">Soil</th>
+                    </tr>
+                    <tr>
+                        <th class="unit-header group-start">L</th>
+                        <th class="unit-header">gal</th>
+                        <th class="unit-header group-start">L</th>
+                        <th class="unit-header">gal</th>
+                        <th class="unit-header group-start">L</th>
+                        <th class="unit-header">gal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="pot-cell">1 gal</td>
+                        <td class="group-start">2.0</td>
+                        <td>0.5</td>
+                        <td class="group-start">2.3</td>
+                        <td>0.6</td>
+                        <td class="group-start">1.5</td>
+                        <td>0.4</td>
+                    </tr>
+                    <tr>
+                        <td class="pot-cell">2 gal</td>
+                        <td class="group-start">4.0</td>
+                        <td>1.1</td>
+                        <td class="group-start">4.5</td>
+                        <td>1.2</td>
+                        <td class="group-start">3.0</td>
+                        <td>0.8</td>
+                    </tr>
+                    <tr>
+                        <td class="pot-cell">3 gal</td>
+                        <td class="group-start">6.0</td>
+                        <td>1.6</td>
+                        <td class="group-start">6.8</td>
+                        <td>1.8</td>
+                        <td class="group-start">4.5</td>
+                        <td>1.2</td>
+                    </tr>
+                    <tr>
+                        <td class="pot-cell">5 gal</td>
+                        <td class="group-start">10.0</td>
+                        <td>2.6</td>
+                        <td class="group-start">11.4</td>
+                        <td>3.0</td>
+                        <td class="group-start">7.6</td>
+                        <td>2.0</td>
+                    </tr>
+                    <tr>
+                        <td class="pot-cell">7 gal</td>
+                        <td class="group-start">14.0</td>
+                        <td>3.7</td>
+                        <td class="group-start">15.9</td>
+                        <td>4.2</td>
+                        <td class="group-start">10.6</td>
+                        <td>2.8</td>
+                    </tr>
+                    <tr>
+                        <td class="pot-cell">10 gal</td>
+                        <td class="group-start">20.0</td>
+                        <td>5.3</td>
+                        <td class="group-start">22.7</td>
+                        <td>6.0</td>
+                        <td class="group-start">15.1</td>
+                        <td>4.0</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p class="notes"><strong>These are estimates.</strong> Actual retention varies with packing density, amendment ratios, coco texture, and pot material. Fabric pots drain and evaporate faster than plastic — expect slightly lower retention.</p>
+
+        <div class="tip">For the most accurate number, use the built-in calculator in Evapotrack. Water your medium slowly until you get runoff, enter the amounts, and the app calculates your actual Max Retention Capacity.</div>
+    </div>
+
+    <footer>
+        <div class="links">
+            <a href="privacy-policy.html">Privacy Policy</a>
+            <a href="support.html">Support</a>
+        </div>
+        <p class="copyright">&copy; 2026 Evapotrack. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
