@@ -89,10 +89,17 @@
         .screenshot-row {
             display: flex;
             gap: 16px;
-            justify-content: center;
             overflow-x: auto;
             padding: 0 24px 12px;
             -webkit-overflow-scrolling: touch;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+        }
+
+        .screenshot-row::before,
+        .screenshot-row::after {
+            content: '';
+            flex-shrink: 0;
         }
 
         .screenshot-row::-webkit-scrollbar { display: none; }
@@ -102,6 +109,7 @@
             width: auto;
             border-radius: 12px;
             flex-shrink: 0;
+            scroll-snap-align: center;
             box-shadow: 0 4px 24px rgba(93, 163, 245, 0.12), 0 8px 32px rgba(0, 0, 0, 0.4);
         }
 
