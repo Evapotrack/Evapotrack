@@ -423,12 +423,14 @@ enum Strings {
             "La Capacidad Máx. de Retención es el volumen máximo de agua que tu medio de cultivo puede absorber y retener antes de que comience el drenaje.",
             "Este valor es fundamental para cómo Evapotrack calcula el % de Capacidad, el Promedio Retenido, y la Cantidad de Riego Siguiente.",
             "Para determinarla: riega tu medio lentamente hasta que comience el drenaje, luego resta el drenaje del agua que agregaste. El resultado es tu Capacidad Máx. de Retención.",
-            "Un medio más saturado producirá más drenaje. Una Capacidad Máx. de Retención precisa lleva a mejores recomendaciones."
+            "Un medio más saturado producirá más drenaje. Una Capacidad Máx. de Retención precisa lleva a mejores recomendaciones.",
+            "Para valores estimados de retención por tamaño de maceta y medio, visita evapotrack.com/reference."
         ] : [
             "Max Retention Capacity is the maximum volume of water your growing medium can absorb and hold before runoff begins.",
             "This value is central to how Evapotrack calculates Capacity %, Average Retained, and the Next Watering Amount.",
             "To determine it: water your medium slowly until runoff starts, then subtract the runoff from the water you added. The result is your Max Retention Capacity.",
-            "A more saturated medium will produce more runoff. An accurate Max Retention Capacity leads to better recommendations."
+            "A more saturated medium will produce more runoff. An accurate Max Retention Capacity leads to better recommendations.",
+            "For estimated retention values by pot size and medium, visit evapotrack.com/reference."
         ]
     }
 
