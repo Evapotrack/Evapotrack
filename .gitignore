@@ -9,6 +9,7 @@ build/
 
 # macOS
 .DS_Store
+Icon?
 
 # Claude Code
 .claude/
@@ -20,6 +21,9 @@ private/
 evapotrack-video-content/
 elevenlabs-ai-audios/
 Youtube/
+
+# Working screenshots (simulator captures, not for public repo)
+screenshots/
 
 # App Store screenshots (exact pixel dimensions for submission)
 apple-app-store-screenshots/
