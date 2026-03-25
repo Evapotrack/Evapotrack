@@ -73,9 +73,16 @@ Colors: evPrimaryBlue `#5da3f5`, evSecondaryText `#8a95a8`, evSlateGray `#3a4a5c
 - Capacity bar: evSoftPurple
 - Label: **"Track progress and follow recommendations"**
 
+### Graphic 8 — "Reference Table Card"
+- Text centered on evBackground: **"evapotrack.com/reference"**
+- Subtitle below: "Water retention estimates by pot size and medium"
+- URL text: evPrimaryBlue, bold, 64pt
+- Subtitle: evPrimaryText, regular, 36pt
+- Minimal — no illustrations, just the URL and description
+
 ### Export
 - File → Export To → Images → PNG, 1920×1080
-- 7 PNGs total, named: `01-empty-pot.png` through `07-insights.png`
+- 8 PNGs total, named: `01-empty-pot.png` through `08-reference.png`
 
 ---
 
@@ -192,7 +199,8 @@ Record each flow as a **separate clip**. Use iPhone 17 Pro simulator. Keep recor
 | 1:55–2:25 | **Clip C**: Add a Watering Log | Screen recording |
 | 2:25–2:40 | **Clip D**: Review Insights & History | Screen recording |
 | 2:40–2:48 | **Graphic 7**: Track Progress | `07-insights.png` |
-| 2:48–3:00 | **Outro card**: App Store link, "Download Evapotrack", logo | Keynote PNG |
+| 2:48–2:55 | **Reference card**: "evapotrack.com/reference" with table preview graphic | Keynote PNG |
+| 2:55–3:05 | **Outro card**: App Store link, "Download Evapotrack", logo | Keynote PNG |
 
 ### Edit Notes
 - Transitions: 0.5s dissolve between all clips
@@ -232,7 +240,7 @@ Write the script **after** the video edit is locked, so timing matches exactly. 
 
 **[Graphic 7 — Track Progress]** "Follow the protocol every time you water, and Evapotrack handles the math."
 
-**[Outro]** "Download Evapotrack free on the App Store."
+**[Outro]** "Check out the water retention reference table at evapotrack.com/reference for common pot sizes and mediums. Download Evapotrack free on the App Store."
 
 ---
 
@@ -260,7 +268,7 @@ Write the script **after** the video edit is locked, so timing matches exactly. 
 
 1. Upload to YouTube as **unlisted**
 2. Title: "Evapotrack Watering Protocol — How To"
-3. Description: step-by-step protocol + App Store link
+3. Description: step-by-step protocol + App Store link + reference table link (evapotrack.com/reference)
 4. Tags: same set as existing videos
 5. Thumbnail: export Graphic 4 or 6 as the thumbnail (the most visually interesting)
 6. Keep unlisted until app launch
