@@ -1,8 +1,13 @@
 # Evapotrack Watering Protocol Video — Production Plan
 
+> **STATUS: COMPLETE** (March 25, 2026)
+> Final video: 1:14 duration, 1080p, voiceover mixed in.
+> Assets: `evapotrack-video-content/watering-protocol-clip/` — 7 graphics, 15 ElevenLabs voiceover clips, 1 final video.
+> Video demonstrates: protocol graphics, create plant (with calculator demo), add watering log, dashboard results.
+
 **Title:** "Evapotrack Watering Protocol — How To"
-**Target Length:** 3–5 minutes
-**Resolution:** 1920×1080 (16:9)
+**Final Length:** 1:14
+**Resolution:** 1080p
 
 ---
 
