@@ -87,7 +87,7 @@ Colors: evPrimaryBlue `#5da3f5`, evSecondaryText `#8a95a8`, evSlateGray `#3a4a5c
 
 ### Export
 - File → Export To → Images → PNG, 1920×1080
-- 8 PNGs total, named: `01-empty-pot.png` through `08-reference.png`
+- 7 PNGs produced (Graphic 8 "Reference Table Card" was cut from the final video — the reference URL is mentioned in voiceover instead)
 
 ---
 
