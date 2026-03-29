@@ -155,6 +155,12 @@ struct HowToView: View {
             ForEach(Strings.wateringProtocolBullets, id: \.self) { text in
                 bullet(text)
             }
+            Link(destination: URL(string: "https://evapotrack.com/watering-protocol")!) {
+                Label(Strings.wateringProtocolLinkLabel, systemImage: "arrow.up.right.square")
+                    .font(.body.weight(.medium))
+                    .foregroundStyle(Color.evPrimaryBlue)
+            }
+            .padding(.top, 2)
         }
     }
 

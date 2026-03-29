@@ -537,4 +537,5 @@ enum Strings {
             "Subtract Runoff Collected from Water Added. This is your Retained volume — the amount of water the medium actually absorbed."
         ]
     }
+    static var wateringProtocolLinkLabel: String { es ? "Ver protocolo completo en evapotrack.com" : "View full protocol at evapotrack.com" }
 }
