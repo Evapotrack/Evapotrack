@@ -16,6 +16,7 @@ struct CreatePlantView: View {
     @Environment(SettingsViewModel.self) private var settingsVM
     @State private var vm = CreatePlantViewModel()
     @State private var dismissTask: Task<Void, Never>?
+    @ScaledMetric(relativeTo: .largeTitle) private var checkmarkSize: CGFloat = 56
     var grow: Grow? = nil
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
@@ -181,7 +182,7 @@ struct CreatePlantView: View {
                     .overlay {
                         VStack(spacing: 12) {
                             Image(systemName: "checkmark.circle.fill")
-                                .font(.system(size: 56))
+                                .font(.system(size: checkmarkSize))
                                 .foregroundStyle(.evPrimaryBlue)
                             Text(Strings.saved)
                                 .font(.headline.weight(.bold))

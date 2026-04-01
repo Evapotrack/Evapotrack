@@ -19,6 +19,7 @@ struct WateringLogRowView: View {
     let isExpanded: Bool
     let onToggleSelection: () -> Void
     let onToggleExpansion: () -> Void
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     private var capacityPercent: Double {
         WateringCalculationService.capacityPercent(
@@ -65,31 +66,55 @@ struct WateringLogRowView: View {
                 .font(.body)
 
                 // Collapsed summary: key metrics at a glance
-                HStack(spacing: 0) {
-                    Text(DisplayFormatter.water(log.waterAdded, unit: waterUnit))
-                        .fontWeight(.medium)
-                        .foregroundStyle(Color.evPrimaryText)
-                    Text(Strings.added)
-                        .foregroundStyle(Color.evSlateGray)
+                if dynamicTypeSize.isAccessibilitySize {
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack(spacing: 0) {
+                            Text(DisplayFormatter.water(log.waterAdded, unit: waterUnit))
+                                .fontWeight(.medium)
+                                .foregroundStyle(Color.evPrimaryText)
+                            Text(Strings.added)
+                                .foregroundStyle(Color.evSlateGray)
+                        }
+                        HStack(spacing: 0) {
+                            Text(DisplayFormatter.water(log.retained, unit: waterUnit))
+                                .fontWeight(.medium)
+                                .foregroundStyle(Color.evPrimaryText)
+                            Text(Strings.ret)
+                                .foregroundStyle(Color.evSlateGray)
+                        }
+                        Text(DisplayFormatter.percent(capacityPercent))
+                            .fontWeight(.semibold)
+                            .foregroundStyle(Color.evPrimaryBlue)
+                            .accessibilityLabel(Strings.capacityAccessibility(DisplayFormatter.percent(capacityPercent)))
+                    }
+                    .font(.callout)
+                } else {
+                    HStack(spacing: 0) {
+                        Text(DisplayFormatter.water(log.waterAdded, unit: waterUnit))
+                            .fontWeight(.medium)
+                            .foregroundStyle(Color.evPrimaryText)
+                        Text(Strings.added)
+                            .foregroundStyle(Color.evSlateGray)
 
-                    Text("  ·  ")
-                        .foregroundStyle(Color.evSlateGray)
+                        Text("  ·  ")
+                            .foregroundStyle(Color.evSlateGray)
 
-                    Text(DisplayFormatter.water(log.retained, unit: waterUnit))
-                        .fontWeight(.medium)
-                        .foregroundStyle(Color.evPrimaryText)
-                    Text(Strings.ret)
-                        .foregroundStyle(Color.evSlateGray)
+                        Text(DisplayFormatter.water(log.retained, unit: waterUnit))
+                            .fontWeight(.medium)
+                            .foregroundStyle(Color.evPrimaryText)
+                        Text(Strings.ret)
+                            .foregroundStyle(Color.evSlateGray)
 
-                    Spacer()
+                        Spacer()
 
-                    Text(DisplayFormatter.percent(capacityPercent))
-                        .fontWeight(.semibold)
-                        .foregroundStyle(Color.evPrimaryBlue)
-                        .accessibilityLabel(Strings.capacityAccessibility(DisplayFormatter.percent(capacityPercent)))
+                        Text(DisplayFormatter.percent(capacityPercent))
+                            .fontWeight(.semibold)
+                            .foregroundStyle(Color.evPrimaryBlue)
+                            .accessibilityLabel(Strings.capacityAccessibility(DisplayFormatter.percent(capacityPercent)))
+                    }
+                    .font(.callout)
+                    .lineLimit(1)
                 }
-                .font(.callout)
-                .lineLimit(1)
 
                 // Expanded detail fields
                 if isExpanded {

@@ -144,7 +144,7 @@ struct SettingsView: View {
                             }
                         }
                         .pickerStyle(.segmented)
-                        .frame(width: 100)
+                        .frame(minWidth: 100)
                     }
                 }
             }

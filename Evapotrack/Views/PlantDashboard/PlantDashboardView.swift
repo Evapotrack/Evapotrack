@@ -14,6 +14,7 @@ struct PlantDashboardView: View {
     @Environment(SettingsViewModel.self) private var settingsVM
     @Environment(\.dismiss) private var dismiss
     @Environment(\.horizontalSizeClass) private var sizeClass
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var vm: PlantDashboardViewModel
 
     init(plant: Plant) {
@@ -29,7 +30,7 @@ struct PlantDashboardView: View {
                 Text(vm.plant.plantName)
                     .font(.title.weight(.bold))
                     .foregroundStyle(Color.evPrimaryText)
-                    .lineLimit(1)
+                    .lineLimit(dynamicTypeSize.isAccessibilitySize ? 3 : 1)
                     .truncationMode(.tail)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .listRowBackground(Color.clear)
@@ -38,14 +39,25 @@ struct PlantDashboardView: View {
 
             // Plant details
             Section {
-                HStack {
-                    plantInfoCell(Strings.pot, vm.plant.potSize.isEmpty ? "—" : vm.plant.potSize)
-                    Spacer()
-                    plantInfoCell(Strings.medium, vm.plant.mediumType.isEmpty ? "—" : vm.plant.mediumType)
-                    Spacer()
-                    plantInfoCell(Strings.maxCapacity, DisplayFormatter.water(vm.plant.maxRetentionCapacity, unit: waterUnit))
-                    Spacer()
-                    plantInfoCell(Strings.goalRunoff, DisplayFormatter.percent(vm.plant.goalRunoffPercent))
+                Group {
+                    if dynamicTypeSize.isAccessibilitySize {
+                        VStack(spacing: 8) {
+                            plantInfoCell(Strings.pot, vm.plant.potSize.isEmpty ? "—" : vm.plant.potSize)
+                            plantInfoCell(Strings.medium, vm.plant.mediumType.isEmpty ? "—" : vm.plant.mediumType)
+                            plantInfoCell(Strings.maxCapacity, DisplayFormatter.water(vm.plant.maxRetentionCapacity, unit: waterUnit))
+                            plantInfoCell(Strings.goalRunoff, DisplayFormatter.percent(vm.plant.goalRunoffPercent))
+                        }
+                    } else {
+                        HStack {
+                            plantInfoCell(Strings.pot, vm.plant.potSize.isEmpty ? "—" : vm.plant.potSize)
+                            Spacer()
+                            plantInfoCell(Strings.medium, vm.plant.mediumType.isEmpty ? "—" : vm.plant.mediumType)
+                            Spacer()
+                            plantInfoCell(Strings.maxCapacity, DisplayFormatter.water(vm.plant.maxRetentionCapacity, unit: waterUnit))
+                            Spacer()
+                            plantInfoCell(Strings.goalRunoff, DisplayFormatter.percent(vm.plant.goalRunoffPercent))
+                        }
+                    }
                 }
                 .frame(maxWidth: sizeClass == .regular ? 500 : .infinity)
                 .frame(maxWidth: .infinity, alignment: .center)

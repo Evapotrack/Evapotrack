@@ -13,9 +13,15 @@ struct SummaryPanelView: View {
     let maxRetentionCapacity: Double
     let waterUnit: WaterUnit
     @Environment(\.horizontalSizeClass) private var sizeClass
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     private var columns: [GridItem] {
-        let count = sizeClass == .regular ? 3 : 2
+        let count: Int
+        if dynamicTypeSize.isAccessibilitySize {
+            count = 1
+        } else {
+            count = sizeClass == .regular ? 3 : 2
+        }
         return Array(repeating: GridItem(.flexible(), spacing: 12), count: count)
     }
 

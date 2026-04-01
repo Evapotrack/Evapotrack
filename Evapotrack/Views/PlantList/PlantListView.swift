@@ -30,6 +30,7 @@ struct PlantListView: View {
     @State private var isShowingLimitExceeded = false
     @State private var limitExceededMessage = ""
     @State private var saveError: String?
+    @ScaledMetric(relativeTo: .largeTitle) private var emptyIconSize: CGFloat = 56
     @Environment(\.dismiss) private var dismiss
 
     /// Plants sorted by most recently created first.
@@ -221,7 +222,7 @@ struct PlantListView: View {
     private var emptyStateView: some View {
         VStack(spacing: 16) {
             Image(systemName: "leaf.circle.fill")
-                .font(.system(size: 56))
+                .font(.system(size: emptyIconSize))
                 .foregroundStyle(Color.evPrimaryBlue)
                 .accessibilityHidden(true)
 

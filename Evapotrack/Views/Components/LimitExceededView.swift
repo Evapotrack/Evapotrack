@@ -13,6 +13,7 @@ struct LimitExceededView: View {
     let message: String
     let onClose: () -> Void
     @Environment(\.horizontalSizeClass) private var sizeClass
+    @ScaledMetric(relativeTo: .title) private var iconSize: CGFloat = 40
 
     var body: some View {
         ZStack {
@@ -24,7 +25,7 @@ struct LimitExceededView: View {
 
             VStack(spacing: 20) {
                 Image(systemName: "exclamationmark.triangle.fill")
-                    .font(.system(size: 40))
+                    .font(.system(size: iconSize))
                     .foregroundStyle(Color.evWarmOrange)
                     .accessibilityHidden(true)
 

@@ -15,6 +15,8 @@ struct AddWateringLogView: View {
     @State private var vm: AddWateringLogViewModel
     @State private var isShowingHowTo = false
     @State private var dismissTask: Task<Void, Never>?
+    @ScaledMetric(relativeTo: .title) private var helpButtonSize: CGFloat = 56
+    @ScaledMetric(relativeTo: .largeTitle) private var checkmarkSize: CGFloat = 56
 
     init(plant: Plant) {
         _vm = State(wrappedValue: AddWateringLogViewModel(plant: plant))
@@ -102,7 +104,7 @@ struct AddWateringLogView: View {
                             .font(.title)
                             .fontWeight(.bold)
                             .foregroundStyle(.white)
-                            .frame(width: 56, height: 56)
+                            .frame(width: helpButtonSize, height: helpButtonSize)
                             .background(Color.evPrimaryBlue)
                             .clipShape(Circle())
                         Spacer()
@@ -158,7 +160,7 @@ struct AddWateringLogView: View {
                     .overlay {
                         VStack(spacing: 12) {
                             Image(systemName: "checkmark.circle.fill")
-                                .font(.system(size: 56))
+                                .font(.system(size: checkmarkSize))
                                 .foregroundStyle(.evPrimaryBlue)
                             Text(Strings.saved)
                                 .font(.headline.weight(.bold))

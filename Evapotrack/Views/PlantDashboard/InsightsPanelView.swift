@@ -12,12 +12,12 @@ struct InsightsPanelView: View {
     let averageRetained: Double?                      // internal: liters
     let nextRecommendation: NextWaterRecommendation?  // internal: liters
     let waterUnit: WaterUnit
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
-    private let columns = [
-        GridItem(.flexible(), spacing: 12),
-        GridItem(.flexible(), spacing: 12),
-        GridItem(.flexible(), spacing: 12)
-    ]
+    private var columns: [GridItem] {
+        let count = dynamicTypeSize.isAccessibilitySize ? 1 : 3
+        return Array(repeating: GridItem(.flexible(), spacing: 12), count: count)
+    }
 
     var body: some View {
         Section {

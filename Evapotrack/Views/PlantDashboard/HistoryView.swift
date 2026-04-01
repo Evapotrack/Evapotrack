@@ -26,6 +26,9 @@ struct HistoryView: View {
     @State private var isShowingChart = false
     @State private var showTemperature = false
     @State private var showHumidity = false
+    @ScaledMetric(relativeTo: .caption2) private var legendDotSize: CGFloat = 8
+    @ScaledMetric(relativeTo: .caption2) private var chartDotSize: CGFloat = 7
+    @ScaledMetric(relativeTo: .body) private var baseChartHeight: CGFloat = 180
 
     private var selectedLog: WateringLog? {
         guard let id = selectedLogID else { return nil }
@@ -280,7 +283,7 @@ struct HistoryView: View {
             HStack(spacing: 4) {
                 Circle()
                     .fill(color)
-                    .frame(width: 8, height: 8)
+                    .frame(width: legendDotSize, height: legendDotSize)
                 Text(label)
                     .font(.caption.weight(.semibold))
             }
@@ -327,7 +330,7 @@ struct HistoryView: View {
         let firstDate = chartData.first?.dateTime ?? Date()
         let lastDate = chartData.last?.dateTime ?? Date()
         let xDomain = firstDate...max(lastDate, firstDate.addingTimeInterval(60))
-        let chartHeight: CGFloat = sizeClass == .regular ? 260 : 180
+        let chartHeight: CGFloat = min(sizeClass == .regular ? 260 : baseChartHeight, 400)
 
         ZStack {
             // Primary chart: Retained water (left Y-axis)
@@ -363,7 +366,7 @@ struct HistoryView: View {
                     .annotation(position: .overlay) {
                         Circle()
                             .stroke(Color.evBackground, lineWidth: 1.5)
-                            .frame(width: 7, height: 7)
+                            .frame(width: chartDotSize, height: chartDotSize)
                     }
                 }
             }
