@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evapotrack - Desk Display</title>
+<style>
+  @page {
+    size: 8.5in 11in;
+    margin: 0;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    width: 100%;
+    min-height: 100vh;
+    background: #FFFFFF;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  .page {
+    width: 8.5in;
+    height: 11in;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4in;
+    background: #FFFFFF;
+  }
+
+  .icon {
+    width: 2.5in;
+    height: 2.5in;
+    border-radius: 0.56in;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  }
+
+  .icon img {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .app-name {
+    font-size: 0.85in;
+    font-weight: 700;
+    color: #1F3A5F;
+    letter-spacing: 0.06in;
+    text-transform: uppercase;
+  }
+
+  .tagline {
+    font-size: 0.35in;
+    font-weight: 400;
+    color: #555555;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  .qr-container {
+    padding: 0.12in;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .qr-container canvas {
+    display: block;
+    width: 1.8in;
+    height: 1.8in;
+  }
+
+  .cta {
+    font-size: 0.24in;
+    color: #4A90E2;
+    text-align: center;
+    line-height: 1.5;
+    font-weight: 500;
+    letter-spacing: 0.01in;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="icon">
+    <img src="app-icon-256.png" alt="Evapotrack App Icon">
+  </div>
+  <div class="app-name">Evapotrack</div>
+  <div class="tagline">
+    Optimize Plant Watering
+  </div>
+  <div class="qr-container">
+    <canvas id="qr"></canvas>
+  </div>
+  <div class="cta">
+    Scan to download<br>on the App Store
+  </div>
+</div>
+
+<script>
+(function(){
+  var QRCode = (function() {
+    var EXP = new Array(256), LOG = new Array(256);
+    (function() {
+      var x = 1;
+      for (var i = 0; i < 255; i++) {
+        EXP[i] = x;
+        LOG[x] = i;
+        x = (x << 1) ^ (x & 128 ? 0x11d : 0);
+      }
+      EXP[255] = EXP[0];
+    })();
+
+    function gfMul(a, b) {
+      return a === 0 || b === 0 ? 0 : EXP[(LOG[a] + LOG[b]) % 255];
+    }
+
+    function polyMul(a, b) {
+      var r = new Array(a.length + b.length - 1).fill(0);
+      for (var i = 0; i < a.length; i++)
+        for (var j = 0; j < b.length; j++)
+          r[i + j] ^= gfMul(a[i], b[j]);
+      return r;
+    }
+
+    function polyRem(dividend, divisor) {
+      var r = dividend.slice();
+      for (var i = 0; i <= r.length - divisor.length; i++) {
+        if (r[i] === 0) continue;
+        for (var j = 1; j < divisor.length; j++)
+          r[i + j] ^= gfMul(r[i], divisor[j]);
+        r[i] = 0;
+      }
+      return r.slice(dividend.length - divisor.length + 1);
+    }
+
+    function genPoly(n) {
+      var p = [1];
+      for (var i = 0; i < n; i++)
+        p = polyMul(p, [1, EXP[i]]);
+      return p;
+    }
+
+    function encode(str) {
+      var data = [];
+      for (var i = 0; i < str.length; i++)
+        data.push(str.charCodeAt(i));
+
+      var version, totalCodewords, ecCodewords, numBlocks;
+      var dataLen = data.length;
+
+      var versions = [
+        [1, 26, 10, 1, 16],
+        [2, 44, 16, 1, 28],
+        [3, 70, 26, 1, 44],
+        [4, 100, 18, 2, 64],
+        [5, 134, 24, 2, 86],
+        [6, 172, 16, 4, 108],
+        [7, 196, 18, 4, 122],
+        [8, 242, 22, 4, 152],
+        [9, 292, 22, 4, 180],
+      ];
+
+      for (var vi = 0; vi < versions.length; vi++) {
+        var v = versions[vi];
+        var charCountBits = v[0] <= 9 ? 8 : 16;
+        var dataBits = 4 + charCountBits + 8 * dataLen;
+        var dataCodewordsCap = v[4];
+        if (Math.ceil(dataBits / 8) <= dataCodewordsCap) {
+          version = v[0];
+          totalCodewords = v[1];
+          ecCodewords = v[2];
+          numBlocks = v[3];
+          break;
+        }
+      }
+
+      if (!version) throw new Error('Data too long');
+
+      var size = version * 4 + 17;
+      var charCountBits2 = version <= 9 ? 8 : 16;
+      var dataCodewordsTotal = totalCodewords - ecCodewords * numBlocks;
+
+      var bits = [];
+      function pushBits(val, len) {
+        for (var i = len - 1; i >= 0; i--)
+          bits.push((val >> i) & 1);
+      }
+
+      pushBits(4, 4);
+      pushBits(dataLen, charCountBits2);
+      for (var i = 0; i < dataLen; i++)
+        pushBits(data[i], 8);
+      pushBits(0, Math.min(4, dataCodewordsTotal * 8 - bits.length));
+      while (bits.length % 8 !== 0) bits.push(0);
+      var padBytes = [0xEC, 0x11];
+      var pi = 0;
+      while (bits.length < dataCodewordsTotal * 8) {
+        pushBits(padBytes[pi % 2], 8);
+        pi++;
+      }
+
+      var codewords = [];
+      for (var i = 0; i < bits.length; i += 8)
+        codewords.push((bits[i]<<7)|(bits[i+1]<<6)|(bits[i+2]<<5)|(bits[i+3]<<4)|
+                        (bits[i+4]<<3)|(bits[i+5]<<2)|(bits[i+6]<<1)|bits[i+7]);
+
+      var blockDataCounts = [];
+      var shortBlockLen = Math.floor(dataCodewordsTotal / numBlocks);
+      var longBlocks = dataCodewordsTotal % numBlocks;
+      for (var i = 0; i < numBlocks; i++)
+        blockDataCounts.push(shortBlockLen + (i >= numBlocks - longBlocks ? 1 : 0));
+
+      var blocks = [], ecBlocks = [];
+      var offset = 0;
+      var g = genPoly(ecCodewords);
+      for (var i = 0; i < numBlocks; i++) {
+        var blockData = codewords.slice(offset, offset + blockDataCounts[i]);
+        offset += blockDataCounts[i];
+        var padded = blockData.concat(new Array(ecCodewords).fill(0));
+        var ec = polyRem(padded, g);
+        blocks.push(blockData);
+        ecBlocks.push(ec);
+      }
+
+      var result = [];
+      var maxDataLen = shortBlockLen + (longBlocks > 0 ? 1 : 0);
+      for (var i = 0; i < maxDataLen; i++)
+        for (var j = 0; j < numBlocks; j++)
+          if (i < blocks[j].length) result.push(blocks[j][i]);
+      for (var i = 0; i < ecCodewords; i++)
+        for (var j = 0; j < numBlocks; j++)
+          result.push(ecBlocks[j][i]);
+
+      var matrix = [];
+      var reserved = [];
+      for (var y = 0; y < size; y++) {
+        matrix[y] = new Array(size).fill(0);
+        reserved[y] = new Array(size).fill(false);
+      }
+
+      function setFinderPattern(row, col) {
+        for (var r = -1; r <= 7; r++)
+          for (var c = -1; c <= 7; c++) {
+            var y = row + r, x = col + c;
+            if (y < 0 || y >= size || x < 0 || x >= size) continue;
+            var inOuter = r === 0 || r === 6 || c === 0 || c === 6;
+            var inInner = r >= 2 && r <= 4 && c >= 2 && c <= 4;
+            matrix[y][x] = (inOuter || inInner) && r >= 0 && r <= 6 && c >= 0 && c <= 6 ? 1 : 0;
+            reserved[y][x] = true;
+          }
+      }
+
+      setFinderPattern(0, 0);
+      setFinderPattern(0, size - 7);
+      setFinderPattern(size - 7, 0);
+
+      if (version >= 2) {
+        var intervals = version === 2 ? [6, 18] :
+                        version === 3 ? [6, 22] :
+                        version === 4 ? [6, 26] :
+                        version === 5 ? [6, 30] :
+                        version === 6 ? [6, 34] :
+                        version === 7 ? [6, 22, 38] :
+                        version === 8 ? [6, 24, 42] :
+                        version === 9 ? [6, 26, 46] : [6, 18];
+        for (var i = 0; i < intervals.length; i++)
+          for (var j = 0; j < intervals.length; j++) {
+            var ay = intervals[i], ax = intervals[j];
+            if (reserved[ay] && reserved[ay][ax]) continue;
+            for (var r = -2; r <= 2; r++)
+              for (var c = -2; c <= 2; c++) {
+                var y = ay + r, x = ax + c;
+                if (y >= 0 && y < size && x >= 0 && x < size) {
+                  matrix[y][x] = (Math.abs(r) === 2 || Math.abs(c) === 2 || (r === 0 && c === 0)) ? 1 : 0;
+                  reserved[y][x] = true;
+                }
+              }
+          }
+      }
+
+      for (var i = 8; i < size - 8; i++) {
+        if (!reserved[6][i]) { matrix[6][i] = i % 2 === 0 ? 1 : 0; reserved[6][i] = true; }
+        if (!reserved[i][6]) { matrix[i][6] = i % 2 === 0 ? 1 : 0; reserved[i][6] = true; }
+      }
+
+      matrix[size - 8][8] = 1;
+      reserved[size - 8][8] = true;
+
+      for (var i = 0; i < 8; i++) {
+        reserved[8][i] = true; reserved[8][size - 1 - i] = true;
+        reserved[i][8] = true; reserved[size - 1 - i][8] = true;
+      }
+      reserved[8][8] = true;
+
+      if (version >= 7) {
+        for (var i = 0; i < 6; i++)
+          for (var j = 0; j < 3; j++) {
+            reserved[i][size - 11 + j] = true;
+            reserved[size - 11 + j][i] = true;
+          }
+      }
+
+      var bitIdx = 0;
+      var allBits = [];
+      for (var i = 0; i < result.length; i++)
+        for (var b = 7; b >= 0; b--)
+          allBits.push((result[i] >> b) & 1);
+
+      var right = true;
+      for (var col = size - 1; col >= 1; col -= 2) {
+        if (col === 6) col = 5;
+        for (var cnt = 0; cnt < size; cnt++) {
+          var row = right ? size - 1 - cnt : cnt;
+          for (var dx = 0; dx <= 1; dx++) {
+            var x = col - dx;
+            if (!reserved[row][x]) {
+              matrix[row][x] = bitIdx < allBits.length ? allBits[bitIdx] : 0;
+              bitIdx++;
+            }
+          }
+        }
+        right = !right;
+      }
+
+      var maskFn = function(r, c) { return (r + c) % 2 === 0; };
+      for (var y = 0; y < size; y++)
+        for (var x = 0; x < size; x++)
+          if (!reserved[y][x])
+            matrix[y][x] ^= maskFn(y, x) ? 1 : 0;
+
+      var formatBits = [1,0,1,0,1,0,0,0,0,0,1,0,0,1,0];
+      var formatPositions1 = [
+        [8,0],[8,1],[8,2],[8,3],[8,4],[8,5],[8,7],[8,8],
+        [7,8],[5,8],[4,8],[3,8],[2,8],[1,8],[0,8]
+      ];
+      var formatPositions2 = [
+        [size-1,8],[size-2,8],[size-3,8],[size-4,8],[size-5,8],[size-6,8],[size-7,8],
+        [8,size-8],[8,size-7],[8,size-6],[8,size-5],[8,size-4],[8,size-3],[8,size-2],[8,size-1]
+      ];
+      for (var i = 0; i < 15; i++) {
+        matrix[formatPositions1[i][0]][formatPositions1[i][1]] = formatBits[i];
+        matrix[formatPositions2[i][0]][formatPositions2[i][1]] = formatBits[i];
+      }
+
+      return { matrix: matrix, size: size };
+    }
+
+    return { encode: encode };
+  })();
+
+  var qrData = QRCode.encode('https://apps.apple.com/app/evapotrack/id6761138265');
+  var canvas = document.getElementById('qr');
+  var cellSize = 6;
+  var quietZone = 2;
+  var totalSize = (qrData.size + quietZone * 2) * cellSize;
+  canvas.width = totalSize;
+  canvas.height = totalSize;
+  canvas.style.width = '1.8in';
+  canvas.style.height = '1.8in';
+  canvas.style.imageRendering = 'pixelated';
+  var ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillRect(0, 0, totalSize, totalSize);
+  ctx.fillStyle = '#1F3A5F';
+  for (var y = 0; y < qrData.size; y++)
+    for (var x = 0; x < qrData.size; x++)
+      if (qrData.matrix[y][x])
+        ctx.fillRect((x + quietZone) * cellSize, (y + quietZone) * cellSize, cellSize, cellSize);
+})();
+</script>
+</body>
+</html>
