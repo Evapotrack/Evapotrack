@@ -30,6 +30,10 @@ Evapotrack is an iOS 17+ application for tracking and optimizing plant watering 
 - FR-3.5: Date/time cannot be in the future.
 - FR-3.6: History view includes a toggleable chart showing retained water volumes over time.
 - FR-3.7: History view toolbar includes an add button to quickly log a new watering for that plant.
+- FR-3.8: Users can optionally attach one photo to a watering log, captured with the camera at log-creation time only (no photo library; no adding, replacing, or removing after save — logs remain fully immutable).
+- FR-3.9: Photos are processed before storage: downscaled to a longest edge of 2048 px, EXIF/GPS metadata stripped, JPEG-compressed to at most 800 KB. If processing fails, the log saves without a photo.
+- FR-3.10: In history, collapsed rows with a photo show a camera glyph; expanding a log reveals a tappable thumbnail that opens a full-screen zoomable viewer (pinch 1x-4x, double-tap zoom toggle).
+- FR-3.11: The photo section only appears on devices with a camera; deleting a log deletes its photo.
 
 ### FR-4: Calculations & Insights
 - FR-4.1: Retained volume = water added - runoff collected (computed on creation).
@@ -63,6 +67,7 @@ Evapotrack is an iOS 17+ application for tracking and optimizing plant watering 
 
 ### NFR-1: Data Storage
 - All data stored locally via SwiftData. No network calls, no cloud sync, no third-party SDKs.
+- Watering-log photos use SwiftData external storage (blobs live beside the database, not inside it) and are removed automatically with their log via cascade rules.
 
 ### NFR-2: Performance
 - Entity caps (30 grows, 25 plants/grow) keep SwiftData performant on older devices.
@@ -81,3 +86,4 @@ Evapotrack is an iOS 17+ application for tracking and optimizing plant watering 
 ### NFR-5: Security & Privacy
 - No user accounts, no network requests, no analytics.
 - All data remains on-device.
+- Photos are stripped of all EXIF and GPS metadata before storage; camera access is requested only when the user taps Take Photo (NSCameraUsageDescription provided).

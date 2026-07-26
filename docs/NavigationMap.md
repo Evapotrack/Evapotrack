@@ -14,14 +14,20 @@ GrowListView (ROOT - owns NavigationStack)
 │   │   ├── [Push] HistoryView(vm:waterUnit:maxRetentionCapacity:)
 │   │   │   │   via NavigationLink in HistoryPanelView or chart toolbar button
 │   │   │   │
-│   │   │   └── [Push] HowToView(context: .chart)
-│   │   │           via NavigationLink in toolbar
+│   │   │   ├── [Push] HowToView(context: .chart)
+│   │   │   │       via NavigationLink in toolbar
+│   │   │   │
+│   │   │   └── [FullScreenCover] PhotoViewerView(photoData:)
+│   │   │           via isShowingPhotoViewer in expanded WateringLogRowView
 │   │   │
 │   │   ├── [Push] HowToView(context: .addWatering)
 │   │   │       via NavigationLink in toolbar
 │   │   │
 │   │   ├── [Sheet] AddWateringLogView(plant:)
-│   │   │       via isShowingAddWatering
+│   │   │   │   via isShowingAddWatering
+│   │   │   │
+│   │   │   └── [FullScreenCover] CameraPicker(onCapture:)
+│   │   │           via isShowingCamera (camera-equipped devices only)
 │   │   │
 │   │   └── [Sheet] SettingsView()
 │   │           via isShowingSettings

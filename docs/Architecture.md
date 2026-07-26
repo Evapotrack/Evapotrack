@@ -21,6 +21,7 @@ Evapotrack/
     UnitConversionService.swift   # Liters/Celsius to/from display units
     HapticService.swift           # UIFeedbackGenerator wrappers
     DataExportService.swift       # Plain-text grow data export + FileDocument
+    ImageProcessingService.swift  # Photo downscale, metadata strip, JPEG size cap
     ServiceError.swift            # Shared error type for service-layer operations
   ViewModels/
     SettingsViewModel.swift       # UserDefaults-backed settings
@@ -56,6 +57,8 @@ Evapotrack/
       LaunchView.swift            # Animated launch screen
       DeleteConfirmationView.swift # Reusable delete modal overlay
       LimitExceededView.swift     # Reusable limit-exceeded modal overlay
+      CameraPicker.swift          # Camera-only UIImagePickerController wrapper
+      PhotoViewerView.swift       # Full-screen zoomable photo viewer
 
   Utilities/
     Validators.swift              # Pure validation functions
