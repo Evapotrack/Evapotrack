@@ -7,6 +7,7 @@
 // temp unit. All values converted to internal units on save.
 
 import SwiftUI
+import UIKit
 
 struct AddWateringLogView: View {
     @Environment(\.modelContext) private var modelContext
@@ -14,6 +15,7 @@ struct AddWateringLogView: View {
     @Environment(SettingsViewModel.self) private var settingsVM
     @State private var vm: AddWateringLogViewModel
     @State private var isShowingHowTo = false
+    @State private var isShowingCamera = false
     @State private var dismissTask: Task<Void, Never>?
     @ScaledMetric(relativeTo: .title) private var helpButtonSize: CGFloat = 56
     @ScaledMetric(relativeTo: .largeTitle) private var checkmarkSize: CGFloat = 56
@@ -86,6 +88,60 @@ struct AddWateringLogView: View {
                     .textCase(nil)
             }
 
+            if CameraPicker.isCameraAvailable {
+                Section {
+                    if vm.isProcessingPhoto {
+                        HStack(spacing: 12) {
+                            ProgressView()
+                            Text(Strings.processingPhoto)
+                                .foregroundStyle(Color.evSecondaryText)
+                        }
+                    } else if let preview = vm.photoPreview {
+                        VStack(alignment: .leading, spacing: 10) {
+                            Image(uiImage: preview)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 160)
+                                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                                .accessibilityLabel(Strings.wateringPhoto)
+
+                            HStack(spacing: 16) {
+                                Button {
+                                    isShowingCamera = true
+                                } label: {
+                                    Label(Strings.retakePhoto, systemImage: "camera")
+                                        .font(.callout.weight(.semibold))
+                                }
+                                .buttonStyle(.borderless)
+
+                                Button(role: .destructive) {
+                                    vm.removePhoto()
+                                } label: {
+                                    Label(Strings.removePhoto, systemImage: "trash")
+                                        .font(.callout.weight(.semibold))
+                                }
+                                .buttonStyle(.borderless)
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    } else {
+                        Button {
+                            isShowingCamera = true
+                        } label: {
+                            Label(Strings.takePhoto, systemImage: "camera")
+                                .fontWeight(.semibold)
+                        }
+                        .accessibilityHint(Strings.optional)
+                    }
+                } header: {
+                    Text(Strings.photoSectionHeader)
+                        .font(sectionHeaderFont)
+                        .foregroundStyle(.evDeepNavy)
+                        .textCase(nil)
+                }
+            }
+
             if let error = vm.validationError {
                 Section {
                     Text(error)
@@ -144,6 +200,13 @@ struct AddWateringLogView: View {
         }
         .navigationDestination(isPresented: $isShowingHowTo) {
             HowToView(context: .addWatering)
+        }
+        .fullScreenCover(isPresented: $isShowingCamera) {
+            CameraPicker { image in
+                vm.attachPhoto(image)
+            }
+            .ignoresSafeArea()
+            .background(Color.black)
         }
         .onAppear {
             vm.resetState()

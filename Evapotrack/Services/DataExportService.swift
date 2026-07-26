@@ -49,6 +49,7 @@ enum DataExportService {
                 // Check if any log has env data to include those columns
                 let hasTemp = sortedLogs.contains { $0.temperatureCelsius != nil }
                 let hasHumidity = sortedLogs.contains { $0.humidityPercent != nil }
+                let hasPhoto = sortedLogs.contains { $0.photoData != nil }
 
                 lines.append("")
                 var header = "  "
@@ -59,10 +60,12 @@ enum DataExportService {
                 header += "Runoff%".padding(toLength: 10, withPad: " ", startingAt: 0)
                 header += "Interval".padding(toLength: 10, withPad: " ", startingAt: 0)
                 if hasTemp { header += "Temp".padding(toLength: 10, withPad: " ", startingAt: 0) }
-                if hasHumidity { header += "Humidity" }
+                if hasHumidity { header += "Humidity".padding(toLength: 10, withPad: " ", startingAt: 0) }
+                if hasPhoto { header += "Photo" }
                 lines.append(header)
 
-                let headerWidth = hasTemp || hasHumidity ? 95 : 80
+                var headerWidth = hasTemp || hasHumidity ? 95 : 80
+                if hasPhoto { headerWidth += 8 }
                 lines.append("  " + String(repeating: "─", count: headerWidth))
 
                 for log in sortedLogs {
@@ -91,7 +94,10 @@ enum DataExportService {
                         let humidity = log.humidityPercent.map {
                             DisplayFormatter.percent($0)
                         } ?? "—"
-                        line += humidity
+                        line += humidity.padding(toLength: 10, withPad: " ", startingAt: 0)
+                    }
+                    if hasPhoto {
+                        line += log.photoData != nil ? "yes" : "—"
                     }
 
                     lines.append(line)

@@ -37,6 +37,11 @@ final class WateringLog {
     /// Relative humidity at time of watering, 0–100 (optional).
     var humidityPercent: Double?
 
+    /// Processed JPEG photo of the plant taken when the log was created (optional).
+    /// Downscaled and compressed by ImageProcessingService before storage.
+    /// Stored outside the database file; deleted automatically with the log.
+    @Attribute(.externalStorage) var photoData: Data?
+
     // MARK: - Calculated Fields (stored unrounded)
 
     /// Water retained by the medium: waterAdded - runoffCollected.
@@ -63,6 +68,7 @@ final class WateringLog {
         dateTime: Date,
         temperatureCelsius: Double? = nil,
         humidityPercent: Double? = nil,
+        photoData: Data? = nil,
         intervalHours: Double? = nil,
         plant: Plant? = nil
     ) {
@@ -74,6 +80,7 @@ final class WateringLog {
         self.dateTime = dateTime
         self.temperatureCelsius = temperatureCelsius
         self.humidityPercent = humidityPercent
+        self.photoData = photoData
         self.plant = plant
 
         // Compute derived fields — stored unrounded

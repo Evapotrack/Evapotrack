@@ -85,6 +85,24 @@ enum Strings {
     static var added: String { es ? " agr." : " added" }
     static var ret: String { es ? " ret" : " ret" }
 
+    // MARK: - Photo
+
+    static var photoSectionHeader: String { es ? "Foto (opcional)" : "Photo (optional)" }
+    static var takePhoto: String { es ? "Tomar Foto" : "Take Photo" }
+    static var retakePhoto: String { es ? "Repetir" : "Retake" }
+    static var removePhoto: String { es ? "Quitar" : "Remove" }
+    static var processingPhoto: String { es ? "Procesando foto…" : "Processing photo…" }
+    static var photoProcessingFailed: String {
+        es ? "No se pudo procesar la foto. Inténtalo de nuevo." : "Could not process the photo. Please try again."
+    }
+    static var photoStillProcessing: String {
+        es ? "Espera a que la foto termine de procesarse." : "Please wait for the photo to finish processing."
+    }
+    static var wateringPhoto: String { es ? "Foto del riego" : "Watering photo" }
+    static var viewPhoto: String { es ? "Ver foto" : "View photo" }
+    static var hasPhotoLabel: String { es ? "Tiene foto" : "Has photo" }
+    static var photoLabel: String { es ? "Foto" : "Photo" }
+
     // MARK: - Placeholders
 
     static var growName: String { es ? "Nombre del Cultivo" : "Grow Name" }

@@ -56,6 +56,16 @@ ViewModels use a `configure(modelContext:)` method called from `.onAppear` rathe
 | Date/time | Not in the future, unique per plant (to the minute) | - |
 | Goal runoff % | 0.1-99.9 (optional, defaults to 15%) | targetRunoffPercent |
 
+## Watering Log Photos
+
+Each WateringLog may carry one optional photo, captured with the camera at log-creation time only (no library picker, no post-creation editing — consistent with log immutability). The raw capture is processed by ImageProcessingService before storage:
+
+1. Downscaled via ImageIO thumbnailing (never decodes the full camera image into memory) to a longest edge of 2048 px (`maxPhotoDimension`).
+2. EXIF/GPS metadata stripped.
+3. JPEG-encoded starting at 0.7 quality, stepping down until the result is ≤ 800 KB (`maxPhotoBytes`); processing fails (photo not attached) if the cap cannot be met.
+
+Storage uses `@Attribute(.externalStorage)` so photo blobs live outside the SQLite store and are deleted automatically with their log (and by cascade with the plant/grow). Display: a camera glyph marks collapsed history rows with photos; the expanded row shows a tappable thumbnail that opens a full-screen zoomable viewer (pinch 1x-4x, double-tap toggle). The plain-text export gains a Photo column (yes/—) when any exported log has a photo.
+
 ## Algorithm: Next Water Recommendation
 
 1. Estimate expected retention by averaging the most recent retained amount with the historical average (50/50 blend).

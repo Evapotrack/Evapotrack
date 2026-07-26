@@ -32,6 +32,17 @@ enum AppConstants {
     static let waterAddedRange: ClosedRange<Double> = 0.001...100.0
     static let humidityRange: ClosedRange<Double> = 0.0...100.0
     static let temperatureRangeCelsius: ClosedRange<Double> = -50.0...60.0
+    // MARK: - Photos
+
+    /// Longest edge of a stored watering-log photo, in pixels.
+    static let maxPhotoDimension = 2048
+
+    /// Maximum stored size of a watering-log photo, in bytes (~800 KB).
+    static let maxPhotoBytes = 800_000
+
+    /// Initial JPEG compression quality; reduced stepwise until under maxPhotoBytes.
+    static let photoJPEGQuality = 0.7
+
     // MARK: - Algorithm
 
     /// Target runoff percentage used by the Next water recommendation algorithm.

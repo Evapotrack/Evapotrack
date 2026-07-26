@@ -9,6 +9,7 @@
 // Expansion state managed by parent — only one row expanded at a time.
 
 import SwiftUI
+import UIKit
 
 struct WateringLogRowView: View {
     let log: WateringLog
@@ -20,6 +21,8 @@ struct WateringLogRowView: View {
     let onToggleSelection: () -> Void
     let onToggleExpansion: () -> Void
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @State private var photoThumbnail: UIImage?
+    @State private var isShowingPhotoViewer = false
 
     private var capacityPercent: Double {
         WateringCalculationService.capacityPercent(
@@ -56,6 +59,12 @@ struct WateringLogRowView: View {
                     Text(log.dateTime.timeFormatted)
                         .fontWeight(.semibold)
                         .foregroundStyle(Color.evDeepNavy)
+                    if log.photoData != nil {
+                        Image(systemName: "camera.fill")
+                            .font(.caption)
+                            .foregroundStyle(Color.evSlateGray)
+                            .accessibilityLabel(Strings.hasPhotoLabel)
+                    }
                     Spacer()
                     Image(systemName: "chevron.right")
                         .font(.caption.weight(.semibold))
@@ -133,6 +142,9 @@ struct WateringLogRowView: View {
                         if let humidity = log.humidityPercent {
                             fieldRow(Strings.humidity, DisplayFormatter.percent(humidity), shaded: log.temperatureCelsius == nil)
                         }
+                        if log.photoData != nil {
+                            photoRow
+                        }
                     }
                     .transition(.opacity)
                 }
@@ -148,6 +160,53 @@ struct WateringLogRowView: View {
             .accessibilityAddTraits(.isButton)
         }
         .padding(.vertical, 2)
+    }
+
+    // MARK: - Photo
+
+    /// Thumbnail of the log's photo shown in the expanded state.
+    /// Tapping opens the full-screen zoomable viewer.
+    @ViewBuilder
+    private var photoRow: some View {
+        Button {
+            isShowingPhotoViewer = true
+        } label: {
+            Group {
+                if let thumbnail = photoThumbnail {
+                    Image(uiImage: thumbnail)
+                        .resizable()
+                        .scaledToFill()
+                } else {
+                    Color.evFrostBlue.opacity(0.12)
+                        .overlay { ProgressView() }
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: 140)
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .overlay(alignment: .bottomTrailing) {
+                Image(systemName: "arrow.up.left.and.arrow.down.right")
+                    .font(.caption.weight(.bold))
+                    .foregroundStyle(.white)
+                    .padding(6)
+                    .background(.black.opacity(0.45), in: Circle())
+                    .padding(6)
+            }
+        }
+        .buttonStyle(.plain)
+        .padding(.top, 8)
+        .accessibilityLabel(Strings.viewPhoto)
+        .task(id: log.id) {
+            guard photoThumbnail == nil, let data = log.photoData else { return }
+            photoThumbnail = await Task.detached(priority: .userInitiated) {
+                ImageProcessingService.displayImage(from: data, maxPixelSize: 600)
+            }.value
+        }
+        .fullScreenCover(isPresented: $isShowingPhotoViewer) {
+            if let data = log.photoData {
+                PhotoViewerView(photoData: data)
+            }
+        }
     }
 
     private func fieldRow(_ label: String, _ value: String, shaded: Bool = false) -> some View {

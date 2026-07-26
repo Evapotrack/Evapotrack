@@ -52,6 +52,7 @@
 | dateTime | Date | Yes | Not future, unique per plant (minute) |
 | temperatureCelsius | Double? | No | -50 to 60 C |
 | humidityPercent | Double? | No | 0-100% |
+| photoData | Data? | No | @Attribute(.externalStorage); processed JPEG, camera-only, attached at creation |
 | retained | Double | Computed | waterAdded - runoffCollected |
 | runoffPercent | Double | Computed | (runoff / waterAdded) x 100 |
 | intervalHours | Double? | System | Hours since previous log, recalculated |

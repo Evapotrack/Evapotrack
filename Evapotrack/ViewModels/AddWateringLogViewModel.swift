@@ -11,6 +11,7 @@
 import Foundation
 import SwiftData
 import Observation
+import UIKit
 
 @Observable
 @MainActor
@@ -25,6 +26,14 @@ final class AddWateringLogViewModel {
     var humidityText = ""
     var validationError: String?
     var showSaveConfirmation = false
+
+    // MARK: - Photo State
+
+    /// Processed photo ready for storage (downscaled, compressed, metadata-stripped).
+    var photoData: Data?
+    /// Small decoded preview of photoData for the form thumbnail.
+    var photoPreview: UIImage?
+    var isProcessingPhoto = false
 
     // MARK: - Dependencies
 
@@ -50,6 +59,31 @@ final class AddWateringLogViewModel {
     func resetState() {
         showSaveConfirmation = false
         validationError = nil
+    }
+
+    // MARK: - Photo Actions
+
+    /// Process a captured camera image off the main actor and attach it.
+    func attachPhoto(_ image: UIImage) {
+        isProcessingPhoto = true
+        Task {
+            let processed = await Task.detached(priority: .userInitiated) {
+                ImageProcessingService.processForStorage(image)
+            }.value
+            photoData = processed
+            photoPreview = processed.flatMap {
+                ImageProcessingService.displayImage(from: $0, maxPixelSize: 600)
+            }
+            isProcessingPhoto = false
+            if processed == nil {
+                validationError = Strings.photoProcessingFailed
+            }
+        }
+    }
+
+    func removePhoto() {
+        photoData = nil
+        photoPreview = nil
     }
 
     // MARK: - Actions
@@ -126,6 +160,10 @@ final class AddWateringLogViewModel {
 
     func save() -> Bool {
         guard !showSaveConfirmation else { return false }
+        if isProcessingPhoto {
+            validationError = Strings.photoStillProcessing
+            return false
+        }
         guard validate() else { return false }
         guard let displayWater = Double(waterAddedText),
               let displayRunoff = Double(runoffCollectedText) else { return false }
@@ -150,7 +188,8 @@ final class AddWateringLogViewModel {
             runoffCollected: runoffLiters,
             dateTime: dateTime,
             temperatureCelsius: tempCelsius,
-            humidityPercent: humidity
+            humidityPercent: humidity,
+            photoData: photoData
         )
 
         do {
