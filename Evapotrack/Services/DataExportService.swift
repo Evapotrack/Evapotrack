@@ -4,6 +4,7 @@
 //
 // Generates plain-text data exports for a Grow and its plants.
 // Used by SettingsView to export grow data as a .txt file.
+// `now` and `formatDate` are injectable so tests can pin the exact output.
 
 import SwiftUI
 import UniformTypeIdentifiers
@@ -14,16 +15,18 @@ enum DataExportService {
     static func exportGrow(
         _ grow: Grow,
         waterUnit: WaterUnit,
-        temperatureUnit: TemperatureUnit
+        temperatureUnit: TemperatureUnit,
+        now: Date = Date(),
+        formatDate: (Date) -> String = { $0.formatted(date: .abbreviated, time: .shortened) }
     ) -> String {
         var lines: [String] = []
         let divider = String(repeating: "─", count: 60)
 
         lines.append("Evapotrack Data Export")
-        lines.append("Generated: \(Date().formatted(date: .abbreviated, time: .shortened))")
+        lines.append("Generated: \(formatDate(now))")
         lines.append("")
         lines.append("Grow: \(grow.growName)")
-        lines.append("Created: \(grow.createdAt.formatted(date: .abbreviated, time: .shortened))")
+        lines.append("Created: \(formatDate(grow.createdAt))")
         lines.append("Plants: \(grow.plants.count)")
         lines.append("")
         lines.append(divider)
@@ -39,7 +42,7 @@ enum DataExportService {
             lines.append("  Medium: \(plant.mediumType)")
             lines.append("  Max Retention: \(DisplayFormatter.water(plant.maxRetentionCapacity, unit: waterUnit))")
             lines.append("  Goal Runoff: \(DisplayFormatter.percent(plant.goalRunoffPercent))")
-            lines.append("  Created: \(plant.createdAt.formatted(date: .abbreviated, time: .shortened))")
+            lines.append("  Created: \(formatDate(plant.createdAt))")
             lines.append("  Watering Logs: \(plant.wateringLogs.count)")
 
             let sortedLogs = plant.wateringLogs.sorted { $0.dateTime > $1.dateTime }
@@ -66,7 +69,7 @@ enum DataExportService {
                 lines.append("  " + String(repeating: "─", count: headerWidth))
 
                 for log in sortedLogs {
-                    let date = log.dateTime.formatted(date: .abbreviated, time: .shortened)
+                    let date = formatDate(log.dateTime)
                     let water = DisplayFormatter.water(log.waterAdded, unit: waterUnit)
                     let runoff = DisplayFormatter.water(log.runoffCollected, unit: waterUnit)
                     let retained = DisplayFormatter.water(log.retained, unit: waterUnit)
