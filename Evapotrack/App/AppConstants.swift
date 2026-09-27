@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum AppConstants {
+nonisolated enum AppConstants {
 
     // MARK: - Validation Bounds
 

@@ -9,7 +9,7 @@
 
 import Foundation
 
-enum UnitConversionService {
+nonisolated enum UnitConversionService {
 
     // MARK: - Water Constants
 
