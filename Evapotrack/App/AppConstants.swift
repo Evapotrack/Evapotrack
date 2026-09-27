@@ -49,6 +49,15 @@ nonisolated enum AppConstants {
     /// never rejected: the capacity itself may be set too low.
     static let retainedConfirmationFactor = 1.05
 
+    // MARK: - Photos
+
+    /// Longest edge of a stored watering photo, in pixels. About 1.5x the
+    /// width of the largest iPhone screen, so zooming shows leaf detail.
+    static let photoDetailMaxPixelSize = 2048
+
+    /// Longest edge of a stored photo thumbnail, in pixels (a 120 pt preview at @3x).
+    static let photoThumbnailMaxPixelSize = 360
+
     // MARK: - UserDefaults Keys
 
     static let userSettingsKey = "userSettings"

@@ -6,6 +6,9 @@
 // Adding or deleting a log triggers intervalHours
 // recalculation for all logs of that plant.
 // A failed save rolls back, so nothing half-done stays in memory.
+// Photo files follow the database: a photo is copied into place before the
+// log is saved (and removed again if the save fails), and deleted only
+// after the log's deletion is saved.
 
 import Foundation
 import SwiftData
@@ -16,14 +19,25 @@ final class WateringLogService {
 
     private let modelContext: ModelContext
     private let save: SaveHandler
+    private let photoStore: PhotoStore
 
-    init(modelContext: ModelContext, save: @escaping SaveHandler = { try $0.save() }) {
+    init(
+        modelContext: ModelContext,
+        photoStore: PhotoStore = .shared,
+        save: @escaping SaveHandler = { try $0.save() }
+    ) {
         self.modelContext = modelContext
+        self.photoStore = photoStore
         self.save = save
     }
 
-    /// Add a new watering log to a plant and recalculate intervals.
-    func addLog(_ log: WateringLog, to plant: Plant) throws {
+    /// Add a new watering log (with an optional prepared photo) to a plant and
+    /// recalculate intervals.
+    func addLog(_ log: WateringLog, to plant: Plant, photo: PreparedPhoto? = nil) throws {
+        if let photo {
+            try photoStore.commit(photo)
+            log.photoFileID = photo.id
+        }
         log.plant = plant
         modelContext.insert(log)
         // SwiftData wires the inverse relationship automatically.
@@ -38,10 +52,13 @@ final class WateringLogService {
         } catch {
             // The rollback restores what is on disk. Make sure the unsaved log
             // is not left in the plant's list either, or a retry would be
-            // rejected as a duplicate timestamp.
+            // rejected as a duplicate timestamp. The placed photo copy goes;
+            // the prepared copy stays so the grower can retry.
             plant.wateringLogs.removeAll { $0 === log }
+            if let photo { photoStore.deletePhoto(id: photo.id) }
             throw error
         }
+        if let photo { photoStore.discard(photo) }
         Logger.services.info("Added watering log")
     }
 
@@ -53,6 +70,7 @@ final class WateringLogService {
     /// Delete a log and recalculate intervals for its plant.
     func deleteLog(_ log: WateringLog) throws {
         let plant = log.plant
+        let photoID = log.photoFileID
         modelContext.delete(log)
 
         if let plant {
@@ -63,6 +81,7 @@ final class WateringLogService {
         }
 
         try modelContext.saveOrRollback(using: save, action: "Delete watering log")
+        if let photoID { photoStore.deletePhoto(id: photoID) }
         Logger.services.info("Deleted watering log")
     }
 

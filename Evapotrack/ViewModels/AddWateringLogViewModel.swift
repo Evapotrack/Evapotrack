@@ -5,6 +5,8 @@
 // Form state and validation for adding a new WateringLog.
 // Logs are immutable after creation. Retaining more than the plant's
 // Max Retention Capacity asks for confirmation instead of blocking.
+// An optional photo is prepared off the main actor as soon as it is picked
+// and saved together with the log; an unsaved photo is discarded.
 // User enters water/runoff in display unit and temperature in
 // display temp unit; all values are converted to internal units
 // (liters, Celsius) before storage. No rounding on stored values.
@@ -12,6 +14,7 @@
 import Foundation
 import SwiftData
 import Observation
+import OSLog
 
 @Observable
 @MainActor
@@ -29,6 +32,30 @@ final class AddWateringLogViewModel {
     var isShowingCapacityConfirmation = false
     var capacityConfirmationMessage = ""
 
+    // MARK: - Photo State
+
+    enum PhotoState: Equatable {
+        case empty
+        case processing
+        case ready(PreparedPhoto)
+        case failed
+    }
+
+    var photoState: PhotoState = .empty
+
+    var isProcessingPhoto: Bool { photoState == .processing }
+
+    var preparedPhoto: PreparedPhoto? {
+        if case .ready(let photo) = photoState { return photo }
+        return nil
+    }
+
+    /// The photo being prepared; readable so tests can await it.
+    @ObservationIgnored private(set) var photoTask: Task<Void, Never>?
+    @ObservationIgnored private var photoRequestID: UUID?
+    @ObservationIgnored private var didSave = false
+    private let photoStore: PhotoStore
+
     // MARK: - Dependencies
 
     nonisolated(unsafe) let plant: Plant
@@ -37,14 +64,19 @@ final class AddWateringLogViewModel {
     var waterUnit: WaterUnit = .liters
     var temperatureUnit: TemperatureUnit = .celsius
 
-    nonisolated init(plant: Plant, dateProvider: DateProviding = SystemDateProvider()) {
+    nonisolated init(
+        plant: Plant,
+        dateProvider: DateProviding = SystemDateProvider(),
+        photoStore: PhotoStore = .shared
+    ) {
         self.plant = plant
         self.dateProvider = dateProvider
+        self.photoStore = photoStore
     }
 
     func configure(modelContext: ModelContext, waterUnit: WaterUnit, temperatureUnit: TemperatureUnit) {
         guard logService == nil else { return }
-        self.logService = WateringLogService(modelContext: modelContext)
+        self.logService = WateringLogService(modelContext: modelContext, photoStore: photoStore)
         self.waterUnit = waterUnit
         self.temperatureUnit = temperatureUnit
     }
@@ -138,7 +170,7 @@ final class AddWateringLogViewModel {
     }
 
     func save(confirmedOverCapacity: Bool = false) -> Bool {
-        guard !showSaveConfirmation else { return false }
+        guard !showSaveConfirmation, !isProcessingPhoto else { return false }
         guard validate(confirmedOverCapacity: confirmedOverCapacity) else { return false }
         guard let displayWater = NumericInput.parse(waterAddedText),
               let displayRunoff = NumericInput.parse(runoffCollectedText) else { return false }
@@ -167,12 +199,72 @@ final class AddWateringLogViewModel {
         )
 
         do {
-            try service.addLog(log, to: plant)
+            try service.addLog(log, to: plant, photo: preparedPhoto)
         } catch {
             validationError = Strings.failedToSave
             return false
         }
+        didSave = true
         showSaveConfirmation = true
         return true
+    }
+
+    // MARK: - Photo
+
+    /// Prepares a picked photo off the main actor. `load` returns the picked
+    /// file (the view passes PhotosPickerItem.loadTransferable). Picking again
+    /// replaces the previous photo; a result that arrives after a newer pick
+    /// or after the form closed is discarded.
+    func loadPhoto(_ load: @escaping @Sendable () async throws -> PickedImageFile?) {
+        photoTask?.cancel()
+        discardPreparedPhoto()
+        let requestID = UUID()
+        photoRequestID = requestID
+        photoState = .processing
+        let store = photoStore
+
+        photoTask = Task { [weak self] in
+            do {
+                guard let picked = try await load() else {
+                    throw PhotoProcessor.ProcessingError.unreadableImage
+                }
+                let prepared = try await Task.detached(priority: .userInitiated) {
+                    defer { try? FileManager.default.removeItem(at: picked.url) }
+                    return try PhotoProcessor.process(
+                        sourceURL: picked.url,
+                        outputDirectory: try store.makeSessionIncomingDirectory()
+                    )
+                }.value
+                guard let self, self.photoRequestID == requestID else {
+                    store.discard(prepared)
+                    return
+                }
+                self.photoState = .ready(prepared)
+            } catch {
+                guard let self, self.photoRequestID == requestID else { return }
+                Logger.photos.error("Photo import failed: \(error.localizedDescription, privacy: .public)")
+                self.photoState = .failed
+            }
+        }
+    }
+
+    /// Removes the photo from the form (before saving).
+    func removePhoto() {
+        photoTask?.cancel()
+        photoRequestID = nil
+        discardPreparedPhoto()
+        photoState = .empty
+    }
+
+    /// Call when the form closes without saving: deletes a prepared photo.
+    func discardUnsavedPhoto() {
+        guard !didSave else { return }
+        removePhoto()
+    }
+
+    private func discardPreparedPhoto() {
+        if let photo = preparedPhoto {
+            photoStore.discard(photo)
+        }
     }
 }

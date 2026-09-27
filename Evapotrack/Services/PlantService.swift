@@ -14,9 +14,15 @@ final class PlantService {
 
     private let modelContext: ModelContext
     private let save: SaveHandler
+    private let photoStore: PhotoStore
 
-    init(modelContext: ModelContext, save: @escaping SaveHandler = { try $0.save() }) {
+    init(
+        modelContext: ModelContext,
+        photoStore: PhotoStore = .shared,
+        save: @escaping SaveHandler = { try $0.save() }
+    ) {
         self.modelContext = modelContext
+        self.photoStore = photoStore
         self.save = save
     }
 
@@ -70,10 +76,13 @@ final class PlantService {
         Logger.services.info("Edited plant")
     }
 
-    /// Deletes the plant and, by cascade, its watering logs.
+    /// Deletes the plant and, by cascade, its watering logs. Their photo files
+    /// are removed after the deletion is saved.
     func deletePlant(_ plant: Plant) throws {
+        let photoIDs = plant.wateringLogs.compactMap(\.photoFileID)
         modelContext.delete(plant)
         try modelContext.saveOrRollback(using: save, action: "Delete plant")
+        photoIDs.forEach { photoStore.deletePhoto(id: $0) }
         Logger.services.info("Deleted plant")
     }
 }

@@ -4,7 +4,8 @@
 //
 // Snapshot tests for the plain-text grow export. The expected lines pin the
 // export format exactly (column widths, padding, rounding, sorting), so any
-// change to it is deliberate and visible in review.
+// change to it is deliberate and visible in review. The no-photo snapshot
+// was written before the photo column existed and still passes unchanged.
 
 import XCTest
 import SwiftData
@@ -145,6 +146,67 @@ final class DataExportTests: XCTestCase {
             "────────────────────────────────────────────────────────────",
             "",
             "Total: 3 plants, 3 watering logs",
+        ])
+    }
+
+    /// A plant with photos gets a Photo column; the export ends with a note
+    /// that photos are not included. Plants without photos are unchanged.
+    func test_export_withPhoto_addsPhotoColumnAndNote() throws {
+        let context = ModelContext(try PersistenceController.makeInMemoryContainer())
+        let grow = makeGrow(in: context, photoOnFirstBasilLog: UUID())
+
+        assertLines(export(grow), [
+            "Evapotrack Data Export",
+            "Generated: 2026-03-10 12:00",
+            "",
+            "Grow: Tent A",
+            "Created: 2026-03-01 00:00",
+            "Plants: 3",
+            "",
+            "────────────────────────────────────────────────────────────",
+            "",
+            "Plant: Aloe",
+            "  Pot Size: Plastic 1 gal",
+            "  Medium: coco",
+            "  Max Retention: 0.80 L",
+            "  Goal Runoff: 20.0%",
+            "  Created: 2026-03-01 00:10",
+            "  Watering Logs: 0",
+            "",
+            "────────────────────────────────────────────────────────────",
+            "",
+            "Plant: Basil",
+            "  Pot Size: Fabric 3 gal",
+            "  Medium: soil",
+            "  Max Retention: 1.50 L",
+            "  Goal Runoff: 15.0%",
+            "  Created: 2026-03-01 00:05",
+            "  Watering Logs: 2",
+            "",
+            "  Date                  Water Added   Runoff      Retained    Runoff%   Interval  Temp      Humidity  Photo",
+            "  ─────────────────────────────────────────────────────────────────────────────────────────────────────────",
+            "  2026-03-04 10:15      1.20 L        0.30 L      0.90 L      25.0%     2d 2h     —         —         —",
+            "  2026-03-02 08:00      1.00 L        0.20 L      0.80 L      20.0%     —         22.5 °C   60.0%     Yes",
+            "",
+            "────────────────────────────────────────────────────────────",
+            "",
+            "Plant: Cactus",
+            "  Pot Size: Clay 6 in",
+            "  Medium: gritty mix",
+            "  Max Retention: 0.40 L",
+            "  Goal Runoff: 10.0%",
+            "  Created: 2026-03-01 00:15",
+            "  Watering Logs: 1",
+            "",
+            "  Date                  Water Added   Runoff      Retained    Runoff%   Interval  ",
+            "  ────────────────────────────────────────────────────────────────────────────────",
+            "  2026-03-03 09:00      0.50 L        0.00 L      0.50 L      0.0%      —         ",
+            "",
+            "────────────────────────────────────────────────────────────",
+            "",
+            "Total: 3 plants, 3 watering logs",
+            "",
+            "Photos: 1 watering log has a photo. Photos stay on this device and are not included in this export.",
         ])
     }
 

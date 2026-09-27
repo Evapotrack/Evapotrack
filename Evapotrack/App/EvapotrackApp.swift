@@ -7,6 +7,9 @@
 // GrowListView as root. Shows an animated launch screen before revealing
 // the main content. If the store cannot be opened, shows an explanation
 // instead of crashing or starting with an empty store.
+// At launch, removes watering-photo files that no log refers to (see
+// PhotoMaintenance); it runs on the main actor, so it can never interleave
+// with adding or deleting a log.
 
 import SwiftUI
 import SwiftData
@@ -35,6 +38,9 @@ struct EvapotrackApp: App {
                 case .success(let container):
                     mainContent
                         .modelContainer(container)
+                        .task {
+                            PhotoMaintenance.removeOrphanedFiles(context: container.mainContext)
+                        }
                 case .failure:
                     DataStoreErrorView()
                         .environment(settingsVM)

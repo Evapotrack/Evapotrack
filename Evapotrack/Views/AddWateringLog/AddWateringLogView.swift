@@ -5,8 +5,12 @@
 // Form for adding a new watering log. Logs are immutable after creation.
 // User enters water/runoff in display unit and temperature in display
 // temp unit. All values converted to internal units on save.
+// An optional photo is chosen with the system photo picker, which runs
+// outside the app: no Photos permission is requested and only the chosen
+// photo is shared with Evapotrack.
 
 import SwiftUI
+import PhotosUI
 
 struct AddWateringLogView: View {
     @Environment(\.modelContext) private var modelContext
@@ -15,6 +19,9 @@ struct AddWateringLogView: View {
     @State private var vm: AddWateringLogViewModel
     @State private var isShowingHowTo = false
     @State private var dismissTask: Task<Void, Never>?
+    @State private var pickerItem: PhotosPickerItem?
+    @State private var viewerItem: PhotoViewerItem?
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @ScaledMetric(relativeTo: .title) private var helpButtonSize: CGFloat = 56
     @ScaledMetric(relativeTo: .largeTitle) private var checkmarkSize: CGFloat = 56
 
@@ -86,6 +93,17 @@ struct AddWateringLogView: View {
                     .textCase(nil)
             }
 
+            Section {
+                photoContent
+            } header: {
+                Text(Strings.photoSection)
+                    .font(sectionHeaderFont)
+                    .foregroundStyle(.evDeepNavy)
+                    .textCase(nil)
+            } footer: {
+                Text(Strings.photoFooter)
+            }
+
             if let error = vm.validationError {
                 Section {
                     Text(error)
@@ -123,9 +141,12 @@ struct AddWateringLogView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
-                Button(Strings.cancel) { dismiss() }
-                    .font(.body)
-                    .fontWeight(.bold)
+                Button(Strings.cancel) {
+                    vm.discardUnsavedPhoto()
+                    dismiss()
+                }
+                .font(.body)
+                .fontWeight(.bold)
             }
             ToolbarItem(placement: .confirmationAction) {
                 Button(Strings.save) {
@@ -133,8 +154,19 @@ struct AddWateringLogView: View {
                 }
                 .font(.body)
                 .fontWeight(.bold)
-                .disabled(vm.showSaveConfirmation)
+                .disabled(vm.showSaveConfirmation || vm.isProcessingPhoto)
             }
+        }
+        // A chosen photo would be lost by a swipe-down, so closing the form
+        // takes Cancel or Save while one is attached.
+        .interactiveDismissDisabled(hasUnsavedPhoto)
+        .onChange(of: pickerItem) { _, item in
+            guard let item else { return }
+            pickerItem = nil
+            vm.loadPhoto { try await item.loadTransferable(type: PickedImageFile.self) }
+        }
+        .fullScreenCover(item: $viewerItem) { item in
+            PhotoViewer(item: item)
         }
         .alert(Strings.retainedOverCapacityTitle, isPresented: $vm.isShowingCapacityConfirmation) {
             Button(Strings.saveAnyway) {
@@ -146,6 +178,7 @@ struct AddWateringLogView: View {
         }
         .navigationDestination(isPresented: $isShowingHowTo) {
             HowToView(context: .addWatering)
+                .interactiveDismissDisabled(hasUnsavedPhoto)
         }
         .onAppear {
             vm.resetState()
@@ -183,6 +216,96 @@ struct AddWateringLogView: View {
         }
         .animation(.easeInOut(duration: 0.3), value: vm.showSaveConfirmation)
         .onDisappear { dismissTask?.cancel() }
+    }
+
+    private var hasUnsavedPhoto: Bool {
+        vm.preparedPhoto != nil || vm.isProcessingPhoto
+    }
+
+    // MARK: - Photo
+
+    @ViewBuilder
+    private var photoContent: some View {
+        switch vm.photoState {
+        case .empty:
+            photoPicker(Strings.addPhoto, systemImage: "photo.badge.plus")
+        case .processing:
+            HStack(spacing: 12) {
+                HStack(spacing: 12) {
+                    ProgressView()
+                    Text(Strings.preparingPhoto)
+                        .foregroundStyle(Color.evSecondaryText)
+                }
+                .accessibilityElement(children: .combine)
+                Spacer(minLength: 0)
+                Button(Strings.cancel) {
+                    vm.removePhoto()
+                }
+                .buttonStyle(.borderless)
+                .frame(minHeight: 44)
+            }
+        case .ready(let photo):
+            Button {
+                showViewer(PhotoViewerItem(source: .prepared(photo), date: vm.dateTime))
+            } label: {
+                WateringPhotoThumbnail(source: .prepared(photo), maxHeight: 160)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(Strings.viewPhoto)
+            .accessibilityHint(Strings.viewPhotoHint)
+
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 24) {
+                    replacePhotoButton
+                    removePhotoButton
+                    Spacer(minLength: 0)
+                }
+                VStack(alignment: .leading, spacing: 12) {
+                    replacePhotoButton
+                    removePhotoButton
+                }
+            }
+        case .failed:
+            Label(Strings.photoFailed, systemImage: "exclamationmark.triangle")
+                .foregroundStyle(.red)
+                .font(.callout)
+            photoPicker(Strings.chooseAnotherPhoto, systemImage: "photo.badge.plus")
+        }
+    }
+
+    private var replacePhotoButton: some View {
+        photoPicker(Strings.replacePhoto, systemImage: "arrow.triangle.2.circlepath")
+            .buttonStyle(.borderless)
+    }
+
+    private var removePhotoButton: some View {
+        Button(role: .destructive) {
+            vm.removePhoto()
+        } label: {
+            Label(Strings.removePhoto, systemImage: "trash")
+                .frame(minHeight: 44)
+        }
+        .buttonStyle(.borderless)
+    }
+
+    /// The system photo picker, limited to still images.
+    private func photoPicker(_ title: String, systemImage: String) -> some View {
+        PhotosPicker(selection: $pickerItem, matching: .images) {
+            Label(title, systemImage: systemImage)
+                .frame(minHeight: 44)
+        }
+    }
+
+    /// Opens the full-screen photo viewer (without the slide-up animation
+    /// when Reduce Motion is on).
+    private func showViewer(_ item: PhotoViewerItem) {
+        var transaction = Transaction()
+        transaction.disablesAnimations = reduceMotion
+        withTransaction(transaction) {
+            viewerItem = item
+        }
     }
 
     /// Confirms the save with a haptic and closes the form after a moment.

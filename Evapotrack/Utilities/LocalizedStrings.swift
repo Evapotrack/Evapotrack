@@ -160,18 +160,23 @@ enum Strings {
 
     static func deleteGrowMessage(_ name: String) -> String {
         es
-            ? "¿Estás seguro de que quieres eliminar \"\(name)\"? Todas las plantas y sus registros de riego en este cultivo serán eliminados permanentemente. Esta acción no se puede deshacer."
-            : "Are you sure you want to delete \"\(name)\"? All plants and their watering logs in this grow will be permanently deleted. This action cannot be undone."
+            ? "¿Estás seguro de que quieres eliminar \"\(name)\"? Todas las plantas de este cultivo, sus registros de riego y sus fotos serán eliminados permanentemente. Esta acción no se puede deshacer."
+            : "Are you sure you want to delete \"\(name)\"? All plants in this grow, their watering logs, and their photos will be permanently deleted. This action cannot be undone."
     }
 
     static func deletePlantMessage(_ name: String) -> String {
         es
-            ? "¿Estás seguro de que quieres eliminar \"\(name)\"? Todos los registros de riego de esta planta serán eliminados permanentemente. Esta acción no se puede deshacer."
-            : "Are you sure you want to delete \"\(name)\"? All watering logs for this plant will be permanently deleted. This action cannot be undone."
+            ? "¿Estás seguro de que quieres eliminar \"\(name)\"? Todos los registros de riego de esta planta y sus fotos serán eliminados permanentemente. Esta acción no se puede deshacer."
+            : "Are you sure you want to delete \"\(name)\"? All watering logs for this plant, and their photos, will be permanently deleted. This action cannot be undone."
     }
 
-    static func deleteLogMessage(_ dateFormatted: String) -> String {
-        es
+    static func deleteLogMessage(_ dateFormatted: String, hasPhoto: Bool = false) -> String {
+        if hasPhoto {
+            return es
+                ? "¿Eliminar el registro de \(dateFormatted) y su foto? Esta acción no se puede deshacer."
+                : "Delete the log from \(dateFormatted) and its photo? This action cannot be undone."
+        }
+        return es
             ? "¿Eliminar el registro de \(dateFormatted)? Esta acción no se puede deshacer."
             : "Delete the log from \(dateFormatted)? This action cannot be undone."
     }
@@ -215,8 +220,15 @@ enum Strings {
     static var showLogs: String { es ? "Mostrar Registros" : "Show Logs" }
     static var showChart: String { es ? "Mostrar Gráfico" : "Show Chart" }
     static var dismissDialog: String { es ? "Cerrar diálogo" : "Dismiss dialog" }
-    static var expandLogDetails: String { es ? "Expandir detalles del registro" : "Expand log details" }
-    static var collapseLogDetails: String { es ? "Contraer detalles del registro" : "Collapse log details" }
+    static var expanded: String { es ? "Expandido" : "Expanded" }
+    static var collapsed: String { es ? "Contraído" : "Collapsed" }
+    static func logRowAccessibility(time: String, added: String, retained: String, capacity: String, hasPhoto: Bool) -> String {
+        let summary = es
+            ? "\(time), \(added) agregados, \(retained) retenidos, capacidad \(capacity)"
+            : "\(time), \(added) added, \(retained) retained, capacity \(capacity)"
+        guard hasPhoto else { return summary }
+        return summary + (es ? ", con foto" : ", has photo")
+    }
     static var doubleTapExpandCollapse: String { es ? "Toca dos veces para expandir o contraer detalles" : "Double tap to expand or collapse details" }
     static var savedLabel: String { es ? "Guardado" : "Saved" }
 
@@ -270,6 +282,38 @@ enum Strings {
     }
     static func calcRunoffAccessibility(_ unit: String) -> String {
         es ? "Calculadora Drenaje Recolectado en \(unit)" : "Calculator Runoff Collected in \(unit)"
+    }
+
+    // MARK: - Photos
+
+    static var photoSection: String { es ? "Foto" : "Photo" }
+    static var photoFooter: String {
+        es
+            ? "Opcional. La foto se guarda solo en este dispositivo, sin su ubicación ni otros datos de la cámara."
+            : "Optional. The photo is saved only on this device, without its location or other camera details."
+    }
+    static var addPhoto: String { es ? "Agregar Foto" : "Add Photo" }
+    static var replacePhoto: String { es ? "Reemplazar" : "Replace" }
+    static var removePhoto: String { es ? "Quitar" : "Remove" }
+    static var chooseAnotherPhoto: String { es ? "Elegir Otra Foto" : "Choose Another Photo" }
+    static var preparingPhoto: String { es ? "Preparando foto…" : "Preparing photo…" }
+    static var photoFailed: String { es ? "No se pudo agregar esta foto." : "This photo couldn't be added." }
+    static var photoUnavailable: String { es ? "Foto no disponible" : "Photo unavailable" }
+    static var viewPhoto: String { es ? "Ver foto" : "View photo" }
+    static var viewPhotoHint: String { es ? "Abre la foto en pantalla completa." : "Opens the photo full screen." }
+    static var closePhoto: String { es ? "Cerrar foto" : "Close photo" }
+    static func wateringPhotoLabel(_ date: String) -> String {
+        es ? "Foto del riego, \(date)" : "Watering photo, \(date)"
+    }
+    static var storage: String { es ? "Almacenamiento" : "Storage" }
+    static var photos: String { es ? "Fotos" : "Photos" }
+    static func photoStorageLabel(_ count: Int, size: String) -> String {
+        es ? "Fotos: \(count) · \(size)" : "Photos: \(count) · \(size)"
+    }
+    static var storageFooter: String {
+        es
+            ? "Las fotos de riego se guardan solo en este dispositivo y se incluyen en sus copias de seguridad. Nunca se suben ni se incluyen en la exportación. Eliminar un registro de riego elimina su foto."
+            : "Watering photos are stored only on this device and are included in its backups. They are never uploaded or included in the export. Deleting a watering log deletes its photo."
     }
 
     // MARK: - Chart
@@ -471,11 +515,11 @@ enum Strings {
         es ? [
             "Evapotrack te ayuda a rastrear y optimizar el riego de tus plantas registrando cuánta agua agregas y cuánta drena.",
             "La app calcula métricas clave como el volumen Retenido, % de Capacidad, y una cantidad de riego recomendada basada en tu historial.",
-            "Todos los datos se almacenan localmente en tu dispositivo. Puedes descargar tus datos directamente desde Configuración."
+            "Todos los datos, incluidas las fotos de riego, se almacenan localmente en tu dispositivo. Puedes descargar tus datos directamente desde Configuración."
         ] : [
             "Evapotrack helps you track and optimize watering for your plants by recording how much water you add and how much runs off.",
             "The app calculates key metrics like Retained volume, Capacity %, and a recommended Next watering amount based on your history.",
-            "All data is stored locally on your device. You can download your data directly from Settings."
+            "All data, including watering photos, is stored locally on your device. You can download your data directly from Settings."
         ]
     }
 
@@ -486,12 +530,12 @@ enum Strings {
             "Un Cultivo es un grupo que contiene una o más plantas. Usa cultivos para organizar plantas por ubicación, ciclo, o cualquier agrupación que tenga sentido para ti.",
             "Toca + en la pantalla Mis Cultivos para crear un nuevo cultivo. Cada cultivo registra su nombre y la fecha de creación.",
             "Toca un cultivo para abrir su lista de plantas. Desde ahí, toca + para agregar plantas a ese cultivo.",
-            "Eliminar un cultivo eliminará permanentemente todas las plantas dentro de él y todos sus registros de riego."
+            "Eliminar un cultivo eliminará permanentemente todas las plantas dentro de él y todos sus registros de riego y fotos."
         ] : [
             "A Grow is a group that contains one or more plants. Use grows to organize plants by location, cycle, or any grouping that makes sense for you.",
             "Tap + on the My Grows screen to create a new grow. Each grow records its name and the date it was created.",
             "Tap a grow to open its plant list. From there, tap + to add plants to that grow.",
-            "Deleting a grow will permanently delete all plants inside it and all of their watering logs."
+            "Deleting a grow will permanently delete all plants inside it and all of their watering logs and photos."
         ]
     }
 
@@ -503,13 +547,13 @@ enum Strings {
             "Ingresa los campos requeridos: Nombre de la Planta, Tamaño de Maceta, Tipo de Medio, y Capacidad Máx. de Retención.",
             "Si ya conoces tu Capacidad Máx. de Retención, ingrésala directamente. Si no, usa la calculadora incorporada para derivarla de un riego de prueba.",
             "Puedes editar una planta más tarde desde su panel (Editar junto a Información de la Planta). Sus registros de riego no cambian.",
-            "Eliminar una planta eliminará permanentemente todos sus registros de riego."
+            "Eliminar una planta eliminará permanentemente todos sus registros de riego y fotos."
         ] : [
             "Open a grow, then tap + to start creating a new plant.",
             "Enter the required fields: Plant Name, Pot Size, Medium Type, and Max Retention Capacity.",
             "If you already know your Max Retention Capacity, enter it directly. Otherwise, use the built-in calculator to derive it from a test watering.",
             "You can edit a plant later from its dashboard (Edit next to Plant Info). Its watering logs are not changed.",
-            "Deleting a plant will permanently delete all of its watering logs."
+            "Deleting a plant will permanently delete all of its watering logs and photos."
         ]
     }
 
@@ -539,12 +583,14 @@ enum Strings {
             "Desplázate hasta la sección Exportar Datos. Esta sección solo aparece cuando Configuración se abre desde dentro de un cultivo.",
             "Toca Exportar para generar un archivo de texto formateado con todas las plantas del cultivo, sus detalles, y cada registro de riego.",
             "Los valores se exportan en tus unidades de visualización elegidas (unidad de agua y unidad de temperatura).",
+            "Las fotos no se incluyen en el archivo; se quedan en tu dispositivo. El archivo indica qué registros tienen foto.",
             "Elige dónde guardar o compartir el archivo usando el menú de compartir del sistema."
         ] : [
             "Open a grow's plant list, then tap the gear icon to open Settings.",
             "Scroll to the Export Data section. This section only appears when Settings is opened from within a grow.",
             "Tap Export to generate a formatted text file containing all plants in the grow, their details, and every watering log.",
             "Values are exported in your chosen display units (water unit and temperature unit).",
+            "Photos are not included in the file; they stay on your device. The file notes which logs have a photo.",
             "Choose where to save or share the file using the system share sheet."
         ]
     }
@@ -558,12 +604,14 @@ enum Strings {
             "Ingresa Agua Agregada y Drenaje Recolectado. Ambos son requeridos.",
             "Establece la Fecha y Hora correctas. No se permiten fechas futuras.",
             "Temperatura y Humedad son opcionales. Se registran para tu referencia pero no se usan en los cálculos.",
+            "También puedes agregar una foto (opcional) para recordar cómo se veía la planta. Se elige con el selector de fotos del sistema, así que Evapotrack no necesita acceso a tu fototeca. En el historial, expande el registro y toca la foto para verla en pantalla completa.",
             "Los registros no pueden editarse después de su creación. Si un registro es incorrecto, elimínalo y crea uno nuevo."
         ] : [
             "From a plant's dashboard, tap + to add a new watering event.",
             "Enter Water Added and Runoff Collected. Both are required.",
             "Set the correct Date and Time. Future dates are not allowed.",
             "Temperature and Humidity are optional. They are recorded for your reference but are not used in any calculations.",
+            "You can also add a photo (optional) to remember how the plant looked. It's chosen with the system photo picker, so Evapotrack doesn't need access to your photo library. In History, expand the log and tap the photo to view it full screen.",
             "Logs cannot be edited after creation. If a log is incorrect, delete it and create a new one."
         ]
     }

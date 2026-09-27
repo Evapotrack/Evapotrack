@@ -6,6 +6,7 @@
 // Shows all logs with stats, selection, and delete functionality.
 // Only one log may be expanded at a time.
 // Chart button toggles between chart view and log list.
+// A log's photo opens in a full-screen viewer.
 // Pushed via NavigationLink from the plant dashboard.
 
 import SwiftUI
@@ -25,6 +26,8 @@ struct HistoryView: View {
     @State private var isShowingChart = false
     @State private var showTemperature = false
     @State private var showHumidity = false
+    @State private var viewerItem: PhotoViewerItem?
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @ScaledMetric(relativeTo: .caption2) private var legendDotSize: CGFloat = 8
     @ScaledMetric(relativeTo: .caption2) private var chartDotSize: CGFloat = 7
     @ScaledMetric(relativeTo: .body) private var baseChartHeight: CGFloat = 180
@@ -113,6 +116,9 @@ struct HistoryView: View {
                                 },
                                 onToggleExpansion: {
                                     toggleExpansion(for: log)
+                                },
+                                onOpenPhoto: {
+                                    openPhoto(for: log)
                                 }
                             )
                             .listRowBackground(
@@ -197,6 +203,9 @@ struct HistoryView: View {
                 .accessibilityLabel(isShowingChart ? Strings.showLogs : Strings.showChart)
             }
         }
+        .fullScreenCover(item: $viewerItem) { item in
+            PhotoViewer(item: item)
+        }
         .adaptiveSheet(isPresented: $vm.isShowingAddWatering, onDismiss: { vm.loadData() }) {
             NavigationStack {
                 AddWateringLogView(plant: vm.plant)
@@ -207,7 +216,7 @@ struct HistoryView: View {
             if isShowingDeleteAlert, let log = selectedLog {
                 DeleteConfirmationView(
                     title: Strings.deleteLog,
-                    message: Strings.deleteLogMessage(log.dateTime.longFormatted),
+                    message: Strings.deleteLogMessage(log.dateTime.longFormatted, hasPhoto: log.photoFileID != nil),
                     onDelete: {
                         withAnimation(.easeInOut(duration: 0.2)) {
                             isShowingDeleteAlert = false
@@ -246,6 +255,17 @@ struct HistoryView: View {
             expandedLogID = nil
         } else {
             expandedLogID = log.id
+        }
+    }
+
+    /// Opens the log's photo full screen (without the slide-up animation when
+    /// Reduce Motion is on).
+    private func openPhoto(for log: WateringLog) {
+        guard let photoID = log.photoFileID else { return }
+        var transaction = Transaction()
+        transaction.disablesAnimations = reduceMotion
+        withTransaction(transaction) {
+            viewerItem = PhotoViewerItem(source: .stored(photoID), date: log.dateTime)
         }
     }
 
