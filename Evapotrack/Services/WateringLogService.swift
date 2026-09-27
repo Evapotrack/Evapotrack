@@ -5,6 +5,7 @@
 // CRUD operations for WateringLog entities.
 // Adding or deleting a log triggers intervalHours
 // recalculation for all logs of that plant.
+// A failed save rolls back, so nothing half-done stays in memory.
 
 import Foundation
 import SwiftData
@@ -14,9 +15,11 @@ import OSLog
 final class WateringLogService {
 
     private let modelContext: ModelContext
+    private let save: SaveHandler
 
-    init(modelContext: ModelContext) {
+    init(modelContext: ModelContext, save: @escaping SaveHandler = { try $0.save() }) {
         self.modelContext = modelContext
+        self.save = save
     }
 
     /// Add a new watering log to a plant and recalculate intervals.
@@ -26,12 +29,20 @@ final class WateringLogService {
         // SwiftData wires the inverse relationship automatically.
         // Explicitly append to ensure the in-memory array is current
         // before recalculation (SwiftData may defer the update).
-        if !plant.wateringLogs.contains(where: { $0.id == log.id }) {
+        if !plant.wateringLogs.contains(where: { $0 === log }) {
             plant.wateringLogs.append(log)
         }
         recalculateIntervals(for: plant)
-        try modelContext.save()
-        Logger.services.info("Added watering log to \(plant.plantName)")
+        do {
+            try modelContext.saveOrRollback(using: save, action: "Add watering log")
+        } catch {
+            // The rollback restores what is on disk. Make sure the unsaved log
+            // is not left in the plant's list either, or a retry would be
+            // rejected as a duplicate timestamp.
+            plant.wateringLogs.removeAll { $0 === log }
+            throw error
+        }
+        Logger.services.info("Added watering log")
     }
 
     /// Fetch all logs for a plant, sorted newest first.
@@ -44,14 +55,14 @@ final class WateringLogService {
         let plant = log.plant
         modelContext.delete(log)
 
-        if let plant = plant {
+        if let plant {
             // Eagerly remove from relationship array — SwiftData may not
             // reflect the delete in-memory until the next save/fetch cycle.
-            plant.wateringLogs.removeAll { $0.id == log.id }
+            plant.wateringLogs.removeAll { $0 === log }
             recalculateIntervals(for: plant)
         }
 
-        try modelContext.save()
+        try modelContext.saveOrRollback(using: save, action: "Delete watering log")
         Logger.services.info("Deleted watering log")
     }
 

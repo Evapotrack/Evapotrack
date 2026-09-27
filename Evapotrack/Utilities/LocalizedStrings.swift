@@ -343,6 +343,7 @@ enum Strings {
     static var failedDeleteLog: String { es ? "No se pudo eliminar el registro. Inténtalo de nuevo." : "Failed to delete log. Please try again." }
     static var unableToSave: String { es ? "No se pudo guardar. Inténtalo de nuevo." : "Unable to save. Please try again." }
     static var failedToSave: String { es ? "Error al guardar. Inténtalo de nuevo." : "Failed to save. Please try again." }
+    static var failedToLoadExampleData: String { es ? "No se pudo cargar el cultivo de ejemplo. Inténtalo de nuevo." : "Couldn't load the example grow. Please try again." }
 
     // MARK: - Validation Errors
 

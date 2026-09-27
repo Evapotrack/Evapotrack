@@ -3,6 +3,7 @@
 // Evapotrack
 //
 // CRUD operations for Plant entities using SwiftData.
+// A failed save rolls back, so nothing half-done stays in memory.
 
 import Foundation
 import SwiftData
@@ -12,9 +13,11 @@ import OSLog
 final class PlantService {
 
     private let modelContext: ModelContext
+    private let save: SaveHandler
 
-    init(modelContext: ModelContext) {
+    init(modelContext: ModelContext, save: @escaping SaveHandler = { try $0.save() }) {
         self.modelContext = modelContext
+        self.save = save
     }
 
     func addPlant(_ plant: Plant) throws {
@@ -31,8 +34,8 @@ final class PlantService {
             }
         }
         modelContext.insert(plant)
-        try modelContext.save()
-        Logger.services.info("Added plant: \(plant.plantName)")
+        try modelContext.saveOrRollback(using: save, action: "Add plant")
+        Logger.services.info("Added plant")
     }
 
     func fetchAll() -> [Plant] {
@@ -47,10 +50,10 @@ final class PlantService {
         }
     }
 
+    /// Deletes the plant and, by cascade, its watering logs.
     func deletePlant(_ plant: Plant) throws {
-        let name = plant.plantName
         modelContext.delete(plant)
-        try modelContext.save()
-        Logger.services.info("Deleted plant: \(name)")
+        try modelContext.saveOrRollback(using: save, action: "Delete plant")
+        Logger.services.info("Deleted plant")
     }
 }
