@@ -79,8 +79,7 @@ struct PlantDashboardView: View {
             )
 
             InsightsPanelView(
-                averageRetained: vm.averageRetained,
-                nextRecommendation: vm.nextRecommendation,
+                outcome: vm.recommendation,
                 waterUnit: waterUnit
             )
 

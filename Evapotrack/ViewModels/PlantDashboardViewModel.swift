@@ -5,7 +5,8 @@
 // State and actions for the PlantDashboard screen.
 // Shows summary, insights, and history for a single plant.
 // All calculations use internal units (liters, Celsius).
-// No editing of plants or logs is allowed.
+// Watering logs are never edited; the recommendation is recomputed
+// from the current logs every time it is read.
 
 import Foundation
 import SwiftData
@@ -47,18 +48,10 @@ final class PlantDashboardViewModel {
 
     // MARK: - Insights Computed
 
-    /// Average retained water across all logs, in liters.
-    var averageRetained: Double? {
-        guard !wateringLogs.isEmpty else { return nil }
-        return wateringLogs.map(\.retained).reduce(0, +) / Double(wateringLogs.count)
-    }
-
-    /// Recommended next water amount and estimated runoff, in liters.
-    var nextRecommendation: NextWaterRecommendation? {
-        guard let last = lastLog, let avgRet = averageRetained else { return nil }
-        return WateringCalculationService.computeNextWaterRecommendation(
-            lastLog: last,
-            averageRetained: avgRet,
+    /// Next-watering recommendation computed from this plant's full history.
+    var recommendation: RecommendationOutcome {
+        RecommendationEngine.recommend(
+            observations: wateringLogs.map(\.observation),
             maxRetentionCapacity: plant.maxRetentionCapacity,
             goalRunoffPercent: plant.goalRunoffPercent
         )
@@ -79,5 +72,14 @@ final class PlantDashboardViewModel {
         } catch {
             deleteError = Strings.failedDeleteLog
         }
+    }
+}
+
+// MARK: - Recommendation Input
+
+private extension WateringLog {
+    /// The measured values the recommendation engine works from.
+    var observation: WateringObservation {
+        WateringObservation(waterAdded: waterAdded, runoff: runoffCollected, date: dateTime)
     }
 }

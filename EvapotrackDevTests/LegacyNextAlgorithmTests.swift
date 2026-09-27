@@ -7,6 +7,10 @@
 // algorithm produced, including the behaviors that motivated replacing it
 // (lag on growing plants, zero-runoff logs treated as exact, nil after a
 // fully drained watering, runaway values at high goals).
+//
+// The app now uses RecommendationEngine. These tests run against the frozen
+// copy in Support/LegacyRecommendationModel.swift, which a parity test
+// confirmed against production before the switch (commit f1e6d9d).
 
 import XCTest
 @testable import EvapotrackDev
@@ -168,53 +172,5 @@ final class LegacyNextAlgorithmTests: XCTestCase {
         let a = try XCTUnwrap(legacy(liters))
         let b = try XCTUnwrap(legacy(viaGallons))
         XCTAssertEqual(a.next, b.next, accuracy: 1e-12)
-    }
-}
-
-/// Confirms the test-target copy above reproduces the production code exactly,
-/// so the characterization tests describe what users actually saw.
-@MainActor
-final class LegacyNextAlgorithmParityTests: XCTestCase {
-
-    private func production(_ history: [TestWatering], mrc: Double, goal: Double) -> NextWaterRecommendation? {
-        let logs = history.map {
-            WateringLog(waterAdded: $0.water, runoffCollected: $0.runoff, dateTime: $0.date)
-        }
-        let newestFirst = logs.sorted { $0.dateTime > $1.dateTime }
-        guard let last = newestFirst.first else { return nil }
-        let average = newestFirst.map(\.retained).reduce(0, +) / Double(newestFirst.count)
-        return WateringCalculationService.computeNextWaterRecommendation(
-            lastLog: last,
-            averageRetained: average,
-            maxRetentionCapacity: mrc,
-            goalRunoffPercent: goal
-        )
-    }
-
-    func test_copyMatchesProduction_forRepresentativeHistories() {
-        let histories: [[(water: Double, runoff: Double)]] = [
-            [(1.20, 0.18)],
-            WateringHistory.steady(4) + [(1.20, 0.00)],
-            WateringHistory.steady(4) + [(1.20, 1.20)],
-            WateringHistory.steady(4) + [(0.30, 0.05)],
-            [(0.40, 0.06), (0.50, 0.07), (0.70, 0.10), (1.00, 0.15), (1.40, 0.20), (1.90, 0.28)]
-        ]
-        for (index, amounts) in histories.enumerated() {
-            for (mrc, goal) in [(4.5, 15.0), (0.9, 15.0), (4.5, 30.0)] {
-                let history = WateringHistory.make(amounts)
-                let copy = LegacyRecommendationModel.recommend(history, maxRetentionCapacity: mrc, goalRunoffPercent: goal)
-                let real = production(history, mrc: mrc, goal: goal)
-                let label = "history \(index), mrc \(mrc), goal \(goal)"
-                switch (copy, real) {
-                case (nil, nil):
-                    break
-                case let (copy?, real?):
-                    XCTAssertEqual(copy.next, real.next, accuracy: 1e-12, label)
-                    XCTAssertEqual(copy.goalRunoff, real.goalRunoff, accuracy: 1e-12, label)
-                default:
-                    XCTFail("copy and production disagree on whether to recommend: \(label)")
-                }
-            }
-        }
     }
 }

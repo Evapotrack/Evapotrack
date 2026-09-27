@@ -63,7 +63,8 @@ enum Strings {
     static var interval: String { es ? "Intervalo" : "Interval" }
     static var retained: String { es ? "Retenido" : "Retained" }
     static var capacityLabel: String { es ? "Capacidad" : "Capacity" }
-    static var average: String { es ? "Promedio" : "Average" }
+    static var expected: String { es ? "Esperado" : "Expected" }
+    static var expectedRetentionLabel: String { es ? "Retención esperada" : "Expected retention" }
     static var next: String { es ? "Siguiente" : "Next" }
     static var viewAllLogs: String { es ? "Ver Todos los Registros" : "View All Logs" }
     static var date: String { es ? "Fecha" : "Date" }
@@ -124,7 +125,8 @@ enum Strings {
     static var noPlantsYet: String { es ? "Sin Plantas" : "No Plants Yet" }
     static var tapToAddPlant: String { es ? "para agregar tu primera planta." : "to add your first plant." }
     static var noWateringLogsYet: String { es ? "Aún no hay registros de riego." : "No watering logs yet." }
-    static var noInsightsYet: String { es ? "Aún no hay análisis. Agrega registros de riego para ver recomendaciones." : "No insights yet. Add watering logs to see recommendations." }
+    static var insightsNoHistory: String { es ? "Aún no hay registros de riego. Registra el agua agregada y el drenaje para obtener una recomendación." : "No watering logs yet. Log water added and runoff to get a recommendation." }
+    static var insightsNoUsableData: String { es ? "Aún no hay suficientes datos de drenaje: todos los riegos hasta ahora drenaron por completo. Sigue registrando el agua agregada y el drenaje." : "Not enough runoff data yet: every watering so far drained completely. Keep logging water added and runoff." }
     static var howToGetStarted: String { es ? "Cómo Empezar" : "How to Get Started" }
     static var tryExampleData: String { es ? "Probar Datos de Ejemplo" : "Try Example Data" }
 
@@ -365,6 +367,66 @@ enum Strings {
         es ? "Objetivo (\(percent))" : "Goal (\(percent))"
     }
 
+    // MARK: - Recommendation Explanation
+
+    static func basisRecentWaterings(_ retained: String, goal: String) -> String {
+        es
+            ? "Basado en el agua retenida reciente de \(retained) y un objetivo de drenaje de \(goal)."
+            : "Based on recent retained water of \(retained) and a \(goal) runoff goal."
+    }
+    static func basisSingleWatering(_ retained: String, goal: String) -> String {
+        es
+            ? "Basado en tu único riego con drenaje (\(retained) retenidos) y un objetivo de drenaje de \(goal)."
+            : "Based on your one watering with runoff (\(retained) retained) and a \(goal) runoff goal."
+    }
+    static func basisNoRunoffYet(_ amount: String) -> String {
+        es
+            ? "Ninguno de tus riegos ha producido drenaje todavía, así que la planta necesita al menos \(amount). Riega hasta ver drenaje."
+            : "None of your waterings has produced runoff yet, so the plant needs at least \(amount). Water until you see runoff."
+    }
+    static func noteNoRunoffRaised(_ amount: String) -> String {
+        es
+            ? "Tu último riego (\(amount)) no produjo drenaje, así que Siguiente se aumentó para ayudar a lograr drenaje."
+            : "Your last watering (\(amount)) produced no runoff, so Next was increased to help reach runoff."
+    }
+    static func noteNoRunoffNotLowered(_ amount: String) -> String {
+        es
+            ? "Tu último riego (\(amount)) no produjo drenaje. Fue menos de lo que la planta suele tomar, así que no redujo Siguiente."
+            : "Your last watering (\(amount)) produced no runoff. It was less than the plant usually takes, so it didn't lower Next."
+    }
+    static var noteFullRunoff: String {
+        es
+            ? "Tu último riego drenó por completo (100% de drenaje), así que no se usa. Siguiente se basa en riegos anteriores."
+            : "Your last watering drained completely (100% runoff), so it isn't used. Next is based on earlier waterings."
+    }
+    static var noteDemandRising: String {
+        es
+            ? "Tu planta ha estado tomando más agua recientemente, así que Siguiente incluye parte de ese aumento."
+            : "Your plant has been taking more water recently, so Next includes part of that increase."
+    }
+    static var noteDemandFalling: String {
+        es
+            ? "Tu planta ha estado tomando menos agua recientemente, así que Siguiente incluye parte de esa disminución."
+            : "Your plant has been taking less water recently, so Next includes part of that decrease."
+    }
+    static func noteLimitedByCapacity(_ capacity: String) -> String {
+        es
+            ? "Limitado por la Capacidad Máx. de Retención de esta planta (\(capacity)). Si los riegos retienen más con frecuencia, edita la capacidad de la planta."
+            : "Limited by this plant's Max Retention Capacity (\(capacity)). If waterings regularly retain more, edit the plant's capacity."
+    }
+    static func noteGoalAdjusted(_ requested: String, used: String) -> String {
+        let range = AppConstants.goalRunoffPercentRange
+        let bounds = "\(Int(range.lowerBound))–\(Int(range.upperBound))%"
+        return es
+            ? "El objetivo de drenaje de esta planta (\(requested)) está fuera del rango admitido de \(bounds), así que se usó \(used). Edita la planta para cambiarlo."
+            : "This plant's goal runoff (\(requested)) is outside the supported \(bounds) range, so \(used) was used. Edit the plant to change it."
+    }
+    static func noteLimitedByMaximumWater(_ maximum: String) -> String {
+        es
+            ? "Limitado a \(maximum), el riego más grande que Evapotrack registra."
+            : "Limited to \(maximum), the largest watering Evapotrack records."
+    }
+
     // MARK: - How To Content
 
     // General context
@@ -475,15 +537,17 @@ enum Strings {
     static var whatIsNextHighlight: String { es ? "Siguiente" : "Next" }
     static var whatIsNextBullets: [String] {
         es ? [
-            "Siguiente es la cantidad de agua recomendada que se muestra en el panel de Análisis. Te indica cuánto regar la próxima vez para alcanzar tu % de Drenaje Objetivo.",
-            "Puede aumentar o disminuir según tu historial para mantener tu drenaje lo más cerca posible de tu % de Drenaje Objetivo.",
-            "La estimación se basa en tu historial reciente de riego — promedia tu último Retenido con tu promedio general para predecir la absorción.",
-            "Cuantos más registros guardes, más precisa será la recomendación."
+            "Siguiente es la cantidad recomendada para tu próximo riego, que se muestra en el panel de Análisis. Busca alcanzar tu % de Drenaje Objetivo.",
+            "Evapotrack estima cuánta agua retendrá la planta antes de que empiece el drenaje, usando tus propias mediciones. Los riegos recientes cuentan más, así que Siguiente acompaña a la planta cuando crece o se desacelera.",
+            "Un riego sin drenaje solo muestra que la planta necesitaba al menos esa cantidad, así que Siguiente aumenta. Un riego que drenó por completo no se usa.",
+            "Un riego inusual puede reducir Siguiente como máximo en una cuarta parte, así que un pequeño riego de refuerzo no lo desvía.",
+            "Siguiente nunca supone que la maceta retiene más que su Capacidad Máx. de Retención. La nota bajo Análisis explica en qué se basa Siguiente."
         ] : [
-            "Next is the recommended water amount shown in the Insights panel. It tells you how much to water next time to hit your Goal Runoff %.",
-            "It may increase or decrease based on your history to keep your runoff as close to your Goal Runoff % as possible.",
-            "The estimate is based on your recent watering history — it averages your last Retained amount with your overall average to predict absorption.",
-            "The more logs you record, the more accurate the recommendation becomes."
+            "Next is the recommended amount for your next watering, shown in the Insights panel. It aims for your Goal Runoff %.",
+            "Evapotrack estimates how much water the plant will retain before runoff starts, using your own measurements. Recent waterings count the most, so Next follows the plant as it grows or slows down.",
+            "A watering with no runoff only shows the plant needed at least that much, so Next goes up. A watering that drained completely isn't used.",
+            "One unusual watering can lower Next by at most a quarter, so a small top-up won't throw it off.",
+            "Next never assumes the pot holds more than its Max Retention Capacity. The note under Insights explains what Next is based on."
         ]
     }
 

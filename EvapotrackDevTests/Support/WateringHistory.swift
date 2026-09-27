@@ -52,3 +52,10 @@ enum WateringHistory {
         Array(repeating: (water: water, runoff: runoff), count: count)
     }
 }
+
+extension TestWatering {
+    /// The value the recommendation engine consumes.
+    var observation: WateringObservation {
+        WateringObservation(waterAdded: water, runoff: runoff, date: date)
+    }
+}
