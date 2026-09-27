@@ -310,6 +310,12 @@ enum Strings {
 
     // MARK: - Content Unavailable
 
+    static var dataStoreErrorTitle: String { es ? "No se pudieron abrir tus datos" : "Your data couldn't be opened" }
+    static var dataStoreErrorMessage: String {
+        es
+            ? "Evapotrack no pudo abrir sus datos. No se ha eliminado nada. Cierra la app por completo y vuelve a abrirla. Si sigue ocurriendo, contacta a soporte en evapotrack.com/support. No elimines la app: eso borraría tus datos."
+            : "Evapotrack couldn't open its data. Nothing has been deleted. Close the app completely and open it again. If this keeps happening, contact support at evapotrack.com/support. Don't delete the app. That would remove your data."
+    }
     static var growNotFound: String { es ? "Cultivo No Encontrado" : "Grow Not Found" }
     static var plantNotFound: String { es ? "Planta No Encontrada" : "Plant Not Found" }
 
