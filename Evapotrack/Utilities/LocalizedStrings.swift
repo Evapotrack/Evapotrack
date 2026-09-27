@@ -138,7 +138,13 @@ enum Strings {
     static var timestampFooter: String { es ? "Esta marca de tiempo se registra cuando guardas el cultivo." : "This timestamp is recorded when you save the grow." }
     static var maxRetentionDescription: String { es ? "El volumen máximo de agua que el medio puede retener antes de que comience el drenaje." : "The maximum volume of water the medium can hold before runoff begins." }
     static var calculatorFooter: String { es ? "¿No conoces tu capacidad? Usa la calculadora para derivarla de un riego de prueba." : "Don't know your capacity? Use the calculator to derive it from a test watering." }
-    static var goalRunoffDescription: String { es ? "El porcentaje de drenaje que el algoritmo Siguiente intentará alcanzar. Por defecto 15% si se deja en blanco." : "The runoff percentage the Next algorithm will target. Defaults to 15% if left blank." }
+    static var goalRunoffDescription: String {
+        let range = AppConstants.goalRunoffPercentRange
+        let low = Int(range.lowerBound), high = Int(range.upperBound)
+        return es
+            ? "El porcentaje de drenaje que Siguiente intentará alcanzar, entre \(low)% y \(high)%. Por defecto 15% si se deja en blanco."
+            : "The runoff percentage Next will aim for, from \(low)% to \(high)%. Defaults to 15% if left blank."
+    }
     static var optional: String { es ? "Opcional" : "Optional" }
 
     // MARK: - Delete Confirmations
@@ -344,15 +350,25 @@ enum Strings {
     static var plantNameDuplicate: String { es ? "Ya existe una planta con este nombre en este cultivo." : "A plant with this name already exists in this grow." }
     static var potSizeBlank: String { es ? "El tamaño de la maceta no debe estar en blanco." : "Pot size must not be blank." }
     static var mediumTypeBlank: String { es ? "El tipo de medio no debe estar en blanco." : "Medium type must not be blank." }
-    static var maxRetentionRange: String { es ? "La capacidad máx. de retención debe estar entre 0.001 y 100 litros." : "Max retention capacity must be between 0.001 and 100 liters." }
-    static var waterAddedRange: String { es ? "El agua agregada debe estar entre 0.001 y 100 litros." : "Water added must be between 0.001 and 100 liters." }
+    static func maxRetentionRange(min: String, max: String) -> String {
+        es ? "La capacidad máx. de retención debe estar entre \(min) y \(max)." : "Max retention capacity must be between \(min) and \(max)."
+    }
+    static func waterAddedRange(min: String, max: String) -> String {
+        es ? "El agua agregada debe estar entre \(min) y \(max)." : "Water added must be between \(min) and \(max)."
+    }
     static var runoffRange: String { es ? "El drenaje debe ser ≥ 0 y ≤ al agua agregada." : "Runoff must be ≥ 0 and ≤ water added." }
-    static var temperatureRange: String { es ? "La temperatura debe estar entre -50 y 60 °C." : "Temperature must be between -50 and 60 °C." }
+    static func temperatureRange(min: String, max: String) -> String {
+        es ? "La temperatura debe estar entre \(min) y \(max)." : "Temperature must be between \(min) and \(max)."
+    }
     static var humidityRange: String { es ? "La humedad debe estar entre 0 y 100%." : "Humidity must be between 0 and 100%." }
     static var dateInFuture: String { es ? "La fecha no puede ser en el futuro." : "Date cannot be in the future." }
     static var maxRetentionMustBeNumber: String { es ? "La capacidad máx. de retención debe ser un número." : "Max retention capacity must be a number." }
     static var goalRunoffMustBeNumber: String { es ? "El % de drenaje objetivo debe ser un número." : "Goal Runoff % must be a number." }
-    static var goalRunoffRange: String { es ? "El % de drenaje objetivo debe estar entre 0.1 y 99.9." : "Goal Runoff % must be between 0.1 and 99.9." }
+    static var goalRunoffRange: String {
+        let range = AppConstants.goalRunoffPercentRange
+        let low = Int(range.lowerBound), high = Int(range.upperBound)
+        return es ? "El % de drenaje objetivo debe estar entre \(low) y \(high)." : "Goal Runoff % must be between \(low) and \(high)."
+    }
     static var waterAddedMustBeNumber: String { es ? "El agua agregada debe ser un número." : "Water added must be a number." }
     static var runoffMustBeNumber: String { es ? "El drenaje debe ser un número." : "Runoff must be a number." }
     static var runoffMustBePositive: String { es ? "El drenaje recolectado debe ser mayor que 0." : "Runoff collected must be greater than 0." }

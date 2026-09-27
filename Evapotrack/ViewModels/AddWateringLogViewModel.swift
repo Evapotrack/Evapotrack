@@ -57,7 +57,7 @@ final class AddWateringLogViewModel {
     func validate() -> Bool {
         validationError = nil
 
-        guard let displayWater = Double(waterAddedText) else {
+        guard let displayWater = NumericInput.parse(waterAddedText) else {
             validationError = Strings.waterAddedMustBeNumber
             return false
         }
@@ -65,10 +65,10 @@ final class AddWateringLogViewModel {
         // Convert display → internal (liters) for validation
         let waterLiters = UnitConversionService.toLiters(displayWater, from: waterUnit)
 
-        let waterResult = ValidationService.validateWaterAdded(waterLiters)
+        let waterResult = ValidationService.validateWaterAdded(waterLiters, unit: waterUnit)
         if !waterResult.isValid { validationError = waterResult.errorMessage; return false }
 
-        guard let displayRunoff = Double(runoffCollectedText) else {
+        guard let displayRunoff = NumericInput.parse(runoffCollectedText) else {
             validationError = Strings.runoffMustBeNumber
             return false
         }
@@ -102,18 +102,18 @@ final class AddWateringLogViewModel {
 
         // Temperature is optional — only validate if the user entered a value
         if !temperatureText.trimmingCharacters(in: .whitespaces).isEmpty {
-            guard let displayTemp = Double(temperatureText) else {
+            guard let displayTemp = NumericInput.parse(temperatureText) else {
                 validationError = Strings.temperatureMustBeNumber
                 return false
             }
             let celsius = UnitConversionService.toCelsius(displayTemp, from: temperatureUnit)
-            let tempResult = ValidationService.validateTemperature(celsius)
+            let tempResult = ValidationService.validateTemperature(celsius, unit: temperatureUnit)
             if !tempResult.isValid { validationError = tempResult.errorMessage; return false }
         }
 
         // Humidity is optional — only validate if the user entered a value
         if !humidityText.trimmingCharacters(in: .whitespaces).isEmpty {
-            guard let humidity = Double(humidityText) else {
+            guard let humidity = NumericInput.parse(humidityText) else {
                 validationError = Strings.humidityMustBeNumber
                 return false
             }
@@ -127,8 +127,8 @@ final class AddWateringLogViewModel {
     func save() -> Bool {
         guard !showSaveConfirmation else { return false }
         guard validate() else { return false }
-        guard let displayWater = Double(waterAddedText),
-              let displayRunoff = Double(runoffCollectedText) else { return false }
+        guard let displayWater = NumericInput.parse(waterAddedText),
+              let displayRunoff = NumericInput.parse(runoffCollectedText) else { return false }
         guard let service = logService else {
             validationError = Strings.unableToSave
             return false
@@ -139,11 +139,11 @@ final class AddWateringLogViewModel {
         let runoffLiters = UnitConversionService.toLiters(displayRunoff, from: waterUnit)
 
         let tempCelsius: Double? = {
-            guard let displayTemp = Double(temperatureText) else { return nil }
+            guard let displayTemp = NumericInput.parse(temperatureText) else { return nil }
             return UnitConversionService.toCelsius(displayTemp, from: temperatureUnit)
         }()
 
-        let humidity: Double? = Double(humidityText)
+        let humidity: Double? = NumericInput.parse(humidityText)
 
         let log = WateringLog(
             waterAdded: waterLiters,

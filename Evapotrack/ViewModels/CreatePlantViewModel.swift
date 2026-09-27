@@ -75,7 +75,7 @@ final class CreatePlantViewModel {
         let mediumResult = ValidationService.validateMediumType(mediumType)
         if !mediumResult.isValid { validationError = mediumResult.errorMessage; return false }
 
-        guard let displayValue = Double(maxRetentionCapacityText) else {
+        guard let displayValue = NumericInput.parse(maxRetentionCapacityText) else {
             validationError = Strings.maxRetentionMustBeNumber
             return false
         }
@@ -83,16 +83,16 @@ final class CreatePlantViewModel {
         // Convert from display unit to liters for validation
         let liters = UnitConversionService.toLiters(displayValue, from: waterUnit)
 
-        let capacityResult = ValidationService.validateMaxRetention(liters)
+        let capacityResult = ValidationService.validateMaxRetention(liters, unit: waterUnit)
         if !capacityResult.isValid { validationError = capacityResult.errorMessage; return false }
 
         // Goal Runoff % is optional — validate only if provided
         if !goalRunoffPercentText.trimmingCharacters(in: .whitespaces).isEmpty {
-            guard let goalPercent = Double(goalRunoffPercentText) else {
+            guard let goalPercent = NumericInput.parse(goalRunoffPercentText) else {
                 validationError = Strings.goalRunoffMustBeNumber
                 return false
             }
-            guard goalPercent >= 0.1, goalPercent <= 99.9 else {
+            guard AppConstants.goalRunoffPercentRange.contains(goalPercent) else {
                 validationError = Strings.goalRunoffRange
                 return false
             }
@@ -103,7 +103,7 @@ final class CreatePlantViewModel {
 
     func save() -> Bool {
         guard validate() else { return false }
-        guard let displayValue = Double(maxRetentionCapacityText) else { return false }
+        guard let displayValue = NumericInput.parse(maxRetentionCapacityText) else { return false }
         guard let service = plantService else {
             validationError = Strings.unableToSave
             return false
@@ -112,7 +112,7 @@ final class CreatePlantViewModel {
         // Convert to internal unit (liters) — store unrounded
         let liters = UnitConversionService.toLiters(displayValue, from: waterUnit)
 
-        let goalPercent = Double(goalRunoffPercentText) ?? AppConstants.targetRunoffPercent
+        let goalPercent = NumericInput.parse(goalRunoffPercentText) ?? AppConstants.targetRunoffPercent
 
         let plant = Plant(
             plantName: plantName.trimmingCharacters(in: .whitespaces),
@@ -139,7 +139,7 @@ final class CreatePlantViewModel {
         calculatorError = nil
 
         // Parse water added
-        guard let displayWater = Double(calculatorWaterAddedText) else {
+        guard let displayWater = NumericInput.parse(calculatorWaterAddedText) else {
             calculatorError = Strings.waterAddedMustBeNumber
             return
         }
@@ -148,14 +148,14 @@ final class CreatePlantViewModel {
         let waterLiters = UnitConversionService.toLiters(displayWater, from: waterUnit)
 
         // Validate water added (0.001...100 liters)
-        let waterResult = ValidationService.validateWaterAdded(waterLiters)
+        let waterResult = ValidationService.validateWaterAdded(waterLiters, unit: waterUnit)
         if !waterResult.isValid {
             calculatorError = waterResult.errorMessage
             return
         }
 
         // Parse runoff
-        guard let displayRunoff = Double(calculatorRunoffText) else {
+        guard let displayRunoff = NumericInput.parse(calculatorRunoffText) else {
             calculatorError = Strings.runoffMustBeNumber
             return
         }
