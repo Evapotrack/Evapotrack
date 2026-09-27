@@ -5,7 +5,7 @@
 // Dashboard for a single plant: summary, insights, and history panels.
 // All displayed values respect the user's chosen display units.
 // History is a NavigationLink to a dedicated screen with select/delete.
-// Settings modal, How To push, Add Watering modal.
+// Settings modal, How To push, Add Watering modal, Edit Plant modal.
 
 import SwiftUI
 
@@ -16,6 +16,7 @@ struct PlantDashboardView: View {
     @Environment(\.horizontalSizeClass) private var sizeClass
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var vm: PlantDashboardViewModel
+    @State private var isShowingEditPlant = false
 
     init(plant: Plant) {
         _vm = State(wrappedValue: PlantDashboardViewModel(plant: plant))
@@ -62,13 +63,24 @@ struct PlantDashboardView: View {
                 .frame(maxWidth: sizeClass == .regular ? 500 : .infinity)
                 .frame(maxWidth: .infinity, alignment: .center)
             } header: {
-                Label {
-                    Text(Strings.plantInfo)
-                } icon: {
-                    Image(systemName: "leaf")
+                HStack(alignment: .firstTextBaseline) {
+                    Label {
+                        Text(Strings.plantInfo)
+                    } icon: {
+                        Image(systemName: "leaf")
+                    }
+                    .font(.title2.weight(.bold))
+                    .foregroundStyle(.evDeepNavy)
+
+                    Spacer()
+
+                    Button(Strings.edit) { isShowingEditPlant = true }
+                        .font(.body.weight(.semibold))
+                        .foregroundStyle(.evPrimaryBlue)
+                        .frame(minHeight: 44)
+                        .contentShape(Rectangle())
+                        .accessibilityLabel(Strings.editPlantLabel)
                 }
-                .font(.title2.weight(.bold))
-                .foregroundStyle(.evDeepNavy)
                 .textCase(nil)
             }
 
@@ -85,8 +97,7 @@ struct PlantDashboardView: View {
 
             HistoryPanelView(
                 vm: vm,
-                waterUnit: waterUnit,
-                maxRetentionCapacity: vm.plant.maxRetentionCapacity
+                waterUnit: waterUnit
             )
         }
         .listStyle(.insetGrouped)
@@ -142,7 +153,6 @@ struct PlantDashboardView: View {
                     HistoryView(
                         vm: vm,
                         waterUnit: waterUnit,
-                        maxRetentionCapacity: vm.plant.maxRetentionCapacity,
                         startInChartMode: true
                     )
                 } label: {
@@ -165,6 +175,12 @@ struct PlantDashboardView: View {
         .adaptiveSheet(isPresented: $vm.isShowingSettings) {
             NavigationStack {
                 SettingsView()
+            }
+            .preferredColorScheme(settingsVM.colorScheme)
+        }
+        .adaptiveSheet(isPresented: $isShowingEditPlant) {
+            NavigationStack {
+                PlantFormView(mode: .edit(vm.plant))
             }
             .preferredColorScheme(settingsVM.colorScheme)
         }

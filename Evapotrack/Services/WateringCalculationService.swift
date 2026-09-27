@@ -33,11 +33,12 @@ enum WateringCalculationService {
 
     // MARK: - Capacity Percent
 
-    /// Capacity % = (retained / maxRetentionCapacity) × 100, capped at 105%.
-    /// All inputs in internal units (liters).
+    /// Capacity % = (retained / maxRetentionCapacity) × 100: how much of the
+    /// medium's full capacity this watering refilled. Not capped: above 100%
+    /// means the watering retained more than the plant's Max Retention
+    /// Capacity, a sign the capacity is set too low. All inputs in liters.
     static func capacityPercent(retained: Double, maxRetentionCapacity: Double) -> Double {
-        guard maxRetentionCapacity > 0 else { return 0 }
-        let raw = (retained / maxRetentionCapacity) * 100.0
-        return min(raw, AppConstants.maxCapacityPercent)
+        guard maxRetentionCapacity > 0, retained.isFinite else { return 0 }
+        return max(0, retained / maxRetentionCapacity * 100.0)
     }
 }

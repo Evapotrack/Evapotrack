@@ -3,9 +3,9 @@
 // Evapotrack
 //
 // SwiftData model representing a plant the user is tracking.
-// Immutable after creation — plants may be created or deleted
-// but never edited. Deleting a plant cascade-deletes all
-// associated WateringLogs.
+// Name, pot size, medium, Max Retention Capacity and goal runoff can be
+// edited; editing never changes the plant's watering logs. Deleting a
+// plant cascade-deletes all associated WateringLogs.
 //
 // Part of the current schema (SchemaV2). Refer to it through the
 // top-level typealias defined in Schema.swift.
@@ -32,8 +32,9 @@ extension SchemaV2 {
         /// Growing medium type (e.g. "soil", "perlite", "coco coir").
         var mediumType: String
 
-        /// Maximum water the medium can hold before runoff, in liters.
-        /// Must always be greater than 0. Stored unrounded.
+        /// Max Retention Capacity in liters: the most water the medium can hold,
+        /// measured from dry medium watered until runoff. Must always be
+        /// greater than 0. Stored unrounded.
         var maxRetentionCapacity: Double
 
         /// User-set goal runoff percentage used by the Next algorithm.

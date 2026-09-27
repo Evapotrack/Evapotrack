@@ -44,13 +44,10 @@ nonisolated enum AppConstants {
     /// Drain-to-waste practice is typically 10–30%.
     static let goalRunoffPercentRange: ClosedRange<Double> = 5.0...50.0
 
-    /// Maximum Capacity % displayed. Caps at 105% to allow minor
-    /// fluctuations in retention while preventing unrealistic values.
-    static let maxCapacityPercent = 105.0
-
-    /// Maximum retained volume as a factor of Max Retention Capacity.
-    /// 1.05 = 105% — matches the Capacity % display cap.
-    static let maxRetainedFactor = 1.05
+    /// A watering that retains more than this factor × Max Retention Capacity
+    /// asks the grower to confirm (5% tolerance for measuring error). It is
+    /// never rejected: the capacity itself may be set too low.
+    static let retainedConfirmationFactor = 1.05
 
     // MARK: - UserDefaults Keys
 

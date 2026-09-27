@@ -10,15 +10,13 @@ import SwiftUI
 struct HistoryPanelView: View {
     var vm: PlantDashboardViewModel
     let waterUnit: WaterUnit
-    let maxRetentionCapacity: Double
 
     var body: some View {
         Section {
             NavigationLink {
                 HistoryView(
                     vm: vm,
-                    waterUnit: waterUnit,
-                    maxRetentionCapacity: maxRetentionCapacity
+                    waterUnit: waterUnit
                 )
             } label: {
                 HStack {

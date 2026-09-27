@@ -32,11 +32,13 @@ final class ExampleDataService {
         let grow = Grow(growName: Strings.exampleGrow)
         modelContext.insert(grow)
 
+        // Capacities follow evapotrack.com/reference (1 gal soil ≈ 1.5 L,
+        // 1 gal coco ≈ 2.3 L), measured from dry medium.
         let soilPlant = Plant(
             plantName: Strings.examplePlant,
-            potSize: "Fabric 3 gal",
+            potSize: "Fabric 1 gal",
             mediumType: "soil",
-            maxRetentionCapacity: 1.6,
+            maxRetentionCapacity: 1.5,
             goalRunoffPercent: 15.0,
             grow: grow
         )
@@ -52,9 +54,9 @@ final class ExampleDataService {
 
         let cocoPlant = Plant(
             plantName: Strings.examplePlant2,
-            potSize: "Plastic 5 gal",
+            potSize: "Plastic 1 gal",
             mediumType: "coco",
-            maxRetentionCapacity: 2.1,
+            maxRetentionCapacity: 2.3,
             goalRunoffPercent: 20.0,
             grow: grow
         )

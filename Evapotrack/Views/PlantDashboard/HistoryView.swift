@@ -14,7 +14,6 @@ import Charts
 struct HistoryView: View {
     var vm: PlantDashboardViewModel
     let waterUnit: WaterUnit
-    let maxRetentionCapacity: Double
     var startInChartMode: Bool = false
 
     @Environment(\.dismiss) private var dismiss
@@ -106,7 +105,7 @@ struct HistoryView: View {
                                 log: log,
                                 waterUnit: waterUnit,
                                 temperatureUnit: settingsVM.settings.temperatureUnit,
-                                maxRetentionCapacity: maxRetentionCapacity,
+                                maxRetentionCapacity: vm.plant.maxRetentionCapacity,
                                 isSelected: selectedLogID == log.id,
                                 isExpanded: expandedLogID == log.id,
                                 onToggleSelection: {

@@ -3,7 +3,8 @@
 // Evapotrack
 //
 // Form state and validation for adding a new WateringLog.
-// Logs are immutable after creation.
+// Logs are immutable after creation. Retaining more than the plant's
+// Max Retention Capacity asks for confirmation instead of blocking.
 // User enters water/runoff in display unit and temperature in
 // display temp unit; all values are converted to internal units
 // (liters, Celsius) before storage. No rounding on stored values.
@@ -25,6 +26,8 @@ final class AddWateringLogViewModel {
     var humidityText = ""
     var validationError: String?
     var showSaveConfirmation = false
+    var isShowingCapacityConfirmation = false
+    var capacityConfirmationMessage = ""
 
     // MARK: - Dependencies
 
@@ -50,11 +53,16 @@ final class AddWateringLogViewModel {
     func resetState() {
         showSaveConfirmation = false
         validationError = nil
+        isShowingCapacityConfirmation = false
     }
 
     // MARK: - Actions
 
-    func validate() -> Bool {
+    /// Validates the form. Hard errors set `validationError`. When the entry
+    /// is otherwise valid but retains more than the plant's Max Retention
+    /// Capacity (plus 5% measurement tolerance), asks for confirmation instead
+    /// of rejecting it, unless `confirmedOverCapacity` is true.
+    func validate(confirmedOverCapacity: Bool = false) -> Bool {
         validationError = nil
 
         guard let displayWater = NumericInput.parse(waterAddedText) else {
@@ -77,14 +85,6 @@ final class AddWateringLogViewModel {
 
         let runoffResult = ValidationService.validateRunoff(runoffLiters, waterAdded: waterLiters)
         if !runoffResult.isValid { validationError = runoffResult.errorMessage; return false }
-
-        // Retained cannot exceed 105% of Max Retention Capacity
-        let retained = waterLiters - runoffLiters
-        let retainedCap = plant.maxRetentionCapacity * AppConstants.maxRetainedFactor
-        if retained > retainedCap {
-            validationError = Strings.retainedExceedsCapacity
-            return false
-        }
 
         let dateResult = ValidationService.validateDate(dateTime, now: dateProvider.now)
         if !dateResult.isValid { validationError = dateResult.errorMessage; return false }
@@ -121,12 +121,25 @@ final class AddWateringLogViewModel {
             if !humResult.isValid { validationError = humResult.errorMessage; return false }
         }
 
+        // More retained than the plant's capacity usually means a typo, but it
+        // can also mean the capacity is set too low. Ask; never block.
+        let retained = waterLiters - runoffLiters
+        let threshold = plant.maxRetentionCapacity * AppConstants.retainedConfirmationFactor
+        if retained > threshold && !confirmedOverCapacity {
+            capacityConfirmationMessage = Strings.retainedOverCapacityMessage(
+                DisplayFormatter.water(retained, unit: waterUnit),
+                capacity: DisplayFormatter.water(plant.maxRetentionCapacity, unit: waterUnit)
+            )
+            isShowingCapacityConfirmation = true
+            return false
+        }
+
         return true
     }
 
-    func save() -> Bool {
+    func save(confirmedOverCapacity: Bool = false) -> Bool {
         guard !showSaveConfirmation else { return false }
-        guard validate() else { return false }
+        guard validate(confirmedOverCapacity: confirmedOverCapacity) else { return false }
         guard let displayWater = NumericInput.parse(waterAddedText),
               let displayRunoff = NumericInput.parse(runoffCollectedText) else { return false }
         guard let service = logService else {

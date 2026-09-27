@@ -24,9 +24,11 @@ final class WateringCalculationTests: XCTestCase {
         XCTAssertEqual(result, 100.0, accuracy: 0.001)
     }
 
-    func test_capacityPercent_exceedsCapacity_cappedAt105() {
+    func test_capacityPercent_aboveCapacity_isNotCapped() {
+        // Retaining more than the plant's capacity is shown as it is (150%),
+        // so an underestimated capacity is visible instead of hidden at 105%.
         let result = WateringCalculationService.capacityPercent(retained: 1.5, maxRetentionCapacity: 1.0)
-        XCTAssertEqual(result, 105.0, accuracy: 0.001)
+        XCTAssertEqual(result, 150.0, accuracy: 0.001)
     }
 
     func test_capacityPercent_zeroMaxRetention_returnsZero() {

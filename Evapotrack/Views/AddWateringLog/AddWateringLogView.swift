@@ -129,18 +129,20 @@ struct AddWateringLogView: View {
             }
             ToolbarItem(placement: .confirmationAction) {
                 Button(Strings.save) {
-                    if vm.save() {
-                        HapticService.success()
-                        dismissTask = Task {
-                            try? await Task.sleep(for: .seconds(1))
-                            dismiss()
-                        }
-                    }
+                    if vm.save() { finishSaving() }
                 }
                 .font(.body)
                 .fontWeight(.bold)
                 .disabled(vm.showSaveConfirmation)
             }
+        }
+        .alert(Strings.retainedOverCapacityTitle, isPresented: $vm.isShowingCapacityConfirmation) {
+            Button(Strings.saveAnyway) {
+                if vm.save(confirmedOverCapacity: true) { finishSaving() }
+            }
+            Button(Strings.reviewValues, role: .cancel) {}
+        } message: {
+            Text(vm.capacityConfirmationMessage)
         }
         .navigationDestination(isPresented: $isShowingHowTo) {
             HowToView(context: .addWatering)
@@ -181,5 +183,14 @@ struct AddWateringLogView: View {
         }
         .animation(.easeInOut(duration: 0.3), value: vm.showSaveConfirmation)
         .onDisappear { dismissTask?.cancel() }
+    }
+
+    /// Confirms the save with a haptic and closes the form after a moment.
+    private func finishSaving() {
+        HapticService.success()
+        dismissTask = Task {
+            try? await Task.sleep(for: .seconds(1))
+            dismiss()
+        }
     }
 }

@@ -17,6 +17,7 @@ enum Strings {
     static var myGrows: String { es ? "Mis Cultivos" : "My Grows" }
     static var addGrow: String { es ? "Agregar Cultivo" : "Add Grow" }
     static var addPlant: String { es ? "Agregar Planta" : "Add Plant" }
+    static var editPlant: String { es ? "Editar Planta" : "Edit Plant" }
     static var addWateringEvent: String { es ? "Agregar Evento de Riego" : "Add Watering Event" }
     static var settings: String { es ? "Configuración" : "Settings" }
     static var howTo: String { es ? "Cómo Usar" : "How To" }
@@ -52,6 +53,9 @@ enum Strings {
     static var clear: String { es ? "Limpiar" : "Clear" }
     static var resetSettings: String { es ? "Restablecer Configuración" : "Reset Settings" }
     static var saved: String { es ? "Guardado" : "Saved" }
+    static var edit: String { es ? "Editar" : "Edit" }
+    static var saveAnyway: String { es ? "Guardar de Todos Modos" : "Save Anyway" }
+    static var reviewValues: String { es ? "Revisar" : "Review" }
     static var ok: String { "OK" }
 
     // MARK: - Labels
@@ -136,8 +140,9 @@ enum Strings {
     static var themeFooter: String { es ? "Cambiar entre modo Día y Oscuro." : "Switch between Day and Dark mode." }
     static var exportFooter: String { es ? "Exportar datos del cultivo como archivo de texto." : "Export grow data as a text file." }
     static var timestampFooter: String { es ? "Esta marca de tiempo se registra cuando guardas el cultivo." : "This timestamp is recorded when you save the grow." }
-    static var maxRetentionDescription: String { es ? "El volumen máximo de agua que el medio puede retener antes de que comience el drenaje." : "The maximum volume of water the medium can hold before runoff begins." }
-    static var calculatorFooter: String { es ? "¿No conoces tu capacidad? Usa la calculadora para derivarla de un riego de prueba." : "Don't know your capacity? Use the calculator to derive it from a test watering." }
+    static var maxRetentionDescription: String { es ? "La mayor cantidad de agua que el medio puede retener: lo que absorbe cuando empieza seco y se riega hasta que comienza el drenaje." : "The most water the medium can hold: what it takes in when it starts dry and is watered until runoff begins." }
+    static var editCapacityFooter: String { es ? "Cambiar la capacidad mantiene cada registro de riego tal como se midió. El % de Capacidad y Siguiente usan el nuevo valor." : "Changing the capacity keeps every watering log as measured. Capacity % and Next use the new value." }
+    static var calculatorFooter: String { es ? "¿No la conoces? Empieza con el medio seco, riega despacio hasta que aparezca drenaje y deja que termine de drenar. Ingresa ambas cantidades y la calculadora resta el drenaje." : "Don't know it? Start with dry medium, water slowly until runoff appears, and let it finish draining. Enter both amounts and the calculator subtracts the runoff." }
     static var goalRunoffDescription: String {
         let range = AppConstants.goalRunoffPercentRange
         let low = Int(range.lowerBound), high = Int(range.upperBound)
@@ -201,6 +206,7 @@ enum Strings {
     static var backLabel: String { es ? "Atrás" : "Back" }
     static var addGrowLabel: String { es ? "Agregar Cultivo" : "Add Grow" }
     static var addPlantLabel: String { es ? "Agregar Planta" : "Add Plant" }
+    static var editPlantLabel: String { es ? "Editar planta" : "Edit plant" }
     static var addWateringLabel: String { es ? "Agregar Riego" : "Add Watering" }
     static var deleteGrowLabel: String { es ? "Eliminar Cultivo" : "Delete Grow" }
     static var deletePlantLabel: String { es ? "Eliminar Planta" : "Delete Plant" }
@@ -379,7 +385,13 @@ enum Strings {
     static var waterAddedMustBeNumber: String { es ? "El agua agregada debe ser un número." : "Water added must be a number." }
     static var runoffMustBeNumber: String { es ? "El drenaje debe ser un número." : "Runoff must be a number." }
     static var runoffMustBePositive: String { es ? "El drenaje recolectado debe ser mayor que 0." : "Runoff collected must be greater than 0." }
-    static var retainedExceedsCapacity: String { es ? "El volumen retenido excede el 105% de la Capacidad Máx. de Retención. Verifica tus valores de Agua Agregada y Drenaje." : "Retained volume exceeds 105% of Max Retention Capacity. Check your Water Added and Runoff values." }
+    static var calculatorRunoffTooLarge: String { es ? "El drenaje debe ser menor que el agua agregada para medir la capacidad." : "Runoff must be less than the water added to measure capacity." }
+    static var retainedOverCapacityTitle: String { es ? "Más que la capacidad de la maceta" : "More than the pot's capacity" }
+    static func retainedOverCapacityMessage(_ retained: String, capacity: String) -> String {
+        es
+            ? "Este riego retuvo \(retained), más que la Capacidad Máx. de Retención de esta planta (\(capacity)). Revisa el Agua Agregada y el Drenaje. Si son correctos, la capacidad puede estar configurada demasiado baja; puedes editarla desde el panel de la planta."
+            : "This watering retained \(retained), more than this plant's Max Retention Capacity (\(capacity)). Check Water Added and Runoff. If they're right, the capacity may be set too low; you can edit it from the plant's dashboard."
+    }
     static var duplicateLogTimestamp: String { es ? "Ya existe un registro de riego en esta fecha y hora." : "A watering log already exists at this date and time." }
     static var temperatureMustBeNumber: String { es ? "La temperatura debe ser un número." : "Temperature must be a number." }
     static var humidityMustBeNumber: String { es ? "La humedad debe ser un número." : "Humidity must be a number." }
@@ -490,13 +502,13 @@ enum Strings {
             "Abre un cultivo, luego toca + para comenzar a crear una nueva planta.",
             "Ingresa los campos requeridos: Nombre de la Planta, Tamaño de Maceta, Tipo de Medio, y Capacidad Máx. de Retención.",
             "Si ya conoces tu Capacidad Máx. de Retención, ingrésala directamente. Si no, usa la calculadora incorporada para derivarla de un riego de prueba.",
-            "Las plantas no pueden editarse después de su creación. Asegúrate de que todos los campos sean correctos antes de guardar.",
+            "Puedes editar una planta más tarde desde su panel (Editar junto a Información de la Planta). Sus registros de riego no cambian.",
             "Eliminar una planta eliminará permanentemente todos sus registros de riego."
         ] : [
             "Open a grow, then tap + to start creating a new plant.",
             "Enter the required fields: Plant Name, Pot Size, Medium Type, and Max Retention Capacity.",
             "If you already know your Max Retention Capacity, enter it directly. Otherwise, use the built-in calculator to derive it from a test watering.",
-            "Plants cannot be edited after creation. Make sure all fields are correct before saving.",
+            "You can edit a plant later from its dashboard (Edit next to Plant Info). Its watering logs are not changed.",
             "Deleting a plant will permanently delete all of its watering logs."
         ]
     }
@@ -505,17 +517,17 @@ enum Strings {
     static var whatIsMaxRetentionHighlight: String { es ? "Capacidad Máx. de Retención" : "Max Retention Capacity" }
     static var whatIsMaxRetentionBullets: [String] {
         es ? [
-            "La Capacidad Máx. de Retención es el volumen máximo de agua que tu medio de cultivo puede absorber y retener antes de que comience el drenaje.",
-            "Este valor es fundamental para cómo Evapotrack calcula el % de Capacidad, el Promedio Retenido, y la Cantidad de Riego Siguiente.",
-            "Para determinarla: riega tu medio lentamente hasta que comience el drenaje, luego resta el drenaje del agua que agregaste. El resultado es tu Capacidad Máx. de Retención.",
-            "Un medio más saturado producirá más drenaje. Una Capacidad Máx. de Retención precisa lleva a mejores recomendaciones.",
-            "Para valores estimados de retención por tamaño de maceta y medio, visita evapotrack.com/reference."
+            "La Capacidad Máx. de Retención es la mayor cantidad de agua que tu medio puede retener: lo que absorbe cuando empieza seco y se riega hasta que comienza el drenaje.",
+            "Evapotrack la usa para el % de Capacidad (cuánto de esa capacidad rellenó un riego) y como límite superior de Siguiente.",
+            "Para medirla: empieza con el medio seco, riega despacio hasta que aparezca drenaje, deja que la maceta termine de drenar y resta el drenaje del agua que agregaste. La calculadora de Agregar Planta hace la cuenta.",
+            "Un % de Capacidad mayor que 100% significa que un riego retuvo más que el valor que ingresaste. Edita la planta para actualizarlo.",
+            "Para valores estimados por tamaño de maceta y medio, visita evapotrack.com/reference."
         ] : [
-            "Max Retention Capacity is the maximum volume of water your growing medium can absorb and hold before runoff begins.",
-            "This value is central to how Evapotrack calculates Capacity %, Average Retained, and the Next Watering Amount.",
-            "To determine it: water your medium slowly until runoff starts, then subtract the runoff from the water you added. The result is your Max Retention Capacity.",
-            "A more saturated medium will produce more runoff. An accurate Max Retention Capacity leads to better recommendations.",
-            "For estimated retention values by pot size and medium, visit evapotrack.com/reference."
+            "Max Retention Capacity is the most water your medium can hold: what it takes in when it starts dry and is watered until runoff begins.",
+            "Evapotrack uses it for Capacity % (how much of that capacity a watering refilled) and as an upper limit for Next.",
+            "To measure it: start with dry medium, water slowly until runoff appears, let the pot finish draining, then subtract the runoff from the water you added. The Add Plant calculator does the math.",
+            "A Capacity % above 100% means a watering retained more than the value you entered. Edit the plant to update it.",
+            "For estimated values by pot size and medium, visit evapotrack.com/reference."
         ]
     }
 
@@ -611,17 +623,17 @@ enum Strings {
     static var wateringProtocolHighlight: String { es ? "Protocolo" : "Protocol" }
     static var wateringProtocolBullets: [String] {
         es ? [
-            "Riega tu medio lenta y uniformemente, siempre apuntando al drenaje.",
-            "Siempre debes tener drenaje. El drenaje siempre debe ser menor que el Agua Agregada.",
-            "Tu meta de drenaje se basa en el % de Drenaje Objetivo establecido para cada planta (por defecto 15%).",
+            "Riega tu medio lenta y uniformemente, siempre buscando drenaje.",
+            "Apunta a tu % de Drenaje Objetivo (se define para cada planta, 15% por defecto). El drenaje es lo que le indica a Evapotrack que el medio se llenó.",
             "Recolecta todo el drenaje en una bandeja y mídelo después de que la maceta termine de drenar.",
-            "Resta el Drenaje Recolectado del Agua Agregada. Este es tu volumen Retenido — la cantidad de agua que el medio realmente absorbió."
+            "Registra lo que realmente ocurrió, aunque no haya habido drenaje o todo haya drenado. Evapotrack ajusta Siguiente en consecuencia.",
+            "Resta el Drenaje Recolectado del Agua Agregada. Este es tu volumen Retenido: la cantidad de agua que el medio realmente absorbió."
         ] : [
             "Water your medium slowly and evenly, always aiming for runoff.",
-            "You must always have runoff. Runoff must always be less than Water Added.",
-            "Your runoff goal is based on the Goal Runoff % set for each plant (default 15%).",
+            "Aim for your Goal Runoff % (set for each plant, 15% by default). Runoff is how Evapotrack knows the medium was filled.",
             "Collect all runoff in a tray and measure it after the pot finishes draining.",
-            "Subtract Runoff Collected from Water Added. This is your Retained volume — the amount of water the medium actually absorbed."
+            "Log what actually happened, even if there was no runoff or everything drained. Evapotrack adjusts Next accordingly.",
+            "Subtract Runoff Collected from Water Added. This is your Retained volume: the amount of water the medium actually absorbed."
         ]
     }
     static var wateringProtocolLinkLabel: String { es ? "Ver protocolo completo en evapotrack.com" : "View full protocol at evapotrack.com" }
