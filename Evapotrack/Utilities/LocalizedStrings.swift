@@ -582,15 +582,15 @@ enum Strings {
     static var howToDownloadDataBullets: [String] {
         es ? [
             "Abre la lista de plantas de un cultivo, luego toca el ícono de engranaje para abrir Configuración.",
-            "Desplázate hasta la sección Exportar Datos. Esta sección solo aparece cuando Configuración se abre desde dentro de un cultivo.",
-            "Toca Exportar para generar un archivo de texto formateado con todas las plantas del cultivo, sus detalles, y cada registro de riego.",
+            "Desplázate hasta la sección Descargar Datos. Esta sección solo aparece cuando Configuración se abre desde dentro de un cultivo.",
+            "Toca la fila del cultivo (con el ícono de compartir) para generar un archivo de texto formateado con todas las plantas del cultivo, sus detalles, y cada registro de riego.",
             "Los valores se exportan en tus unidades de visualización elegidas (unidad de agua y unidad de temperatura).",
             "Las fotos no se incluyen en el archivo; se quedan en tu dispositivo. El archivo indica qué registros tienen foto.",
             "Elige dónde guardar o compartir el archivo usando el menú de compartir del sistema."
         ] : [
             "Open a grow's plant list, then tap the gear icon to open Settings.",
-            "Scroll to the Export Data section. This section only appears when Settings is opened from within a grow.",
-            "Tap Export to generate a formatted text file containing all plants in the grow, their details, and every watering log.",
+            "Scroll to the Download Data section. This section only appears when Settings is opened from within a grow.",
+            "Tap the grow's row (with the share icon) to generate a formatted text file containing all plants in the grow, their details, and every watering log.",
             "Values are exported in your chosen display units (water unit and temperature unit).",
             "Photos are not included in the file; they stay on your device. The file notes which logs have a photo.",
             "Choose where to save or share the file using the system share sheet."
