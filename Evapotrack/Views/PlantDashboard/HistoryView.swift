@@ -11,6 +11,7 @@
 
 import SwiftUI
 import Charts
+import Accessibility
 
 struct HistoryView: View {
     var vm: PlantDashboardViewModel
@@ -27,6 +28,9 @@ struct HistoryView: View {
     @State private var showTemperature = false
     @State private var showHumidity = false
     @State private var viewerItem: PhotoViewerItem?
+    // Its own flag: sharing the dashboard's vm.isShowingAddWatering made the
+    // dashboard underneath try to present the same sheet.
+    @State private var isShowingAddWatering = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @ScaledMetric(relativeTo: .caption2) private var legendDotSize: CGFloat = 8
     @ScaledMetric(relativeTo: .caption2) private var chartDotSize: CGFloat = 7
@@ -155,11 +159,12 @@ struct HistoryView: View {
                             .font(.title3)
                             .fontWeight(.bold)
                             .foregroundStyle(selectedLogID != nil ? .red : .evSlateGray)
+                            .frame(minWidth: 44, minHeight: 44)
                     }
                     .disabled(selectedLogID == nil)
                     .accessibilityLabel(Strings.deleteLogLabel)
 
-                    Button { vm.isShowingAddWatering = true } label: {
+                    Button { isShowingAddWatering = true } label: {
                         Image(systemName: "plus")
                             .font(.title3)
                             .fontWeight(.bold)
@@ -206,7 +211,7 @@ struct HistoryView: View {
         .fullScreenCover(item: $viewerItem) { item in
             PhotoViewer(item: item)
         }
-        .adaptiveSheet(isPresented: $vm.isShowingAddWatering, onDismiss: { vm.loadData() }) {
+        .adaptiveSheet(isPresented: $isShowingAddWatering, onDismiss: { vm.loadData() }) {
             NavigationStack {
                 AddWateringLogView(plant: vm.plant)
             }
@@ -425,6 +430,12 @@ struct HistoryView: View {
         .padding(.bottom, firstDate != lastDate ? 20 : 0)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(chartAccessibilityLabel(dataCount: chartData.count))
+        .accessibilityChartDescriptor(RetainedChartDescriptor(
+            title: chartAccessibilityLabel(dataCount: chartData.count),
+            points: chartData.map { ($0.dateTime, UnitConversionService.fromLiters($0.retained, to: waterUnit)) },
+            unit: waterUnit,
+            locale: Strings.locale
+        ))
     }
 
     @ViewBuilder
@@ -511,5 +522,55 @@ struct HistoryView: View {
         if showTemperature { lines.append(Strings.temperatureLower) }
         if showHumidity { lines.append(Strings.humidityLower) }
         return Strings.chartAccessibility(lines, dataCount: dataCount)
+    }
+}
+
+// MARK: - Chart Accessibility
+
+/// Lets VoiceOver users explore the Retained line as an audio graph
+/// (VoiceOver rotor → Audio Graph), not just hear a one-line summary.
+private struct RetainedChartDescriptor: AXChartDescriptorRepresentable {
+    let title: String
+    let points: [(date: Date, value: Double)]
+    let unit: WaterUnit
+    let locale: Locale
+
+    func makeChartDescriptor() -> AXChartDescriptor {
+        let locale = locale
+        let unitLabel = unit.abbreviation
+        let decimals = unit.displayPrecision
+        let times = points.map { $0.date.timeIntervalSince1970 }
+        let first = times.min() ?? 0
+        let last = max(times.max() ?? 0, first + 60)
+        let highest = max(points.map(\.value).max() ?? 0, 0.001)
+
+        let xAxis = AXNumericDataAxisDescriptor(
+            title: Strings.date,
+            range: first...last,
+            gridlinePositions: []
+        ) { value in
+            Date(timeIntervalSince1970: value)
+                .formatted(Date.FormatStyle(date: .abbreviated, time: .shortened, locale: locale))
+        }
+        let yAxis = AXNumericDataAxisDescriptor(
+            title: "\(Strings.retained) (\(unitLabel))",
+            range: 0...highest,
+            gridlinePositions: []
+        ) { value in
+            String(format: "%.\(decimals)f \(unitLabel)", value)
+        }
+        let series = AXDataSeriesDescriptor(
+            name: Strings.retained,
+            isContinuous: true,
+            dataPoints: points.map { AXDataPoint(x: $0.date.timeIntervalSince1970, y: $0.value) }
+        )
+        return AXChartDescriptor(
+            title: title,
+            summary: nil,
+            xAxis: xAxis,
+            yAxis: yAxis,
+            additionalAxes: [],
+            series: [series]
+        )
     }
 }

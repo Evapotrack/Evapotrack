@@ -61,6 +61,15 @@ enum AppLanguage: String, Codable, CaseIterable, Identifiable {
 
     var id: String { rawValue }
     var displayName: String { rawValue }
+
+    /// Locale for dates and system controls: the app's language with the
+    /// device's region (e.g. "es_US"), so a Spanish UI shows Spanish month
+    /// names while keeping the region's date order and 12/24-hour clock.
+    var locale: Locale {
+        let language = self == .spanish ? "es" : "en"
+        guard let region = Locale.current.region?.identifier else { return Locale(identifier: language) }
+        return Locale(identifier: "\(language)_\(region)")
+    }
 }
 
 // MARK: - Appearance Mode

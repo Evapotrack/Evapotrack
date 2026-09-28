@@ -11,6 +11,8 @@ import Foundation
 enum Strings {
     nonisolated(unsafe) static var current: AppLanguage = .english
     private static var es: Bool { current == .spanish }
+    /// Locale matching the app's language (see AppLanguage.locale).
+    static var locale: Locale { current.locale }
 
     // MARK: - Navigation Titles
 

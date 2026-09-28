@@ -121,7 +121,7 @@ struct AddWateringLogView: View {
                         Image(systemName: "questionmark.circle.fill")
                             .font(.title)
                             .fontWeight(.bold)
-                            .foregroundStyle(.white)
+                            .foregroundStyle(Color.evOnPrimary)
                             .frame(width: helpButtonSize, height: helpButtonSize)
                             .background(Color.evPrimaryBlue)
                             .clipShape(Circle())

@@ -54,6 +54,8 @@ struct EvapotrackApp: App {
         ZStack {
             GrowListView()
                 .environment(settingsVM)
+                // Date pickers and formatted Text follow the app's language.
+                .environment(\.locale, settingsVM.settings.language.locale)
                 .tint(.evPrimaryBlue)
                 .fontDesign(.rounded)
                 .overlay {
