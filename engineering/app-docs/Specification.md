@@ -69,7 +69,7 @@ Implemented by the pure `RecommendationEngine` (Services/RecommendationEngine.sw
 4. The estimate is capped at Max Retention Capacity. `next = estimate / (1 - goal%)`, with the goal clamped to 5-50% and Next capped at 100 L.
 5. Outcomes are no history, no usable data (every watering drained completely), or a recommendation with its basis and notes (no runoff raised, full runoff skipped, demand rising or falling, limited by capacity, goal adjusted, limited by maximum). The notes are shown under Insights in the user's units.
 
-Selection evidence (18 simulated scenarios, candidates A-F) is in `engineering/research/algorithm/`.
+Selection evidence (18 simulated scenarios, candidate families A-G) is in `engineering/research/algorithm/`.
 
 ## Interval Recalculation
 
