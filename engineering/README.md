@@ -1,6 +1,6 @@
 # engineering/
 
-Internal engineering material for EvapoTrack, kept in the repository for future reference.
+Internal engineering material for EvapoTrack, kept in the repository for future reference. The repository root `CLAUDE.md` summarizes the project rules and current status.
 
 This folder is **outside `docs/`**, so GitHub Pages does not publish it on evapotrack.com. The repository itself is public, though, so anything here can be read on GitHub.
 

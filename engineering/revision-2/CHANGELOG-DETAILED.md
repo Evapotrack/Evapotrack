@@ -48,7 +48,8 @@ Reproduce any section with `git diff 89cc8c8 -- <path>` or `git show <commit>`.
 | 9 | `4776130` | Improve contrast, tap targets, chart and language accessibility | A11Y-2…4, UX-2, LOC-2 |
 | 10 | `4d3dc6b` | Correct the website and privacy policy; move internal docs out of docs/ | WEB-1…6, PRIV-1 |
 | 11 | `562925a` | Fix Download help naming controls that don't exist | HELP-1 |
-| 12 | (this commit) | Archive reports, research and change documentation in engineering/ | — |
+| 12 | `c648c1f` | Archive the engineering review, research and change documentation | — |
+| 13 | (next) | Add CLAUDE.md orientation for future sessions | — |
 
 ---
 
