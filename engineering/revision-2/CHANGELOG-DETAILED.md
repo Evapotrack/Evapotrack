@@ -6,10 +6,23 @@ This document describes, for every file changed since the baseline, **what exist
 |---|---|
 | Baseline | `89cc8c8` "Add 8.5x11 print-ready desk display flyer with QR code". This is the code the 2026-09-27 engineering review audited. |
 | Branch | `claude/wonderful-edison-i0ukly` |
-| Scope | 12 commits, 88 files, about 6,100 lines added and 1,140 removed (not counting the archived reports and research in `engineering/`) |
+| Scope | 14 commits, 88 files, about 6,100 lines added and 1,140 removed (not counting the archived reports and research in `engineering/`) |
 | Build status | **Not compiled and no tests run.** The environment had no Swift toolchain: download.swift.org was blocked by the network policy. Every Swift file passed a tree-sitter syntax parse. The one flagged line (`SettingsView.swift`, `as? String ?? "1"`) is unchanged shipped code and a known parser false positive. |
 
 Reproduce any section with `git diff 89cc8c8 -- <path>` or `git show <commit>`.
+
+### Verification levels used in these documents
+
+| Level | Meaning | Reached so far |
+|---|---|---|
+| Implemented | The code or test exists on the branch | Everything listed |
+| Syntax-checked | A tree-sitter parse accepted the file | Every Swift file |
+| Compiled | Xcode built the app and the test target | **Not yet** |
+| Unit-tested | The test was run and passed | **Not yet (0 of 268)** |
+| Device-tested | Checked by hand on an iPhone or iPad | **Not yet** |
+| Release-verified | Checked in an archived Release build or TestFlight | **Not yet** |
+
+Descriptions of tests say what each test is **written to check**. None has been run, so none of them is evidence that the behavior works yet.
 
 ---
 
@@ -49,7 +62,8 @@ Reproduce any section with `git diff 89cc8c8 -- <path>` or `git show <commit>`.
 | 10 | `4d3dc6b` | Correct the website and privacy policy; move internal docs out of docs/ | WEB-1…6, PRIV-1 |
 | 11 | `562925a` | Fix Download help naming controls that don't exist | HELP-1 |
 | 12 | `c648c1f` | Archive the engineering review, research and change documentation | — |
-| 13 | (next) | Add CLAUDE.md orientation for future sessions | — |
+| 13 | `794259d` | Add CLAUDE.md orientation for future sessions | — |
+| 14 | (next) | Address the external review: edge-case engine tests, real-store migration test, isolated settings tests, verification levels, MRC vs Next wording | TEST-4 |
 
 ---
 
@@ -444,15 +458,16 @@ The new `engineering/` folder (outside `docs/`, so not served on evapotrack.com,
 
 ## 13. Tests
 
-| File | Status | What it covers |
+| File | Status | What it is written to check (not yet run) |
 |---|---|---|
 | `InsightsAlgorithmTests.swift` | **deleted** (20 tests) | Tested the removed `computeNextWaterRecommendation` with fixtures that don't occur in practice (TEST-3) |
 | `LegacyNextAlgorithmTests.swift` | new (19) | Characterizes the old algorithm through realistic histories, via `Support/LegacyRecommendationModel.swift`, so old and new behavior can be compared |
-| `RecommendationEngineTests.swift` | new (30) | Classification, censoring, full runoff, drop limit, trend cap, goal clamp, MRC cap, 100 L cap, notes, ordering, non-finite input, determinism (SplitMix64) |
+| `RecommendationEngineTests.swift` | new (34) | Classification, censoring, full runoff, drop limit, trend cap, goal clamp, MRC cap, 100 L cap, notes, ordering, non-finite input, determinism (SplitMix64); rising zero-runoff runs, following Next without ever getting runoff (stops at capacity), several full runoffs in a row, editing capacity |
 | `RecommendationSimulationTests.swift` | new (3) | Closed-loop checks: start at half the need → goal by the 7th watering; +6%/watering growth always gives runoff; a 35% drop recovers within 4 |
 | `NumericInputTests.swift` | new (8) | en_US, es_ES, de_DE, fr_FR, pt_BR (and es_MX) vectors, grouping rules, rejections, round-trips |
 | `ValidationTests.swift` | modified (64 → 69) | Messages in mL/L/gal and °C/°F |
-| `MigrationTests.swift` | new (5), with `Support/PreV1Schema.swift` | Unversioned and versioned V1 stores open as V2 with every record; photo IDs persist across relaunch; an unknown older model still opens; V2 adds only `photoFileID` |
+| `MigrationTests.swift` | new (6), with `Support/PreV1Schema.swift` and `Fixtures/README.md` | A store written by the real App Store build opens with every record (**skipped until that store is captured**, see `EvapotrackDevTests/Fixtures/README.md`); unversioned and versioned V1 stores built from the reconstructed schema open as V2 with every record; photo IDs persist across relaunch; an unknown older model still opens; V2 adds only `photoFileID` |
+| `NavigationTests.swift` | modified (8) | Now uses a private UserDefaults suite per test instead of the app's real settings (TEST-4) |
 | `ModelTests.swift` | modified (13 → 15) | `photoFileID` defaults to nil and is kept |
 | `PersistenceTests.swift` | new (9) | Failed save → rollback for every service; retry succeeds; example data shape and failure |
 | `PlantFormViewModelTests.swift` | new (8) | Unrounded calculator value, typed override, runoff < water, goal rules, edit keeps exact values, edit doesn't touch logs, uniqueness, legacy goal |
@@ -464,7 +479,7 @@ The new `engineering/` folder (outside `docs/`, so not served on evapotrack.com,
 | `PhotoLifecycleTests.swift` | new (15) | Add/delete/failed-save ordering for logs, plants and grows; launch cleanup; the form's photo flow |
 | `Support/WateringHistory.swift`, `Support/TestImages.swift` | new | Test fixtures |
 
-**Totals:** Before 152 tests. After 263. Passing: none confirmed, because none were run. Unverified: 263.
+**Totals:** Before 152 tests. After 268. Passing: none confirmed, because none were run. Unverified: 268, one of which will be skipped until the shipped-store fixture is added.
 
 ---
 
@@ -476,4 +491,4 @@ The new `engineering/` folder (outside `docs/`, so not served on evapotrack.com,
 
 - **Signing and version numbers.** Set these in Xcode for the release after checking App Store Connect (REL-1).
 - **The 3-second launch screen (UX-1).** This is a product decision; the audit recommended shortening it.
-- **`NavigationTests` writing to shared `UserDefaults` (TEST-4)**, the export's English-only text (LOC-3), and "gal" being US gallons (UNIT-2). These are listed as remaining issues in the implementation report.
+- The export's English-only text (LOC-3) and "gal" being US gallons (UNIT-2). (TEST-4, shared `UserDefaults` in tests, was fixed later in commit 14.) These are listed as remaining issues in the implementation report.

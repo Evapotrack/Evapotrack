@@ -1,13 +1,26 @@
 # EvapoTrack Next Revision: Final Engineering Report
 
 **Date:** 2026-09-28
-**Branch:** `claude/wonderful-edison-i0ukly` (12 commits on top of `89cc8c8`)
+**Branch:** `claude/wonderful-edison-i0ukly` (14 commits on top of `89cc8c8`)
 **Companion documents:**
 - [`CHANGELOG-DETAILED.md`](CHANGELOG-DETAILED.md): file-by-file "before → after" for every change.
 - [`../reviews/2026-09-27-engineering-review.md`](../reviews/2026-09-27-engineering-review.md): the audit this revision implements.
 - [`../research/algorithm/README.md`](../research/algorithm/README.md): the simulation study behind the new algorithm.
 
 > **Verification status.** Nothing in this revision has been compiled or run. The cloud environment has no Swift toolchain, and download.swift.org was blocked by the environment's network policy. Each Swift file passed a tree-sitter syntax parse. Expected test values were computed with Python reference models of the Swift code (kept in `engineering/research/`). Everything marked **UNVERIFIED — requires device/Xcode** must be checked before release.
+
+### Verification levels used in these documents
+
+| Level | Meaning | Reached so far |
+|---|---|---|
+| Implemented | The code or test exists on the branch | Everything listed |
+| Syntax-checked | A tree-sitter parse accepted the file | Every Swift file |
+| Compiled | Xcode built the app and the test target | **Not yet** |
+| Unit-tested | The test was run and passed | **Not yet (0 of 268)** |
+| Device-tested | Checked by hand on an iPhone or iPad | **Not yet** |
+| Release-verified | Checked in an archived Release build or TestFlight | **Not yet** |
+
+Descriptions of tests say what each test is **written to check**. None has been run, so none of them is evidence that the behavior works yet.
 
 ---
 
@@ -42,8 +55,8 @@
 | UX-3 | Small friction points | Optional | Not done (P3) |
 | WEB-1…6 | Android claims, "saturation", YouTube tracking, protocol gaps, public internal docs, SEO | Corrections | **Done** (§7) |
 | PRIV-1 | Policy silent on photos | Describe local photos | **Done**: publish with the release |
-| TEST-1…3 | No VM/service/export/migration tests; misleading algorithm tests | Add tests | **Done**: 152 → 263 |
-| TEST-4 | NavigationTests use shared UserDefaults | Isolate | Not done (P3) |
+| TEST-1…3 | No VM/service/export/migration tests; misleading algorithm tests | Add tests | **Done**: 152 → 268 |
+| TEST-4 | NavigationTests use shared UserDefaults | Isolate | **Done**: private suite per test; SettingsViewModel takes an injectable store |
 | EXP-1 | Export untested | Snapshot first | **Done**, committed before the format change |
 | PERF-1 | Image work must be off the main actor | nonisolated processing | **Done** |
 | PERF-2 | HistoryView regroups on every body; Catmull-Rom overshoot | Optional | Not done (P3) |
@@ -176,6 +189,8 @@ The winner was **E with censoring, a 25% maximum drop per watering and a ±25% t
 - `docs/reference.html` intro and tip, and the `docs/watering-protocol.html` tip.
 - The internal Specification and Requirements.
 
+**MRC is not the amount to give every time.** MRC is a property of the pot and medium: the most they can take in from dry. Next is a demand estimate: what this plant has recently been retaining. Next is normally below MRC, and MRC only acts as a ceiling on the estimate. Changing MRC doesn't change Next unless the estimate was at or above the old or new capacity. A test checks this (`test_editingCapacity_onlyMattersWhenItIsTheLimit`), and the How To now says it in the app.
+
 **Behavior:**
 - MRC is editable (Edit Plant).
 - Calculator results are stored unrounded.
@@ -218,16 +233,16 @@ The winner was **E with censoring, a 25% maximum drop per watering and a ±25% t
 
 ```text
 Before: 152 tests
-After: 263 tests
+After: 268 tests
 Passing: 0 confirmed (no test was run: no Swift toolchain in this environment)
-Unverified: 263
+Unverified: 268 (one will be skipped until a store from the App Store build is added; see EvapotrackDevTests/Fixtures/README.md)
 ```
 
-New: RecommendationEngineTests 30, LegacyNextAlgorithmTests 19, RecommendationSimulationTests 3, NumericInputTests 8, MigrationTests 5, PersistenceTests 9, PlantFormViewModelTests 8, AddWateringLogViewModelTests 5, DataExportTests 3, PhotoProcessorTests 9, PhotoStoreTests 10, PhotoLifecycleTests 15.
+New: RecommendationEngineTests 34, LegacyNextAlgorithmTests 19, RecommendationSimulationTests 3, NumericInputTests 8, MigrationTests 6, PersistenceTests 9, PlantFormViewModelTests 8, AddWateringLogViewModelTests 5, DataExportTests 3, PhotoProcessorTests 9, PhotoStoreTests 10, PhotoLifecycleTests 15.
 Modified: ValidationTests 64 → 69, ModelTests 13 → 15, WateringCalculationTests 17 (capacity no longer capped).
 Deleted: InsightsAlgorithmTests 20 (tested the removed function).
 
-Unchanged: UnitConversionTests 30, NavigationTests 8.
+Unchanged: UnitConversionTests 30. NavigationTests 8 (now isolated in a private UserDefaults suite, TEST-4).
 
 Run with **Product › Test** in Xcode (scheme EvapotrackDev) on an iOS 17+ simulator. Expect to fix small compile-level issues first, because the code has never been built.
 
@@ -256,7 +271,7 @@ The pages are not live until merged. Publish them together with the App Store re
 **P0:** none known. Because the code has not been compiled, a failed build is itself the first thing to rule out.
 
 **P1**
-- **Build and run the test suite.** 263 tests and all new code have never been compiled.
+- **Build and run the test suite.** 268 tests and all new code have never been compiled.
 - **Upgrade test.** Verify V1 → V2 on a device with real App Store data before release.
 - **REL-1.** Set `MARKETING_VERSION`/`CURRENT_PROJECT_VERSION` above the live App Store version in Xcode. They are unchanged here (1.0 / 1) on purpose.
 
@@ -266,7 +281,6 @@ The pages are not live until merged. Publish them together with the App Store re
 - If the new blue (#2F6DBD) changes the brand look, confirm it; it could also be applied to App Store screenshots.
 
 **P3**
-- TEST-4: NavigationTests use the shared `UserDefaults`.
 - LOC-3: export text is English-only.
 - UNIT-2: "gal" is the US gallon.
 - SET-1: Reset has no confirmation.
@@ -286,7 +300,7 @@ All items below are **UNVERIFIED — requires device/Xcode**.
 
 **Build and tests**
 1. The project builds with no errors, on the iOS 17 minimum and on the latest SDK; review the warnings (REL-2).
-2. All 263 tests pass on a simulator; fix and re-run any failures.
+2. All 268 tests pass on a simulator; fix and re-run any failures. Capture a store from the App Store build (EvapotrackDevTests/Fixtures/README.md) so the real-store migration test runs instead of being skipped.
 
 **Data**
 

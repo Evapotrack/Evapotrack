@@ -6,9 +6,10 @@
 // current schema and migration plan, and checks that every grow, plant and
 // watering log survives with identical values and no photo.
 //
-// These stores are created by the tests from the frozen SchemaV1 classes.
-// A store file produced by the App Store build is the stronger fixture; see
-// the engineering report for how to capture one.
+// Most stores are created by the tests from the frozen SchemaV1 classes. The
+// stronger check, a store file written by the real App Store build, runs
+// once that file is added to Fixtures/ (see Fixtures/README.md); until then
+// it is skipped, not passed.
 
 import XCTest
 import SwiftData
@@ -110,6 +111,49 @@ final class MigrationTests: XCTestCase {
             XCTAssertEqual(log.intervalHours, index == 0 ? nil : 48)
             XCTAssertEqual(log.plant?.id, fixture.plantID)
             XCTAssertNil(log.photoFileID)
+        }
+    }
+
+    // MARK: - Store written by the App Store build
+
+    /// Opens a store captured from the App Store build (1.0) after tapping
+    /// "Try Example Data", as described in Fixtures/README.md. That build made
+    /// one grow with two plants (capacities 1.6 L and 2.1 L) and six logs each.
+    func test_storeWrittenByTheAppStoreBuild_opensWithEveryRecord() throws {
+        let bundle = Bundle(for: MigrationTests.self)
+        guard let captured = bundle.url(forResource: "shipped-1.0", withExtension: "store") else {
+            throw XCTSkip("No store from the App Store build in Fixtures/ yet. See Fixtures/README.md.")
+        }
+        let directory = FileManager.default.temporaryDirectory
+            .appending(path: "EvapotrackShipped-\(UUID().uuidString)", directoryHint: .isDirectory)
+        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let url = directory.appending(path: "default.store")
+        try FileManager.default.copyItem(at: captured, to: url)
+        for suffix in ["-wal", "-shm"] {
+            if let extra = bundle.url(forResource: "shipped-1.0", withExtension: "store\(suffix)") {
+                try FileManager.default.copyItem(at: extra, to: URL(fileURLWithPath: url.path + suffix))
+            }
+        }
+
+        // Open twice: the migration, then a normal relaunch of the migrated store.
+        for _ in 0..<2 {
+            let container = try PersistenceController.makeContainer(configuration: currentConfiguration(at: url))
+            let context = ModelContext(container)
+
+            XCTAssertEqual(try context.fetchCount(FetchDescriptor<Grow>()), 1)
+            let plants = try context.fetch(FetchDescriptor<Plant>(sortBy: [SortDescriptor(\.maxRetentionCapacity)]))
+            XCTAssertEqual(plants.map(\.maxRetentionCapacity), [1.6, 2.1])
+            XCTAssertEqual(plants.map(\.wateringLogs.count), [6, 6])
+            XCTAssertTrue(plants.allSatisfy { $0.grow != nil })
+
+            let logs = try context.fetch(FetchDescriptor<WateringLog>())
+            XCTAssertEqual(logs.count, 12)
+            for log in logs {
+                XCTAssertNil(log.photoFileID)
+                XCTAssertNotNil(log.plant)
+                XCTAssertEqual(log.retained, max(0, log.waterAdded - log.runoffCollected), accuracy: 1e-9)
+            }
         }
     }
 

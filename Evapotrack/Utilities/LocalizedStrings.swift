@@ -565,12 +565,14 @@ enum Strings {
         es ? [
             "La Capacidad Máx. de Retención es la mayor cantidad de agua que tu medio puede retener: lo que absorbe cuando empieza seco y se riega hasta que comienza el drenaje.",
             "Evapotrack la usa para el % de Capacidad (cuánto de esa capacidad rellenó un riego) y como límite superior de Siguiente.",
+            "No es la cantidad para dar en cada riego: es el límite de la maceta. Siguiente suele ser menor, porque se basa en lo que tu planta ha retenido recientemente.",
             "Para medirla: empieza con el medio seco, riega despacio hasta que aparezca drenaje, deja que la maceta termine de drenar y resta el drenaje del agua que agregaste. La calculadora de Agregar Planta hace la cuenta.",
             "Un % de Capacidad mayor que 100% significa que un riego retuvo más que el valor que ingresaste. Edita la planta para actualizarlo.",
             "Para valores estimados por tamaño de maceta y medio, visita evapotrack.com/reference."
         ] : [
             "Max Retention Capacity is the most water your medium can hold: what it takes in when it starts dry and is watered until runoff begins.",
             "Evapotrack uses it for Capacity % (how much of that capacity a watering refilled) and as an upper limit for Next.",
+            "It isn't the amount to give every time; it's the pot's limit. Next is usually less, because it's based on what your plant has recently retained.",
             "To measure it: start with dry medium, water slowly until runoff appears, let the pot finish draining, then subtract the runoff from the water you added. The Add Plant calculator does the math.",
             "A Capacity % above 100% means a watering retained more than the value you entered. Edit the plant to update it.",
             "For estimated values by pot size and medium, visit evapotrack.com/reference."

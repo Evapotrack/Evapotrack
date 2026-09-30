@@ -120,11 +120,46 @@ final class RecommendationEngineTests: XCTestCase {
         XCTAssertEqual(result.basis, .measured(wateringsWithRunoff: 1))
     }
 
+    func test_risingNoRunoffWaterings_raiseNextOnlyToWhatWasProven() throws {
+        // 1.0 → 1.4 L, never any runoff: the plant needed at least 1.4 L. Next is
+        // that proven minimum sized for the goal, not an extrapolated trend.
+        let result = try recommendation([(1.0, 0), (1.1, 0), (1.2, 0), (1.3, 0), (1.4, 0)])
+        XCTAssertEqual(result.basis, .noRunoffYet)
+        XCTAssertEqual(result.estimatedRetention, 1.4, accuracy: accuracy)
+        XCTAssertEqual(result.nextWater, 1.4 / 0.85, accuracy: accuracy)
+        XCTAssertEqual(result.notes, [.lastWateringNoRunoff(waterAdded: 1.4, raisedEstimate: true)])
+    }
+
+    func test_followingNextWithoutEverGettingRunoff_stopsAtCapacity() throws {
+        // A grower who follows Next and still never sees runoff: each watering
+        // raises Next, but never past what the capacity allows, and the capacity
+        // note tells them the capacity itself may be too low.
+        var amounts: [(water: Double, runoff: Double)] = [(1.0, 0)]
+        var result = try recommendation(amounts, mrc: 1.5)
+        for _ in 0..<9 {
+            let previous = result.nextWater
+            amounts.append((result.nextWater, 0))
+            result = try recommendation(amounts, mrc: 1.5)
+            XCTAssertGreaterThanOrEqual(result.nextWater, previous - accuracy)
+            XCTAssertLessThanOrEqual(result.nextWater, 1.5 / 0.85 + accuracy)
+        }
+        XCTAssertEqual(result.nextWater, 1.5 / 0.85, accuracy: accuracy)
+        XCTAssertTrue(result.notes.contains(.limitedByCapacity(capacity: 1.5)))
+    }
+
     // MARK: - Full runoff
 
     func test_fullRunoffLast_isSkippedAndEarlierWateringsAreUsed() throws {
         let result = try recommendation(steadyFour + [(1.20, 1.20)])
         XCTAssertEqual(result.nextWater, 1.20, accuracy: accuracy)
+        XCTAssertEqual(result.basis, .measured(wateringsWithRunoff: 4))
+        XCTAssertEqual(result.notes, [.lastWateringFullRunoff])
+    }
+
+    func test_severalFullRunoffsInARow_keepTheEarlierEstimate() throws {
+        let result = try recommendation(steadyFour + [(1.20, 1.20), (1.20, 1.20), (1.20, 1.20)])
+        XCTAssertEqual(result.nextWater, 1.20, accuracy: accuracy)
+        XCTAssertEqual(result.estimatedRetention, 1.02, accuracy: accuracy)
         XCTAssertEqual(result.basis, .measured(wateringsWithRunoff: 4))
         XCTAssertEqual(result.notes, [.lastWateringFullRunoff])
     }
@@ -219,6 +254,19 @@ final class RecommendationEngineTests: XCTestCase {
         XCTAssertEqual(result.estimatedRetention, 0.9, accuracy: accuracy)
         XCTAssertEqual(result.nextWater, 0.9 / 0.85, accuracy: accuracy)
         XCTAssertEqual(result.notes, [.limitedByCapacity(capacity: 0.9)])
+    }
+
+    func test_editingCapacity_onlyMattersWhenItIsTheLimit() throws {
+        // Same logs, capacity edited from 1.5 L to 2.0 L: the estimate (1.02 L)
+        // is below both, so Next is unchanged. Lowering it to 0.9 L caps Next.
+        for capacity in [1.5, 2.0] {
+            let result = try recommendation(steadyFour, mrc: capacity)
+            XCTAssertEqual(result.nextWater, 1.20, accuracy: accuracy, "capacity \(capacity)")
+            XCTAssertEqual(result.notes, [], "capacity \(capacity)")
+        }
+        let capped = try recommendation(steadyFour, mrc: 0.9)
+        XCTAssertEqual(capped.nextWater, 0.9 / 0.85, accuracy: accuracy)
+        XCTAssertEqual(capped.notes, [.limitedByCapacity(capacity: 0.9)])
     }
 
     func test_nextNeverExceedsTheLargestLoggableWatering() throws {
