@@ -2,7 +2,7 @@
 
 **Question:** if a cannabis grower using coco or drip drain-to-waste logged every watering in EvapoTrack and poured the app's **Next**, how close would they get to their runoff goal? This is answered for the live app (v1.1) and for revision 2.
 
-**Files:**
+**Files** (see also `odd_cases.py` and `odd_cases_results.txt`, the unusual-watering test described in `engineering/plans/2026-10-06-use-cases-and-odd-cases.md`):
 - `simulate.py`: the test (`python3 simulate.py`, about 15 s).
 - `results.txt`: its output.
 - `example-grow-C1.csv`: 91 days of logs, exactly as a grower would type them into the app (revision 2 run). The extra `plant_used_L` column is what the plant really drank, which the app never sees.

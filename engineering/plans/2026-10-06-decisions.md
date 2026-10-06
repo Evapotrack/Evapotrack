@@ -3,6 +3,7 @@
 This document turns the reviews into one recommended set of decisions. It judges each option against what the app is for and how it is used in practice. Section 5 is a final review of the set as a whole. Approve, change or reject each item in section 6.
 
 Companion documents:
+- [`2026-10-06-use-cases-and-odd-cases.md`](2026-10-06-use-cases-and-odd-cases.md): who the app is for, what a 3 gal pot holds, and unusual waterings.
 - [`2026-10-06-app-store-compliance.md`](2026-10-06-app-store-compliance.md): iPhone and iPad App Store requirements.
 - [`../research/cannabis-dtw/README.md`](../research/cannabis-dtw/README.md): the cannabis drain-to-waste test.
 - [`2026-10-06-review-and-plan.md`](2026-10-06-review-and-plan.md): what exists and what the screenshots mean.
@@ -64,6 +65,15 @@ Every decision below is judged against these facts.
    - **Code and project:** the privacy manifest, export compliance, iPhone and iPad settings and permissions are all in order for both versions. There is no iPad orientation lock and no deprecated full-screen flag.
    - **To confirm in App Store Connect:** the new age-rating questionnaire (it blocks updates), EU trader status, Xcode 26 builds, and the App Store description (Android wording).
    - **To test:** iPadOS 26 window resizing, and the upgrade on iOS 17.
+9. **Real-world use and odd waterings** (`2026-10-06-use-cases-and-odd-cases.md`):
+   - **Who it's for:** soilless drain-to-waste container growers (cannabis/hemp in coco; chili, tomato and strawberry growers in coco or grow bags), plus small greenhouses and nurseries checking a leaching fraction. Not living soil, recirculating hydro or self-watering pots.
+   - **The pot:** a 3 gal fabric pot of amended coco holds about 5.5 L after draining and can give about 2.5–3 L before stress. That's about one day of peak-flower use.
+   - **Odd waterings:** revision 2 shrugs off accidental overpours (57% runoff), saucer overflows, flushes and unit slips.
+   - **Two real traps:**
+     - **A bone-dry fabric pot channels water**, so it shows 43% runoff while the plant is dry, and both versions then lower Next.
+     - **Forgotten runoff typed as 0** causes about a week of 40% runoff.
+
+     Fixes: guidance to re-wet slowly in passes, which recovers in about 5 waterings; a "leave out of Next" option; and a channeling check that caught 92.5% of cases with no false alarms in simulation.
    - **Content:** nothing in the app or listing mentions cannabis; keep it that way.
 
 ---
@@ -88,9 +98,9 @@ Confidence: **High** = clear on evidence; **Medium** = judgment call with good r
 
   Photos aren't measurements, so allowing this doesn't weaken the "logs can't be edited" rule for data.
 
-**A2. Release scope: one 1.2 with revision 2 plus four small, isolated items.** Confidence: Medium-High.
+**A2. Release scope: one 1.2 with revision 2 plus small, isolated items.** Confidence: Medium-High.
 - **Why one release:** revision 2 is interwoven. The new data version contains the photo field, and the website text mixes them. Splitting it would mean new, untested engineering and two data upgrades.
-- **The four additions** (A5, A6, A7, A9) are small: two layout and timing changes, and two guidance sentences.
+- **The additions** are small: two layout and timing changes (A5, A6) and text only (A7, A9, A12, A15, A18).
 - **Sequencing:** they are done only **after** revision 2 compiles and its tests pass, so the first build tests revision 2 exactly as written.
 
 **A3. Recommendation engine: revision 2's as built (`a_up` 0.5) in 1.2; consider 0.6–0.7 in 1.3 with real data.** Confidence: Medium-High.
@@ -149,6 +159,29 @@ Confidence: **High** = clear on evidence; **Medium** = judgment call with good r
 **A11. Keep the app, screenshots and store listing plant-generic; cannabis test data stays in `engineering/`.** Confidence: High.
 - **Why:** guideline 1.4.3 and the age-rating questions treat drug references strictly. The app gains nothing from naming cannabis, and growers recognize "coco", "runoff" and "drain-to-waste".
 
+**A12–A18. Real-world process items** (details and evidence in `2026-10-06-use-cases-and-odd-cases.md` §4):
+
+| # | Item | Version | Confidence |
+|---|---|---|---|
+| A12 | "Collecting runoff" guidance, including *don't let fabric pots go bone-dry; if one does, re-wet slowly in passes until runoff appears, then log the total* | 1.2 (text) | High |
+| A13 | "Leave out of Next" option on a watering (runoff not measured / flush / water ran straight through) | 1.3 (schema version) | High |
+| A14 | Channeling check: runoff ≥ 2× goal and retained ≤ 75% of Expected → ask, show the re-wet steps, offer A13 | 1.3 | Medium-High |
+| A15 | "…and the unit (mL, L or gal)" added to the over-capacity alert | 1.2 (text) | High |
+| A16 | Optional runoff EC and pH, shown as trends | Later | Medium |
+| A17 | Research a pot-weight method (retained = weight after draining − weight before) | Research | Medium |
+| A18 | Max Retention Capacity guidance: about 90% of the table value for normal fills (3 gal amended coco ≈ 5.5 L) | 1.2 (text) | High |
+
+Text for the 1.2 items:
+- **A12**
+  - EN: *"Collecting runoff: use a saucer wider than the pot, wait until dripping stops (10–30 minutes), then measure and empty it. Don't let the pot sit in runoff. Don't let fabric pots go bone-dry; if one does, water slowly in a few passes until runoff appears, then log the total."*
+  - ES: *"Recoger el drenaje: usa un plato más ancho que la maceta, espera a que deje de gotear (10–30 minutos), luego mide y vacía el plato. No dejes la maceta en el agua drenada. No dejes que las macetas de tela se sequen por completo; si ocurre, riega despacio en varias pasadas hasta que aparezca drenaje y registra el total."*
+- **A15**
+  - EN: *"…Check Water Added, Runoff and the unit (mL, L or gal)…"*
+  - ES: *"…Revisa el Agua Agregada, el Drenaje y la unidad (mL, L o gal)…"*
+- **A18**
+  - EN: *"The reference table assumes a completely full pot. For a normally filled pot, use about 90% of the table value."*
+  - ES: *"La tabla de referencia supone una maceta completamente llena. Para una maceta llenada normalmente, usa alrededor del 90% del valor de la tabla."*
+
 ### B. Repository, website and release process
 
 | # | Decision | Confidence | One-line reason |
@@ -171,7 +204,7 @@ Confidence: **High** = clear on evidence; **Medium** = judgment call with good r
 
 **Version 1.2** (built in this order):
 1. Revision 2 as written. Compile, run all 268 tests, add the real v1.1 database fixture, and rehearse the upgrade.
-2. Then A5 (text-size fixes), A6 (launch about 1.5 s), A7 and A9 (guidance sentences), each its own commit, EN and ES.
+2. Then A5 (text-size fixes), A6 (launch about 1.5 s), and the text-only items A7, A9, A12, A15 and A18, each its own commit, EN and ES.
 3. Then the full device checklist, TestFlight, submission.
 
 **Draft release notes**
@@ -191,10 +224,13 @@ ES:
 **Version 1.3** (after 1.2 is stable), in order of real-world value:
 1. Take Photo (camera, permission asked on first tap).
 2. Add or replace a photo on an existing log.
-3. The "longer gap than usual" note (A10).
-4. Engine tuning (`a_up` 0.6–0.7), only if real 1.2 logs support it.
-5. Correcting a mistyped log (today: delete and re-enter).
-6. Import or restore from an export.
+3. "Leave out of Next" (A13) and the channeling check (A14).
+4. The "longer gap than usual" note (A10).
+5. Engine tuning (`a_up` 0.6–0.7), only if real 1.2 logs support it.
+6. Correcting a mistyped log (today: delete and re-enter).
+7. Import or restore from an export.
+
+**Later:** optional runoff EC and pH trends (A16), and research into a pot-weight method (A17).
 
 ---
 
@@ -206,20 +242,22 @@ Each check was run against the whole set, not item by item.
 |---|---|---|
 | 1 | Fits the product principles (offline, on-device, no account, simple) | ✅ 1.2 adds no permission, network or service. The camera is deferred to 1.3, and its permission is asked only on use |
 | 2 | Protects existing users' data | ✅ The upgrade baseline matches the shipped database (23/23). The upgrade is tested 3 ways before release. Revision 2 shows an error screen instead of ever replacing a database it can't open |
-| 3 | No change hides another's failure | ⚠️→✅ **Found:** adding A5–A7, A9 to the first build would mix their errors with revision 2's. **Resolved:** A5–A7, A9 come only after revision 2 is green (§4, step 2) |
+| 3 | No change hides another's failure | ⚠️→✅ **Found:** adding A5–A7, A9, A12, A15, A18 to the first build would mix their errors with revision 2's. **Resolved:** A5–A7, A9, A12, A15, A18 come only after revision 2 is green (§4, step 2) |
 | 4 | Users understand a changed number | ⚠️→✅ **Found:** Next changes on update (your Example Plant: 1.06 → 0.92 L). **Resolved:** release-note sentence (§4) plus revision 2's on-screen explanation |
 | 5 | Known algorithm weaknesses are addressed or disclosed | ⚠️→✅ **Found:** both models struggle with irregular, time-driven watering (S8). **Resolved:** A7 guidance now; real-data research listed for later |
 | 6 | App Review readiness | ✅ No new Info.plist permission keys in 1.2. During review, the live privacy policy stays true ("all data is stored locally"); its photo section publishes on release day |
-| 7 | Spanish parity | ✅ Every new string (A5–A7, A9, release notes) is specified in EN and ES |
+| 7 | Spanish parity | ✅ Every new string (A5–A7, A9, A12, A15, A18, release notes) is specified in EN and ES |
 | 8 | Backups and exports | ✅ Photos are included in device backups but not in the text export; the support FAQ (published on release day) says so. Settings shows photo storage use (about 0.45 MB per photo) |
 | 9 | Website and app stay consistent | ✅ The photo-free fixes go now; photo text goes on release day; carousel screenshots are refreshed after 1.2 |
 | 10 | Every step can be undone | ✅ Website: one revert. Branches: disposable until release. Tags: removable before use. Live app: phased-release pause, then 1.2.1 |
-| 11 | Effort is proportionate | ✅ The heavy work is the necessary compile, test and device testing. The A5–A7, A9 additions are about a day's work |
+| 11 | Effort is proportionate | ✅ The heavy work is the necessary compile, test and device testing. The A5–A7, A9, A12, A15, A18 additions are about a day's work |
 | 12 | Anything left that needs a person | Account checks, Organizer times, Xcode builds, device testing, App Store submission, and the "Yours" calls (A6, A8 look) |
 | 13 | Every factual claim in this document re-checked against code | ⚠️→✅ **Found:** A6's "one-line change" was wrong, because the launch animation is timed to the 3 s wait. **Resolved:** A6 re-times the whole sequence. Confirmed: neither `main` nor revision 2 declares any permission keys; the Spanish terms in the notes match the app ("Siguiente", "Editar Planta", "Día"); revision 2 keeps the 3 s launch, so A6 applies on top of it |
 | 14 | Does the cannabis test change any decision? | ✅ It **strengthens A3**: revision 2 is in range 54–71% in daily hand-watering and drip use, vs v1.1's 0–46% (0–5% for hand-watering), with no dry days. It **keeps `a_up` deferred**: +1–6 points in range for C1, C2 and C6, but more >2× runoff for C3, C6 and C7. It **adds A9–A10** for the limits it found |
 | 15 | Is the cannabis test trustworthy? | ⚠️ It is simulated from published figures, because no public per-watering cannabis log exists. **Mitigated by:** the app's exact formulas (v1.1 code; revision 2's reference engine, verified identical); realistic effects (carry-over, coco channeling, jug rounding, reading error); two stress tests that don't change the conclusions. The definitive check is replaying one of your real exported grows |
 | 16 | Compliance gaps that could block 1.2 | ✅ None in code. ⚠️ Three account-side gates must be confirmed before submitting: the age-rating questionnaire, EU trader status, and Xcode 26 on the Mac (B11, runbook A1/E1) |
+| 17 | Do odd waterings break the recommendation? | ✅ Revision 2 handles overpours, overflows, flushes and unit slips within 3–5 waterings. ⚠️ **Found:** two traps, the bone-dry fabric pot and forgotten runoff. **Resolved:** guidance in 1.2 (A12), plus "leave out of Next" and a channeling check in 1.3 (A13, A14). The simulation shows each fix works |
+| 18 | Is the app aimed at the right growers? | ✅ Its defaults match published practice for its core users (leaching fraction 10–20%, greenhouse drain 15–30%, research 30%). Positioning by medium and method keeps it App Store-safe and covers every core tier (A11) |
 
 **Residual risks:**
 - **Compile surprises.** Revision 2 has never been compiled. Mitigation: the build-and-fix loop (runbook E1–E2).
@@ -233,7 +271,7 @@ Each check was run against the whole set, not item by item.
 Reply with the item numbers you approve (for example "approve all", or "approve all except A6: first launch only").
 
 - [ ] **A1** Photo picker in 1.2; Take Photo and "add a photo later" in 1.3
-- [ ] **A2** One 1.2 release: revision 2 plus A5–A7 and A9, added after it compiles and passes its tests
+- [ ] **A2** One 1.2 release: revision 2 plus A5–A7, A9, A12, A15 and A18, added after it compiles and passes its tests
 - [ ] **A3** Revision 2's engine as built; revisit tuning with real data in 1.3
 - [ ] **A4** Goal runoff 5–50%
 - [ ] **A5** Text-size crowding fixes
@@ -243,5 +281,12 @@ Reply with the item numbers you approve (for example "approve all", or "approve 
 - [ ] **A9** Drip logging guidance (daily totals)
 - [ ] **A10** "Longer gap than usual" note in 1.3
 - [ ] **A11** App and listing stay plant-generic; cannabis test data stays in `engineering/`
+- [ ] **A12** "Collecting runoff" and bone-dry re-wet guidance (1.2, text)
+- [ ] **A13** "Leave out of Next" option (1.3)
+- [ ] **A14** Channeling check (1.3)
+- [ ] **A15** Check-the-unit hint in the over-capacity alert (1.2, text)
+- [ ] **A16** Runoff EC and pH trends (later)
+- [ ] **A17** Pot-weight method research (later)
+- [ ] **A18** Max Retention Capacity fill guidance (1.2, text)
 - [ ] **B1–B11** Repository, website, release process and App Store compliance gates as in the table
 - [ ] **Release notes** as drafted (or with your edits)
