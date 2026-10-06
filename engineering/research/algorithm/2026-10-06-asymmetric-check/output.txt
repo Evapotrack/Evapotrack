@@ -1,0 +1,12 @@
+model            zero%  under%  >2xgoal%  over%  meanErr | conv S1b/S6/S11 | S7 >2x  S8 zero  S8 >2x  S12 zero
+legacy v1.1      34.4   50.3     7.2    16.4    9.90  | 14.0 30.0 30.0 |   6.3   49.7    22.6    30.2
+rev2 (a=.5)       9.7   27.8     4.5    15.4    6.24  |  5.0  6.0  5.0 |  10.3   43.6    39.0     4.0
+a_up=.6           9.1   25.9     4.6    16.4    6.14  |  5.0  5.0  5.0 |  11.2   43.5    39.9     3.0
+a_up=.7           8.7   24.1     4.8    17.4    6.08  |  5.0  5.0  4.5 |  12.0   43.3    40.7     2.4
+a_up=.8           8.4   22.8     4.9    18.4    6.04  |  5.0  4.0  4.0 |  12.8   43.0    41.3     2.0
+
+Example Plant, legacy v1.1: Next 1.06 L
+Example Plant, a_up=0.5: Next 0.92 L (expected retained 0.78 L)
+Example Plant, a_up=0.6: Next 0.95 L (expected retained 0.80 L)
+Example Plant, a_up=0.7: Next 0.97 L (expected retained 0.83 L)
+Example Plant, a_up=0.8: Next 1.00 L (expected retained 0.85 L)
