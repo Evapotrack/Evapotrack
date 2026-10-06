@@ -3,6 +3,8 @@
 This document turns the reviews into one recommended set of decisions. It judges each option against what the app is for and how it is used in practice. Section 5 is a final review of the set as a whole. Approve, change or reject each item in section 6.
 
 Companion documents:
+- [`2026-10-06-app-store-compliance.md`](2026-10-06-app-store-compliance.md): iPhone and iPad App Store requirements.
+- [`../research/cannabis-dtw/README.md`](../research/cannabis-dtw/README.md): the cannabis drain-to-waste test.
 - [`2026-10-06-review-and-plan.md`](2026-10-06-review-and-plan.md): what exists and what the screenshots mean.
 - [`2026-10-06-runbook.md`](2026-10-06-runbook.md): how to carry out each step safely.
 
@@ -46,6 +48,23 @@ Every decision below is judged against these facts.
    | White text on the current dark-mode blue buttons | 2.62:1 | Revision 2 fixes this with a dedicated "on blue" text color |
 5. **The photo workflow.** Revision 2 attaches a photo only while creating a watering log, through the system photo picker, which has no camera button. At the plant, that means taking the photo in the Camera app first, then picking it.
 6. **Text-size crowding.** Revision 2 still changes layout only at the accessibility text sizes. The crowding seen on your phone (Plant Info row, Insights tiles, "ret") would carry into 1.2 unless fixed.
+7. **A cannabis drain-to-waste test** (`engineering/research/cannabis-dtw/`). Seven grows were built from published figures and run as if a grower logged every watering and poured Next:
+   - photoperiod and autoflower, coco and coco/perlite, 3 and 5 gal;
+   - research-style drip at a 30% goal, automated multi-shot drip, water-when-light, and skipped days.
+
+   Results:
+   - **v1.1 under-waters a growing plant** if followed: 0–5% of waterings in range (22–46% on drip), and the pot runs dry on most days.
+   - **Revision 2 keeps runoff within ±5 points of the goal on 54–71% of waterings** for daily hand-watering, research drip and drip logged as daily totals. It almost never gives zero runoff, and the plant never runs dry.
+   - **Three real-world limits:**
+     - drip users who log **every shot** (11% in range, vs 71% logging daily totals);
+     - **skipped days in peak flower**, which empty a 3 gal pot whatever the app says;
+     - **water-when-light** growers who vary the dryness they water at (32% in range).
+   - The conclusions hold when the grower keeps pouring until runoff appears and when coco doesn't channel.
+8. **An App Store compliance review** (`2026-10-06-app-store-compliance.md`):
+   - **Code and project:** the privacy manifest, export compliance, iPhone and iPad settings and permissions are all in order for both versions. There is no iPad orientation lock and no deprecated full-screen flag.
+   - **To confirm in App Store Connect:** the new age-rating questionnaire (it blocks updates), EU trader status, Xcode 26 builds, and the App Store description (Android wording).
+   - **To test:** iPadOS 26 window resizing, and the upgrade on iOS 17.
+   - **Content:** nothing in the app or listing mentions cannabis; keep it that way.
 
 ---
 
@@ -69,9 +88,9 @@ Confidence: **High** = clear on evidence; **Medium** = judgment call with good r
 
   Photos aren't measurements, so allowing this doesn't weaken the "logs can't be edited" rule for data.
 
-**A2. Release scope: one 1.2 with revision 2 plus three small, isolated items.** Confidence: Medium-High.
+**A2. Release scope: one 1.2 with revision 2 plus four small, isolated items.** Confidence: Medium-High.
 - **Why one release:** revision 2 is interwoven. The new data version contains the photo field, and the website text mixes them. Splitting it would mean new, untested engineering and two data upgrades.
-- **The three additions** (A5, A6, A7) are small and UI-only.
+- **The four additions** (A5, A6, A7, A9) are small: two layout and timing changes, and two guidance sentences.
 - **Sequencing:** they are done only **after** revision 2 compiles and its tests pass, so the first build tests revision 2 exactly as written.
 
 **A3. Recommendation engine: revision 2's as built (`a_up` 0.5) in 1.2; consider 0.6–0.7 in 1.3 with real data.** Confidence: Medium-High.
@@ -111,11 +130,24 @@ Confidence: **High** = clear on evidence; **Medium** = judgment call with good r
 
 **A7. Watering guidance for the shared weakness.** Confidence: High.
 - **What:** add one sentence to How To › "What Is Next?" and to the website protocol: *"Next works best when you water at a consistent dryness (lift the pot) or on a regular schedule."*
+  ES: *"Siguiente funciona mejor si riegas siempre con un nivel de sequedad similar (levanta la maceta) o con un horario regular."*
 - **Why:** it costs nothing, and it steers growers away from the one pattern (S8) where both models struggle.
 
 **A8. Light-mode blue #2F6DBD.** Confidence: High on readability; Yours on looks.
 - **Why:** it raises text contrast from 3.29:1 to 5.19:1 (2.95:1 → 4.65:1 on Day mode's background). Dark mode, which you use, doesn't change except for the white-on-blue button fix.
 - **Cost:** a slight light-mode look change, and the light-mode screenshots would be refreshed with 1.2.
+
+**A9. Drip logging guidance: one entry per day with daily totals.** Confidence: High.
+- **What:** one sentence in How To and on the website protocol page: *"Automated or multi-shot watering: log one entry per day with the day's total water and total runoff, then split Next across your shots."*
+  ES: *"Riego automático o en varios pulsos: registra una entrada por día con el agua total y el drenaje total del día, y reparte Siguiente entre tus pulsos."*
+- **Why:** per-shot retained water swings with the time of day, and no per-watering model can follow it. Logging per shot, revision 2 does worse than v1.1 (11% vs 29% in range). Logging daily totals, it does best (71% vs 46%) (C5). This is also how drip guides already judge runoff.
+
+**A10. A "longer gap than usual" note in 1.3 (the number stays the same).** Confidence: Medium.
+- **What:** when the time since the last watering is clearly longer than this plant's usual gap, Insights adds a line such as *"It has been 2 days since the last watering; the plant may need more than Next."*
+- **Why:** skipped days in peak flower empty a 3 gal pot (C7). Scaling the number by time would over-water growers who wait until the pot is light (C6), so a note is the safe form.
+
+**A11. Keep the app, screenshots and store listing plant-generic; cannabis test data stays in `engineering/`.** Confidence: High.
+- **Why:** guideline 1.4.3 and the age-rating questions treat drug references strictly. The app gains nothing from naming cannabis, and growers recognize "coco", "runoff" and "drain-to-waste".
 
 ### B. Repository, website and release process
 
@@ -131,6 +163,7 @@ Confidence: **High** = clear on evidence; **Medium** = judgment call with good r
 | B8 | Pull requests for anything touching the app or `docs/` | High | Review before the site changes; one-click undo |
 | B9 | Camera branch: don't merge; tag `archive/camera-photos-2026-07` | High | Kept as history; its camera screen can inform 1.3's Take Photo |
 | B10 | Mac snapshot: push the project file and recognized source only; zip the rest privately | High | Keeps the exact v1.1 state without risking anything private in a public repo |
+| B11 | App Store compliance gates added to the runbook: Xcode 26 SDK, age-rating questionnaire, EU trader status, store-description check, iPadOS 26 windowing test, iOS 17 upgrade test, 6.9-inch iPhone and 13-inch iPad screenshots, Mac/Vision Pro availability | High | Each is either a hard upload or review gate or a likely review question (details in the compliance document) |
 
 ---
 
@@ -138,7 +171,7 @@ Confidence: **High** = clear on evidence; **Medium** = judgment call with good r
 
 **Version 1.2** (built in this order):
 1. Revision 2 as written. Compile, run all 268 tests, add the real v1.1 database fixture, and rehearse the upgrade.
-2. Then A5 (text-size fixes), A6 (launch about 1.5 s), A7 (guidance sentence), each its own commit, EN and ES.
+2. Then A5 (text-size fixes), A6 (launch about 1.5 s), A7 and A9 (guidance sentences), each its own commit, EN and ES.
 3. Then the full device checklist, TestFlight, submission.
 
 **Draft release notes**
@@ -158,9 +191,10 @@ ES:
 **Version 1.3** (after 1.2 is stable), in order of real-world value:
 1. Take Photo (camera, permission asked on first tap).
 2. Add or replace a photo on an existing log.
-3. Engine tuning (`a_up` 0.6–0.7), only if real 1.2 logs support it.
-4. Correcting a mistyped log (today: delete and re-enter).
-5. Import or restore from an export.
+3. The "longer gap than usual" note (A10).
+4. Engine tuning (`a_up` 0.6–0.7), only if real 1.2 logs support it.
+5. Correcting a mistyped log (today: delete and re-enter).
+6. Import or restore from an export.
 
 ---
 
@@ -172,17 +206,20 @@ Each check was run against the whole set, not item by item.
 |---|---|---|
 | 1 | Fits the product principles (offline, on-device, no account, simple) | ✅ 1.2 adds no permission, network or service. The camera is deferred to 1.3, and its permission is asked only on use |
 | 2 | Protects existing users' data | ✅ The upgrade baseline matches the shipped database (23/23). The upgrade is tested 3 ways before release. Revision 2 shows an error screen instead of ever replacing a database it can't open |
-| 3 | No change hides another's failure | ⚠️→✅ **Found:** adding A5–A7 to the first build would mix their errors with revision 2's. **Resolved:** A5–A7 come only after revision 2 is green (§4, step 2) |
+| 3 | No change hides another's failure | ⚠️→✅ **Found:** adding A5–A7, A9 to the first build would mix their errors with revision 2's. **Resolved:** A5–A7, A9 come only after revision 2 is green (§4, step 2) |
 | 4 | Users understand a changed number | ⚠️→✅ **Found:** Next changes on update (your Example Plant: 1.06 → 0.92 L). **Resolved:** release-note sentence (§4) plus revision 2's on-screen explanation |
 | 5 | Known algorithm weaknesses are addressed or disclosed | ⚠️→✅ **Found:** both models struggle with irregular, time-driven watering (S8). **Resolved:** A7 guidance now; real-data research listed for later |
 | 6 | App Review readiness | ✅ No new Info.plist permission keys in 1.2. During review, the live privacy policy stays true ("all data is stored locally"); its photo section publishes on release day |
-| 7 | Spanish parity | ✅ Every new string (A5–A7, release notes) is specified in EN and ES |
+| 7 | Spanish parity | ✅ Every new string (A5–A7, A9, release notes) is specified in EN and ES |
 | 8 | Backups and exports | ✅ Photos are included in device backups but not in the text export; the support FAQ (published on release day) says so. Settings shows photo storage use (about 0.45 MB per photo) |
 | 9 | Website and app stay consistent | ✅ The photo-free fixes go now; photo text goes on release day; carousel screenshots are refreshed after 1.2 |
 | 10 | Every step can be undone | ✅ Website: one revert. Branches: disposable until release. Tags: removable before use. Live app: phased-release pause, then 1.2.1 |
-| 11 | Effort is proportionate | ✅ The heavy work is the necessary compile, test and device testing. The A5–A7 additions are about a day's work |
+| 11 | Effort is proportionate | ✅ The heavy work is the necessary compile, test and device testing. The A5–A7, A9 additions are about a day's work |
 | 12 | Anything left that needs a person | Account checks, Organizer times, Xcode builds, device testing, App Store submission, and the "Yours" calls (A6, A8 look) |
 | 13 | Every factual claim in this document re-checked against code | ⚠️→✅ **Found:** A6's "one-line change" was wrong, because the launch animation is timed to the 3 s wait. **Resolved:** A6 re-times the whole sequence. Confirmed: neither `main` nor revision 2 declares any permission keys; the Spanish terms in the notes match the app ("Siguiente", "Editar Planta", "Día"); revision 2 keeps the 3 s launch, so A6 applies on top of it |
+| 14 | Does the cannabis test change any decision? | ✅ It **strengthens A3**: revision 2 is in range 54–71% in daily hand-watering and drip use, vs v1.1's 0–46% (0–5% for hand-watering), with no dry days. It **keeps `a_up` deferred**: +1–6 points in range for C1, C2 and C6, but more >2× runoff for C3, C6 and C7. It **adds A9–A10** for the limits it found |
+| 15 | Is the cannabis test trustworthy? | ⚠️ It is simulated from published figures, because no public per-watering cannabis log exists. **Mitigated by:** the app's exact formulas (v1.1 code; revision 2's reference engine, verified identical); realistic effects (carry-over, coco channeling, jug rounding, reading error); two stress tests that don't change the conclusions. The definitive check is replaying one of your real exported grows |
+| 16 | Compliance gaps that could block 1.2 | ✅ None in code. ⚠️ Three account-side gates must be confirmed before submitting: the age-rating questionnaire, EU trader status, and Xcode 26 on the Mac (B11, runbook A1/E1) |
 
 **Residual risks:**
 - **Compile surprises.** Revision 2 has never been compiled. Mitigation: the build-and-fix loop (runbook E1–E2).
@@ -196,12 +233,15 @@ Each check was run against the whole set, not item by item.
 Reply with the item numbers you approve (for example "approve all", or "approve all except A6: first launch only").
 
 - [ ] **A1** Photo picker in 1.2; Take Photo and "add a photo later" in 1.3
-- [ ] **A2** One 1.2 release: revision 2 plus A5–A7, added after it compiles and passes its tests
+- [ ] **A2** One 1.2 release: revision 2 plus A5–A7 and A9, added after it compiles and passes its tests
 - [ ] **A3** Revision 2's engine as built; revisit tuning with real data in 1.3
 - [ ] **A4** Goal runoff 5–50%
 - [ ] **A5** Text-size crowding fixes
 - [ ] **A6** Launch screen about 1.5 s with the animation re-timed (or: first launch only / keep it as is)
 - [ ] **A7** Watering-consistency guidance sentence
 - [ ] **A8** New light-mode blue
-- [ ] **B1–B10** Repository, website and release process as in the table
+- [ ] **A9** Drip logging guidance (daily totals)
+- [ ] **A10** "Longer gap than usual" note in 1.3
+- [ ] **A11** App and listing stay plant-generic; cannabis test data stays in `engineering/`
+- [ ] **B1–B11** Repository, website, release process and App Store compliance gates as in the table
 - [ ] **Release notes** as drafted (or with your edits)
