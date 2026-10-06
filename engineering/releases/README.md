@@ -24,7 +24,7 @@ Each release folder (`v1.1/`, …) holds evidence and screenshots for that relea
 | Version shown in the app | `Evapotrack v1.1 (1)` (Settings footer, seen on device 2026-10-06) |
 | Source commit (best evidence) | `c063360` (2026-04-01), "v1.1: Dynamic Type polish for accessibility text sizes", the last commit before 2026-10 that changed app code |
 | Proposed tag | `v1.1` → `c063360` |
-| Version in the repository | **Still 1.0 (1).** The bump to 1.1 was made in Xcode for the archive and never committed (see the plan, step R1) |
+| Version in the repository | **Still 1.0 (1).** The bump to 1.1 was made in Xcode for the archive and never committed (see the runbook, step B2) |
 | Released | **Unknown: check App Store Connect** → Evapotrack → App Store → version history |
 | Evidence | [`v1.1/device-screenshots/`](v1.1/device-screenshots/) from an iPhone after an automatic update |
 
@@ -66,7 +66,7 @@ Each release folder (`v1.1/`, …) holds evidence and screenshots for that relea
 | Branch | Date | Content | Status |
 |---|---|---|---|
 | `claude/wonderful-edison-i0ukly` | 2026-09-27 → 30 | "Revision 2": new recommendation engine, versioned schema and migration, locale-aware number input, Edit Plant, accessibility, optional photos through **PhotosPicker** (no permissions), website corrections, and 268 tests | Never compiled; see its `engineering/revision-2/IMPLEMENTATION-REPORT.md` |
-| `claude/matts-hydroponics-outreach-vwiicq` | 2026-07-26 | Photos through the **camera** (`NSCameraUsageDescription`, photo bytes stored in SwiftData without a versioned schema), plus `ReleasePlan.md` and `ProjectStatus.md` | Never compiled; **conflicts with revision 2** (see the plan, decision D1) |
+| `claude/matts-hydroponics-outreach-vwiicq` | 2026-07-26 | Photos through the **camera** (`NSCameraUsageDescription`, photo bytes stored in SwiftData without a versioned schema), plus `ReleasePlan.md` and `ProjectStatus.md` | Never compiled; **conflicts with revision 2** (see the runbook, decision D1) |
 
 ---
 

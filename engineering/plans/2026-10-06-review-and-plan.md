@@ -97,7 +97,7 @@ Still true on `main` today:
 - "Saturation levels" wording (WEB-2); a YouTube embed loads Google tracking (WEB-3); internal `.md` docs are published (WEB-5); no robots.txt or sitemap (WEB-6).
 - The 5 carousel screenshots are v1.0 simulator captures in gallons with 1 example plant. They still match the UI, but should be re-shot once revision 2 ships, because they would then show the old Max Capacity and the old Insights.
 
-Revision 2 already fixes all of these, but holds them back until the photo release goes live. **The Android corrections don't depend on photos.** Take those to `main` now (step P1.3).
+Revision 2 already fixes all of these, but holds them back until the photo release goes live. **The Android corrections don't depend on photos.** Take those to `main` now (runbook step C1).
 
 ## 6. Preserving past versions
 
@@ -115,43 +115,9 @@ Safety: tags and this folder only add files; nothing existing is rewritten. `eng
 
 ## 7. Plan
 
-Each step says who can do it: **Mac** = you in Xcode or App Store Connect; **Cloud** = a Claude session like this one.
+**Superseded by [`2026-10-06-runbook.md`](2026-10-06-runbook.md)**, which re-checked every step and gives the why, how, check and rollback for each one. Its double-check corrected two steps of the first draft of this plan:
 
-### Phase 0: Establish the facts (this week)
-- [ ] **0.1 (Mac)** App Store Connect: note v1.1's release date and whether v1.0 → v1.1 was phased. Check Users and Access and Agreements, and that membership auto-renews.
-- [ ] **0.2 (Mac)** Xcode Organizer: note the archive time of v1.0 and v1.1. Send them over to finalize the tag commits.
-- [ ] **0.3 (Cloud, after 0.2)** Create and push the annotated tags `v1.0` and `v1.1` (needs your OK to push tags).
-- [ ] **0.4 (Cloud)** Commit `MARKETING_VERSION = 1.1` on `main` (R1). The next release becomes 1.2 (or 1.1.1 for a hotfix).
+- **Website fixes.** Revision 2's commit `4d3dc6b` can't be cherry-picked whole, because it mixes photo text into the home, privacy and support pages. The runbook (C1) lists which parts to take now and which to hold.
+- **Revision 2.** It must not be merged into `main` early, because `main`'s `docs/` folder is the live website. It goes into a `release/1.2` branch and reaches `main` on release day (runbook §2, D2, F4).
 
-### Phase 1: Quick, safe wins on `main` (no app risk)
-- [ ] **1.1 (Cloud)** Merge this branch: the sticker, the release record and this plan.
-- [ ] **1.2 (Mac)** Print the alignment test page of the sticker, then the sheet.
-- [ ] **1.3 (Cloud)** Website: correct the Android claims (index, privacy, support). Fix "saturation" and the YouTube nocookie embed. Add robots.txt and sitemap. Move `docs/*.md` out of the published folder. Cherry-pick these from revision 2's commit `4d3dc6b`, leaving out the photo text.
-
-### Phase 2: Choose the next release (decision D1)
-- [ ] **2.1 (You)** Pick the photo approach. **Recommended: revision 2 (PhotosPicker)**:
-  - no permission prompt;
-  - keeps the "local, simple" promise;
-  - versioned schema and migration;
-  - far more tests;
-  - it also contains the algorithm, locale and MRC fixes.
-
-  Keep matts-hydroponics' `ReleasePlan.md`/`ProjectStatus.md` (merge their useful content into `engineering/`) and retire its camera code. If you want camera capture as well, add it later on top of revision 2's photo store.
-- [ ] **2.2 (Cloud)** Rebase or merge revision 2 onto `main` after Phase 1. Set the version to 1.2 (1), and update its docs from "1.0 live" to "1.1 live".
-
-### Phase 3: Make revision 2 real (needs the Mac)
-- [ ] **3.1** Build in Xcode; fix compile errors. Send them over and a cloud session can patch them.
-- [ ] **3.2** Run all tests; fix failures. Capture a real **v1.1** store for the skipped migration test.
-- [ ] **3.3** Device checklist (revision 2 report §9). The most important item is to **install the 1.2 build over the App Store v1.1 on this iPhone** and confirm the Example Grow and all logs survive.
-- [ ] **3.4** Fix UI-1/UI-2/UI-3 at your current text size (they apply to both layouts).
-- [ ] **3.5** Decide UX-1 (launch delay) and the new blue (#2F6DBD).
-
-### Phase 4: Release 1.2
-- [ ] **4.1** Archive the **committed and tagged** 1.2 commit; use TestFlight on this iPhone; submit with a phased release. Review notes: "photos chosen by the user, stored on device only".
-- [ ] **4.2** Publish the website and privacy-policy photo text the same day. Re-shoot the 5 carousel screenshots on 1.2.
-- [ ] **4.3** Tag `v1.2`; add the entry and screenshots to `engineering/releases/`.
-
-### Decisions needed from you
-- **D1:** which photo approach (recommendation: revision 2's PhotosPicker).
-- **D2:** OK to push the release tags once 0.2 confirms the commits.
-- **D3:** keep the old simulator screenshot sets in `screenshots/` (tracked, despite the ignore rule) or move them under `engineering/releases/v1.0/`.
+It also added a step to snapshot the Mac's working copy before pulling (A2), and moved the QR sticker out of the published `docs/` folder to `marketing/sticker/`.
