@@ -6,7 +6,7 @@
 
 How to capture it:
 
-1. Check out the released code: `git checkout 89cc8c8` (App Store 1.0). Alternatively, install the App Store build on a simulator through TestFlight.
+1. Check out the released code: `git checkout v1.1` (or commit `c063360`, the App Store 1.1 build). Alternatively, install the App Store build on a simulator through TestFlight. Versions 1.0 and 1.1 store data the same way (the models didn't change between them), so the file keeps its `shipped-1.0.store` name.
 2. Run it on an iOS simulator. Erase the simulator first, or delete the app, so it starts empty.
 3. On My Grows, tap **Try Example Data**. The test expects exactly that data: one grow, two plants with capacities 1.6 L and 2.1 L, and six logs each.
 4. Stop the app in Xcode.

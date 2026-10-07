@@ -64,7 +64,7 @@ Descriptions of tests say what each test is **written to check**. None has been 
 | DEBT-2 | Dead code, duplicated overlays | Optional | Partly (stale strings removed) |
 | HELP-1 | Download help named wrong controls | Fix | **Done** |
 | HELP-2 | "More logs, more accurate" | Remove | **Done** |
-| REL-1 | Version 1.0 (1) | Verify against App Store Connect | **Not changed on purpose**: verify there |
+| REL-1 | Version 1.0 (1) | Verify against App Store Connect | **Not changed on purpose**: verify there. *Update 2026-10-07: App Store has 1.1 (1); `release/1.2` is set to 1.2 (1).* |
 | REL-2 | Warnings baseline unknown | Check | UNVERIFIED — requires Xcode |
 | REL-3 | Target named EvapotrackDev | Optional | Not changed |
 | SET-1 | Reset has no confirmation; export result ignored | Optional | Not done (P3) |
@@ -273,7 +273,7 @@ The pages are not live until merged. Publish them together with the App Store re
 **P1**
 - **Build and run the test suite.** 268 tests and all new code have never been compiled.
 - **Upgrade test.** Verify V1 → V2 on a device with real App Store data before release.
-- **REL-1.** Set `MARKETING_VERSION`/`CURRENT_PROJECT_VERSION` above the live App Store version in Xcode. They are unchanged here (1.0 / 1) on purpose.
+- **REL-1.** Set `MARKETING_VERSION`/`CURRENT_PROJECT_VERSION` above the live App Store version in Xcode. They are unchanged here (1.0 / 1) on purpose. *Update 2026-10-07: done on `release/1.2` (1.2 (1)); the live version is 1.1 (1).*
 
 **P2**
 - UX-1: the 3-second launch screen on every launch. The audit recommends shortening it or showing it once; this was left to you.
