@@ -33,4 +33,4 @@ Every change made to the repository is recorded here, together with **what it re
 
 - Nothing has been deleted from history. No force-push, no rebase of a pushed branch, no deleted branch.
 - The prior state of every changed file is the parent commit of the change. To see it: `git show <commit>^:<path>`. To restore one file: `git checkout <commit>^ -- <path>`, then commit. To undo a whole change: `git revert <commit>`.
-- **Archive tags** mark the important prior states, so they stay findable even if branches are later cleaned up. They are listed in the period record.
+- **Archive tags** mark the important prior states, so they stay findable even if branches are later cleaned up. They are listed in the period record, with the command to push them from the Mac (this cloud environment can't push tags).
