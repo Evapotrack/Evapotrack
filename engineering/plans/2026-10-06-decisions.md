@@ -226,7 +226,7 @@ ES:
 **Version 1.3** (after 1.2 is stable), in order of real-world value:
 1. Take Photo (camera, permission asked on first tap).
 2. Add or replace a photo on an existing log.
-3. "Leave out of Next" (A13) and the channeling check (A14).
+3. The channeling check (A14). ("Leave out of Next", A13, moved into 1.2 by the 2026-10-07 plan.)
 4. The "longer gap than usual" note (A10).
 5. Engine tuning (`a_up` 0.6–0.7), only if real 1.2 logs support it.
 6. Correcting a mistyped log (today: delete and re-enter).
@@ -258,7 +258,7 @@ Each check was run against the whole set, not item by item.
 | 14 | Does the cannabis test change any decision? | ✅ It **strengthens A3**: revision 2 is in range 54–71% in daily hand-watering and drip use, vs v1.1's 0–46% (0–5% for hand-watering), with no dry days. It **keeps `a_up` deferred**: +1–6 points in range for C1, C2 and C6, but more >2× runoff for C3, C6 and C7. It **adds A9–A10** for the limits it found |
 | 15 | Is the cannabis test trustworthy? | ⚠️ It is simulated from published figures, because no public per-watering cannabis log exists. **Mitigated by:** the app's exact formulas (v1.1 code; revision 2's reference engine, verified identical); realistic effects (carry-over, coco channeling, jug rounding, reading error); two stress tests that don't change the conclusions. The definitive check is replaying one of your real exported grows |
 | 16 | Compliance gaps that could block 1.2 | ✅ None in code. ⚠️ Three account-side gates must be confirmed before submitting: the age-rating questionnaire, EU trader status, and Xcode 26 on the Mac (B11, runbook A1/E1) |
-| 17 | Do odd waterings break the recommendation? | ✅ Revision 2 handles overpours, overflows, flushes and unit slips within 3–5 waterings. ⚠️ **Found:** two traps, the bone-dry fabric pot and forgotten runoff. **Resolved:** guidance in 1.2 (A12), plus "leave out of Next" and a channeling check in 1.3 (A13, A14). The simulation shows each fix works |
+| 17 | Do odd waterings break the recommendation? | ✅ Revision 2 handles overpours, overflows, flushes and unit slips within 3–5 waterings. ⚠️ **Found:** two traps, the bone-dry fabric pot and forgotten runoff. **Resolved:** guidance in 1.2 (A12), "leave out of Next" in 1.2 (A13, moved from 1.3 by the 2026-10-07 plan) and a channeling check in 1.3 (A14). The simulation shows each fix works |
 | 18 | Is the app aimed at the right growers? | ✅ Its defaults match published practice for its core users (leaching fraction 10–20%, greenhouse drain 15–30%, research 30%). Positioning by medium and method keeps it App Store-safe and covers every core tier (A11) |
 
 **Residual risks:**
@@ -284,7 +284,7 @@ Reply with the item numbers you approve (for example "approve all", or "approve 
 - [ ] **A10** "Longer gap than usual" note in 1.3
 - [ ] **A11** App and listing stay plant-generic; cannabis test data stays in `engineering/`
 - [ ] **A12** "Collecting runoff" and bone-dry re-wet guidance (1.2, text)
-- [ ] **A13** "Leave out of Next" option (1.3)
+- [ ] **A13** "Leave out of Next" option (**1.2**, moved from 1.3 by the 2026-10-07 plan)
 - [ ] **A14** Channeling check (1.3)
 - [ ] **A15** Check-the-unit hint in the over-capacity alert (1.2, text)
 - [ ] **A16** Runoff EC and pH trends (later)
