@@ -1,5 +1,7 @@
 # EvapoTrack release history
 
+> **Every change, and how to restore any prior state:** [`../changes/`](../changes/). **Next** in these documents means the app's suggested amount for the next watering.
+
 This file is the permanent record of every build that reached the App Store, plus work that is waiting to ship.
 Each entry says which source commit the build came from, how sure we are, and where to find the code.
 
