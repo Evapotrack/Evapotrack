@@ -5,6 +5,7 @@ EvapoTrack is an offline iOS/iPadOS app (SwiftUI + SwiftData, iOS 17+) that trac
 ## Start here
 - **The approved plan (2026-10-07):** `engineering/plans/2026-10-07-plan.md`, with phases, owners and exit criteria. How to do each step: `engineering/plans/2026-10-06-runbook.md`.
 - **Release history:** `engineering/releases/README.md` lists which commit became each App Store version.
+- **Every change, and how to restore the prior state:** `engineering/changes/`. Record each new change there (what changed, the prior state, why, how to undo).
 - **Where revision 2 stood when written:** `engineering/revision-2/IMPLEMENTATION-REPORT.md` covers what the last revision did, open issues (P0–P3) and the device checklist.
 - **What changed and why:** `engineering/revision-2/CHANGELOG-DETAILED.md` describes every file before and after, since `89cc8c8`.
 - **Last audit:** `engineering/reviews/2026-09-27-engineering-review.md`.
@@ -20,15 +21,21 @@ EvapoTrack is an offline iOS/iPadOS app (SwiftUI + SwiftData, iOS 17+) that trac
 - The website in `docs/` on `release/1.2` describes the photo feature. It is published by merging into `main` on release day, not before.
 - Plan Phase 5 adds, **only after the build and tests are green**: text-size layout fixes, the launch screen re-timed to about 1.5 s, in-app guidance, the unit hint in the over-capacity alert, and "Leave out of Next" (an optional field added to the still-unreleased `SchemaV2`; see `engineering/plans/2026-10-07-plan.md`).
 
+## Terms
+- **Next:** the app's **suggested amount for the next watering** (an amount of water, not a time). Every screen, help text, document and website page must keep this meaning.
+- **Expected:** the estimate of what the plant will retain; Next = Expected ÷ (1 − goal runoff).
+- **Retained:** water added − runoff. **Runoff %:** runoff ÷ water added. **Max Retention Capacity:** the most the medium takes in during one watering before runoff begins.
+
 ## Repository layout
 - `Evapotrack/`: app sources (App, Models, Services, Services/Photos, ViewModels, Views, Utilities, Resources).
 - `EvapotrackDevTests/`: XCTest target (`Support/` holds fixtures and reference models).
 - `EvapotrackDev.xcodeproj`: file-system-synchronized groups, so new files join their target automatically. Bundle ID `com.evapotrack.app`.
-- `docs/`: **the public website** (GitHub Pages, CNAME evapotrack.com). Everything here is published. Never put internal notes here.
+- `docs/`: **the public website.** GitHub Pages publishes `main`'s `docs/` folder. The domain evapotrack.com is registered at **Namecheap**, whose DNS points it at GitHub Pages, and `docs/CNAME` holds `evapotrack.com`. Never change DNS or `docs/CNAME` as part of app work. Everything here is published. Never put internal notes here.
 - `engineering/`: internal reports, research, tools and app docs. It isn't published on the site, but the repo is public.
 - Gitignored and private: `private/`, `screenshots/`, App Store screenshots, and video assets.
 
 ## Rules that are easy to break
+- **Preserve history:** never force-push, rebase a pushed branch, delete a branch or delete a tag. Cloud sessions can't push tags (HTTP 403), so tags are pushed from the Mac. Prior versions are kept as commits, branches and tags (`engineering/changes/`).
 - **Schema:** `Models/SchemaV1.swift` is frozen and must match the shipped store forever. Model changes go in a new `SchemaV3` with a migration stage in `Models/Schema.swift`, plus a test in `MigrationTests`. Models are declared as `extension SchemaV2 { @Model nonisolated final class … }` and used through typealiases.
 - **Concurrency:** the app target uses `SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor` with Swift 5 mode. Pure types (engine, parser, unit conversion, AppConstants, photo processing and store) are `nonisolated`. Image work runs in `Task.detached`. The photo orphan sweep deliberately runs on the main actor.
 - **Units:** values are stored unrounded in liters and °C. Rounding happens only in `DisplayFormatter`. Number parsing goes through `NumericInput.parse` (never `Double(text)`). Validation messages take the user's unit.
