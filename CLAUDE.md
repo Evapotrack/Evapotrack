@@ -3,6 +3,7 @@
 EvapoTrack is an offline iOS/iPadOS app (SwiftUI + SwiftData, iOS 17+) that tracks plant watering: water added, runoff collected, and the retained water between them. It recommends the next watering amount from the grower's own measurements. Its website is evapotrack.com.
 
 ## Start here
+- **Where things stand and what to do next:** `engineering/plans/2026-10-07-status.md`.
 - **The approved plan (2026-10-07):** `engineering/plans/2026-10-07-plan.md`, with phases, owners and exit criteria. How to do each step: `engineering/plans/2026-10-06-runbook.md`.
 - **Release history:** `engineering/releases/README.md` lists which commit became each App Store version.
 - **Every change, and how to restore the prior state:** `engineering/changes/`. Record each new change there (what changed, the prior state, why, how to undo).
@@ -35,6 +36,7 @@ EvapoTrack is an offline iOS/iPadOS app (SwiftUI + SwiftData, iOS 17+) that trac
 - Gitignored and private: `private/`, `screenshots/`, App Store screenshots, and video assets.
 
 ## Rules that are easy to break
+- **GitHub never updates the iOS app.** Merging into `main` changes only the website. App releases are archived in Xcode on the Mac, uploaded with the Apple Developer account, reviewed by Apple and released in App Store Connect.
 - **Preserve history:** never force-push, rebase a pushed branch, delete a branch or delete a tag. Cloud sessions can't push tags (HTTP 403), so tags are pushed from the Mac. Prior versions are kept as commits, branches and tags (`engineering/changes/`).
 - **Schema:** `Models/SchemaV1.swift` is frozen and must match the shipped store forever. Model changes go in a new `SchemaV3` with a migration stage in `Models/Schema.swift`, plus a test in `MigrationTests`. Models are declared as `extension SchemaV2 { @Model nonisolated final class … }` and used through typealiases.
 - **Concurrency:** the app target uses `SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor` with Swift 5 mode. Pure types (engine, parser, unit conversion, AppConstants, photo processing and store) are `nonisolated`. Image work runs in `Task.detached`. The photo orphan sweep deliberately runs on the main actor.
