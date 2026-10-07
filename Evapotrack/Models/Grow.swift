@@ -6,39 +6,45 @@
 // Immutable after creation — grows may be created or deleted
 // but never edited. Deleting a grow cascade-deletes all
 // associated Plants (and their WateringLogs).
+//
+// Part of the current schema (SchemaV2). Refer to it through the
+// top-level typealias defined in Schema.swift.
 
 import Foundation
 import SwiftData
 
-@Model
-final class Grow {
+extension SchemaV2 {
 
-    // MARK: - Stored Fields
+    @Model
+    nonisolated final class Grow {
 
-    /// Unique identifier.
-    @Attribute(.unique) var id: UUID
+        // MARK: - Stored Fields
 
-    /// User-given name for the grow (required).
-    var growName: String
+        /// Unique identifier.
+        @Attribute(.unique) var id: UUID
 
-    /// Date the grow was created.
-    var createdAt: Date
+        /// User-given name for the grow (required).
+        var growName: String
 
-    // MARK: - Relationships
+        /// Date the grow was created.
+        var createdAt: Date
 
-    @Relationship(deleteRule: .cascade, inverse: \Plant.grow)
-    var plants: [Plant]
+        // MARK: - Relationships
 
-    // MARK: - Init
+        @Relationship(deleteRule: .cascade, inverse: \Plant.grow)
+        var plants: [Plant]
 
-    init(
-        id: UUID = UUID(),
-        growName: String,
-        createdAt: Date = Date()
-    ) {
-        self.id = id
-        self.growName = growName
-        self.createdAt = createdAt
-        self.plants = []
+        // MARK: - Init
+
+        init(
+            id: UUID = UUID(),
+            growName: String,
+            createdAt: Date = Date()
+        ) {
+            self.id = id
+            self.growName = growName
+            self.createdAt = createdAt
+            self.plants = []
+        }
     }
 }

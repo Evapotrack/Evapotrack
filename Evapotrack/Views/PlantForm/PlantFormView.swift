@@ -1,23 +1,26 @@
 // © 2026 Evapotrack. All rights reserved.
-// CreatePlantView.swift
+// PlantFormView.swift
 // Evapotrack
 //
-// Form for creating a new plant. Plants are immutable after creation.
-// Max retention capacity is entered in the user's display water unit
-// and converted to liters (internal) on save.
-// Includes a calculator to derive max retention from water added
-// and runoff collected.
+// Form for creating a plant or editing an existing one. Max Retention
+// Capacity is entered in the user's display water unit and converted to
+// liters on save. Includes a calculator that derives the capacity from a
+// test watering of dry medium. Watering logs are never changed by editing
+// a plant.
 
 import SwiftUI
 
-struct CreatePlantView: View {
+struct PlantFormView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @Environment(SettingsViewModel.self) private var settingsVM
-    @State private var vm = CreatePlantViewModel()
+    @State private var vm: PlantFormViewModel
     @State private var dismissTask: Task<Void, Never>?
     @ScaledMetric(relativeTo: .largeTitle) private var checkmarkSize: CGFloat = 56
-    var grow: Grow? = nil
+
+    init(mode: PlantFormViewModel.Mode) {
+        _vm = State(wrappedValue: PlantFormViewModel(mode: mode))
+    }
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     private var waterUnit: WaterUnit { settingsVM.settings.waterUnit }
@@ -64,6 +67,11 @@ struct CreatePlantView: View {
                     .font(sectionHeaderFont)
                     .foregroundStyle(.evDeepNavy)
                     .textCase(nil)
+            } footer: {
+                if vm.isEditing {
+                    Text(Strings.editCapacityFooter)
+                        .foregroundStyle(Color.evSecondaryText)
+                }
             }
 
             Section {
@@ -90,7 +98,7 @@ struct CreatePlantView: View {
                         }
                         .font(.body)
                         .fontWeight(.bold)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.evOnPrimary)
                         .padding(.horizontal, 24)
                         .padding(.vertical, 12)
                         .background(Capsule().fill(Color.evPrimaryBlue))
@@ -148,7 +156,7 @@ struct CreatePlantView: View {
         .scrollDismissesKeyboard(.interactively)
         .scrollContentBackground(.hidden)
         .background(Color.evBackground)
-        .navigationTitle(Strings.addPlant)
+        .navigationTitle(vm.isEditing ? Strings.editPlant : Strings.addPlant)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
@@ -173,7 +181,7 @@ struct CreatePlantView: View {
         }
         .onAppear {
             vm.resetState()
-            vm.configure(modelContext: modelContext, waterUnit: waterUnit, grow: grow)
+            vm.configure(modelContext: modelContext, waterUnit: waterUnit)
         }
         .overlay {
             if vm.showSaveConfirmation {

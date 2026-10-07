@@ -63,6 +63,17 @@ final class ModelTests: XCTestCase {
         XCTAssertEqual(log.runoffPercent, 20.0, accuracy: 0.001)
     }
 
+    func test_wateringLog_init_hasNoPhotoByDefault() {
+        let log = WateringLog(waterAdded: 1.0, runoffCollected: 0.2, dateTime: Date())
+        XCTAssertNil(log.photoFileID)
+    }
+
+    func test_wateringLog_init_keepsPhotoIdentifier() {
+        let photoID = UUID()
+        let log = WateringLog(waterAdded: 1.0, runoffCollected: 0.2, dateTime: Date(), photoFileID: photoID)
+        XCTAssertEqual(log.photoFileID, photoID)
+    }
+
     // MARK: - Cascade Delete
 
     func test_deletePlant_cascadeDeletesLogs() throws {

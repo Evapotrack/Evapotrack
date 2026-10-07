@@ -19,7 +19,7 @@ struct CreateGrowView: View {
         horizontalSizeClass == .regular ? .headline.weight(.bold) : .title2.weight(.bold)
     }
     private var timestampText: String {
-        currentTime.formatted(date: .abbreviated, time: .shortened)
+        currentTime.longFormatted
     }
 
     var body: some View {

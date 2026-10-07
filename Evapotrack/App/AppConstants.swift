@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum AppConstants {
+nonisolated enum AppConstants {
 
     // MARK: - Validation Bounds
 
@@ -34,16 +34,29 @@ enum AppConstants {
     static let temperatureRangeCelsius: ClosedRange<Double> = -50.0...60.0
     // MARK: - Algorithm
 
-    /// Target runoff percentage used by the Next water recommendation algorithm.
+    /// Default goal runoff percentage for new plants.
     static let targetRunoffPercent = 15.0
 
-    /// Maximum Capacity % displayed. Caps at 105% to allow minor
-    /// fluctuations in retention while preventing unrealistic values.
-    static let maxCapacityPercent = 105.0
+    /// Goal runoff percentages a grower can set, and the range the
+    /// recommendation engine uses. Below 5% the runoff is too small to measure
+    /// reliably with a collection tray; above 50% more water would drain than
+    /// stay in the pot, and Next would exceed twice the plant's uptake.
+    /// Drain-to-waste practice is typically 10–30%.
+    static let goalRunoffPercentRange: ClosedRange<Double> = 5.0...50.0
 
-    /// Maximum retained volume as a factor of Max Retention Capacity.
-    /// 1.05 = 105% — matches the Capacity % display cap.
-    static let maxRetainedFactor = 1.05
+    /// A watering that retains more than this factor × Max Retention Capacity
+    /// asks the grower to confirm (5% tolerance for measuring error). It is
+    /// never rejected: the capacity itself may be set too low.
+    static let retainedConfirmationFactor = 1.05
+
+    // MARK: - Photos
+
+    /// Longest edge of a stored watering photo, in pixels. About 1.5x the
+    /// width of the largest iPhone screen, so zooming shows leaf detail.
+    static let photoDetailMaxPixelSize = 2048
+
+    /// Longest edge of a stored photo thumbnail, in pixels (a 120 pt preview at @3x).
+    static let photoThumbnailMaxPixelSize = 360
 
     // MARK: - UserDefaults Keys
 

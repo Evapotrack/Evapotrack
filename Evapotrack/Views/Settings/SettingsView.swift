@@ -7,6 +7,8 @@
 // When opened from PlantListView with a grow, shows a
 // Download Data section for that grow. When opened from
 // GrowListView (no grow), the export section is hidden.
+// A Storage section shows how many watering photos are stored and
+// the space they use (read off the main actor).
 // Changes persist immediately via auto-save — no stored
 // SwiftData values are ever modified.
 
@@ -25,6 +27,7 @@ struct SettingsView: View {
     @State private var isShowingExport = false
     @State private var exportDocument: GrowExportDocument?
     @State private var exportFilename = "data"
+    @State private var photoUsage: PhotoUsage?
 
     private var appVersionText: String {
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
@@ -150,6 +153,24 @@ struct SettingsView: View {
             }
 
             Section {
+                Label {
+                    Text(photoUsageText)
+                        .foregroundStyle(Color.evPrimaryText)
+                } icon: {
+                    Image(systemName: "photo.on.rectangle")
+                        .foregroundStyle(.evPrimaryBlue)
+                }
+            } header: {
+                Text(Strings.storage)
+                    .font(.title2.weight(.bold))
+                    .foregroundStyle(.evDeepNavy)
+                    .textCase(nil)
+            } footer: {
+                Text(Strings.storageFooter)
+                    .foregroundStyle(Color.evSecondaryText)
+            }
+
+            Section {
                 HStack {
                     Spacer()
                     Button(Strings.resetSettings) {
@@ -195,6 +216,11 @@ struct SettingsView: View {
         .onChange(of: settingsVM.settings) { _, _ in
             settingsVM.save()
         }
+        .task {
+            photoUsage = await Task.detached(priority: .utility) {
+                PhotoStore.shared.usage()
+            }.value
+        }
         .fileExporter(
             isPresented: $isShowingExport,
             document: exportDocument,
@@ -205,4 +231,12 @@ struct SettingsView: View {
         }
     }
 
+    /// "Photos: 3 · 1.2 MB", or "Photos: —" until the files have been read.
+    private var photoUsageText: String {
+        guard let photoUsage else { return "\(Strings.photos): —" }
+        return Strings.photoStorageLabel(
+            photoUsage.photoCount,
+            size: photoUsage.totalBytes.formatted(.byteCount(style: .file))
+        )
+    }
 }

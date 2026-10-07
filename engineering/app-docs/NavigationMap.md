@@ -1,5 +1,7 @@
 # Evapotrack - Navigation Map
 
+> Internal document. Moved out of the public website folder (`docs/`) on 2026-09-28 and updated for the next revision.
+
 ## Navigation Hierarchy
 
 ```
@@ -11,8 +13,14 @@ GrowListView (ROOT - owns NavigationStack)
 │   ├── [Push] PlantDashboardView(plant:)
 │   │   │   via navigationDestination(for: PlantNavID.self)
 │   │   │
-│   │   ├── [Push] HistoryView(vm:waterUnit:maxRetentionCapacity:)
+│   │   ├── [Push] HistoryView(vm:waterUnit:)
 │   │   │   │   via NavigationLink in HistoryPanelView or chart toolbar button
+│   │   │   │
+│   │   │   ├── [Sheet] AddWateringLogView(plant:)
+│   │   │   │       via HistoryView's own isShowingAddWatering
+│   │   │   │
+│   │   │   ├── [FullScreenCover] PhotoViewer(item:)
+│   │   │   │       via a log's photo thumbnail or "View photo" action
 │   │   │   │
 │   │   │   └── [Push] HowToView(context: .chart)
 │   │   │           via NavigationLink in toolbar
@@ -21,7 +29,11 @@ GrowListView (ROOT - owns NavigationStack)
 │   │   │       via NavigationLink in toolbar
 │   │   │
 │   │   ├── [Sheet] AddWateringLogView(plant:)
-│   │   │       via isShowingAddWatering
+│   │   │       via vm.isShowingAddWatering
+│   │   │   └── [FullScreenCover] PhotoViewer(item:)  (preview of the picked photo)
+│   │   │
+│   │   ├── [Sheet] PlantFormView(mode: .edit(plant))
+│   │   │       via Edit button in Plant Info header
 │   │   │
 │   │   └── [Sheet] SettingsView()
 │   │           via isShowingSettings
@@ -29,7 +41,7 @@ GrowListView (ROOT - owns NavigationStack)
 │   ├── [Push] HowToView(context: .general)
 │   │       via NavigationLink in toolbar
 │   │
-│   ├── [Sheet] CreatePlantView(grow:)
+│   ├── [Sheet] PlantFormView(mode: .create(grow))
 │   │       via isShowingCreatePlant
 │   │
 │   └── [Sheet] SettingsView()
@@ -91,7 +103,8 @@ HistoryView adds a chart/list toggle (trailing) and help button (leading).
 | PlantDashboardView | Push | Inline (empty) + centered name | Yes |
 | HistoryView | Push | Inline (empty) | Yes (help, chart toggle, trash+plus) |
 | CreateGrowView | Sheet | Inline ("Add Grow") | Cancel + Save |
-| CreatePlantView | Sheet | Inline ("Add Plant") | Cancel + Save |
+| PlantFormView | Sheet | Inline ("Add Plant" / "Edit Plant") | Cancel + Save |
+| PhotoViewer | Full-screen cover | None | Close (X) |
 | AddWateringLogView | Sheet | Inline ("Add Watering") | Cancel + Save |
 | SettingsView | Sheet | Inline ("Settings") | Done |
 | HowToView | Push | Large ("How To") | Back only |

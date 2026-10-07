@@ -3,6 +3,8 @@
 // Evapotrack
 //
 // Convenience extensions on Foundation types used throughout the app.
+// Date text follows the app's language (Strings.locale), not only the
+// device language.
 
 import Foundation
 
@@ -11,17 +13,17 @@ import Foundation
 extension Date {
     /// Formats the date for display in lists (e.g. "Mar 1, 2026").
     var shortFormatted: String {
-        formatted(date: .abbreviated, time: .omitted)
+        formatted(Date.FormatStyle(date: .abbreviated, time: .omitted, locale: Strings.locale))
     }
 
     /// Formats the date with time for detail views.
     var longFormatted: String {
-        formatted(date: .abbreviated, time: .shortened)
+        formatted(Date.FormatStyle(date: .abbreviated, time: .shortened, locale: Strings.locale))
     }
 
     /// Formats only the time for display (e.g. "2:30 PM").
     var timeFormatted: String {
-        formatted(date: .omitted, time: .shortened)
+        formatted(Date.FormatStyle(date: .omitted, time: .shortened, locale: Strings.locale))
     }
 
     /// Start of day for the receiver.

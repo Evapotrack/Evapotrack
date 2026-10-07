@@ -3,70 +3,77 @@
 // Evapotrack
 //
 // SwiftData model representing a plant the user is tracking.
-// Immutable after creation — plants may be created or deleted
-// but never edited. Deleting a plant cascade-deletes all
-// associated WateringLogs.
+// Name, pot size, medium, Max Retention Capacity and goal runoff can be
+// edited; editing never changes the plant's watering logs. Deleting a
+// plant cascade-deletes all associated WateringLogs.
+//
+// Part of the current schema (SchemaV2). Refer to it through the
+// top-level typealias defined in Schema.swift.
 
 import Foundation
 import SwiftData
 
-@Model
-final class Plant {
+extension SchemaV2 {
 
-    // MARK: - Stored Fields
+    @Model
+    nonisolated final class Plant {
 
-    /// Unique identifier.
-    @Attribute(.unique) var id: UUID
+        // MARK: - Stored Fields
 
-    /// User-given name for the plant (required).
-    var plantName: String
+        /// Unique identifier.
+        @Attribute(.unique) var id: UUID
 
-    /// Descriptive pot size (e.g. "Fabric 3 gal", "1 gallon", "small").
-    var potSize: String
+        /// User-given name for the plant (required).
+        var plantName: String
 
-    /// Growing medium type (e.g. "soil", "perlite", "coco coir").
-    var mediumType: String
+        /// Descriptive pot size (e.g. "Fabric 3 gal", "1 gallon", "small").
+        var potSize: String
 
-    /// Maximum water the medium can hold before runoff, in liters.
-    /// Must always be greater than 0. Stored unrounded.
-    var maxRetentionCapacity: Double
+        /// Growing medium type (e.g. "soil", "perlite", "coco coir").
+        var mediumType: String
 
-    /// User-set goal runoff percentage used by the Next algorithm.
-    /// Defaults to 15.0 if not specified during plant creation.
-    var goalRunoffPercent: Double = 15.0
+        /// Max Retention Capacity in liters: the most water the medium can hold,
+        /// measured from dry medium watered until runoff. Must always be
+        /// greater than 0. Stored unrounded.
+        var maxRetentionCapacity: Double
 
-    /// Date the plant was created.
-    var createdAt: Date = Date()
+        /// User-set goal runoff percentage used by the Next algorithm.
+        /// Defaults to 15.0 if not specified during plant creation.
+        var goalRunoffPercent: Double = 15.0
 
-    // MARK: - Relationships
+        /// Date the plant was created.
+        var createdAt: Date = Date()
 
-    @Relationship(deleteRule: .cascade, inverse: \WateringLog.plant)
-    var wateringLogs: [WateringLog]
+        // MARK: - Relationships
 
-    /// The grow group this plant belongs to.
-    var grow: Grow?
+        @Relationship(deleteRule: .cascade, inverse: \WateringLog.plant)
+        var wateringLogs: [WateringLog]
 
-    // MARK: - Init
+        /// The grow group this plant belongs to.
+        var grow: Grow?
 
-    init(
-        id: UUID = UUID(),
-        plantName: String,
-        potSize: String,
-        mediumType: String,
-        maxRetentionCapacity: Double,
-        goalRunoffPercent: Double = AppConstants.targetRunoffPercent,
-        createdAt: Date = Date(),
-        grow: Grow? = nil
-    ) {
-        self.id = id
-        self.plantName = plantName
-        self.potSize = potSize
-        self.mediumType = mediumType
-        self.maxRetentionCapacity = max(maxRetentionCapacity, 0.001)
-        // Clamp to valid range — prevents division by zero in recommendation algorithm
-        self.goalRunoffPercent = min(max(goalRunoffPercent, 0.1), 99.9)
-        self.createdAt = createdAt
-        self.wateringLogs = []
-        self.grow = grow
+        // MARK: - Init
+
+        init(
+            id: UUID = UUID(),
+            plantName: String,
+            potSize: String,
+            mediumType: String,
+            maxRetentionCapacity: Double,
+            goalRunoffPercent: Double = AppConstants.targetRunoffPercent,
+            createdAt: Date = Date(),
+            grow: Grow? = nil
+        ) {
+            self.id = id
+            self.plantName = plantName
+            self.potSize = potSize
+            self.mediumType = mediumType
+            self.maxRetentionCapacity = max(maxRetentionCapacity, 0.001)
+            // Clamp to valid range — prevents division by zero in recommendation algorithm
+            self.goalRunoffPercent = min(max(goalRunoffPercent, 0.1), 99.9)
+            self.createdAt = createdAt
+            self.wateringLogs = []
+            self.grow = grow
+        }
     }
 }

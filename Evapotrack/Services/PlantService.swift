@@ -3,6 +3,7 @@
 // Evapotrack
 //
 // CRUD operations for Plant entities using SwiftData.
+// A failed save rolls back, so nothing half-done stays in memory.
 
 import Foundation
 import SwiftData
@@ -12,9 +13,17 @@ import OSLog
 final class PlantService {
 
     private let modelContext: ModelContext
+    private let save: SaveHandler
+    private let photoStore: PhotoStore
 
-    init(modelContext: ModelContext) {
+    init(
+        modelContext: ModelContext,
+        photoStore: PhotoStore = .shared,
+        save: @escaping SaveHandler = { try $0.save() }
+    ) {
         self.modelContext = modelContext
+        self.photoStore = photoStore
+        self.save = save
     }
 
     func addPlant(_ plant: Plant) throws {
@@ -31,8 +40,8 @@ final class PlantService {
             }
         }
         modelContext.insert(plant)
-        try modelContext.save()
-        Logger.services.info("Added plant: \(plant.plantName)")
+        try modelContext.saveOrRollback(using: save, action: "Add plant")
+        Logger.services.info("Added plant")
     }
 
     func fetchAll() -> [Plant] {
@@ -47,10 +56,33 @@ final class PlantService {
         }
     }
 
+    /// Updates a plant's details. Watering logs are not touched: retained
+    /// volumes stay as measured, and Capacity % and Next recalculate from the
+    /// new values the next time they are shown.
+    func updatePlant(
+        _ plant: Plant,
+        name: String,
+        potSize: String,
+        mediumType: String,
+        maxRetentionCapacity: Double,
+        goalRunoffPercent: Double
+    ) throws {
+        plant.plantName = name
+        plant.potSize = potSize
+        plant.mediumType = mediumType
+        plant.maxRetentionCapacity = maxRetentionCapacity
+        plant.goalRunoffPercent = goalRunoffPercent
+        try modelContext.saveOrRollback(using: save, action: "Edit plant")
+        Logger.services.info("Edited plant")
+    }
+
+    /// Deletes the plant and, by cascade, its watering logs. Their photo files
+    /// are removed after the deletion is saved.
     func deletePlant(_ plant: Plant) throws {
-        let name = plant.plantName
+        let photoIDs = plant.wateringLogs.compactMap(\.photoFileID)
         modelContext.delete(plant)
-        try modelContext.save()
-        Logger.services.info("Deleted plant: \(name)")
+        try modelContext.saveOrRollback(using: save, action: "Delete plant")
+        photoIDs.forEach { photoStore.deletePhoto(id: $0) }
+        Logger.services.info("Deleted plant")
     }
 }

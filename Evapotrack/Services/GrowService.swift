@@ -3,6 +3,7 @@
 // Evapotrack
 //
 // CRUD operations for Grow entities using SwiftData.
+// A failed save rolls back, so nothing half-done stays in memory.
 
 import Foundation
 import SwiftData
@@ -12,9 +13,17 @@ import OSLog
 final class GrowService {
 
     private let modelContext: ModelContext
+    private let save: SaveHandler
+    private let photoStore: PhotoStore
 
-    init(modelContext: ModelContext) {
+    init(
+        modelContext: ModelContext,
+        photoStore: PhotoStore = .shared,
+        save: @escaping SaveHandler = { try $0.save() }
+    ) {
         self.modelContext = modelContext
+        self.photoStore = photoStore
+        self.save = save
     }
 
     func addGrow(_ grow: Grow) throws {
@@ -24,8 +33,8 @@ final class GrowService {
             throw ServiceError.limitExceeded
         }
         modelContext.insert(grow)
-        try modelContext.save()
-        Logger.services.info("Added grow: \(grow.growName)")
+        try modelContext.saveOrRollback(using: save, action: "Add grow")
+        Logger.services.info("Added grow")
     }
 
     func fetchAll() -> [Grow] {
@@ -40,10 +49,13 @@ final class GrowService {
         }
     }
 
+    /// Deletes the grow and, by cascade, its plants and their logs. Their
+    /// photo files are removed after the deletion is saved.
     func deleteGrow(_ grow: Grow) throws {
-        let name = grow.growName
+        let photoIDs = grow.plants.flatMap { $0.wateringLogs.compactMap(\.photoFileID) }
         modelContext.delete(grow)
-        try modelContext.save()
-        Logger.services.info("Deleted grow: \(name)")
+        try modelContext.saveOrRollback(using: save, action: "Delete grow")
+        photoIDs.forEach { photoStore.deletePhoto(id: $0) }
+        Logger.services.info("Deleted grow")
     }
 }

@@ -263,7 +263,7 @@ final class ValidationTests: XCTestCase {
     func test_validateMaxRetention_zero_returnsInvalidWithMessage() {
         XCTAssertEqual(
             ValidationService.validateMaxRetention(0.0),
-            .invalid("Max retention capacity must be between 0.001 and 100 liters.")
+            .invalid("Max retention capacity must be between 0.001 L and 100.00 L.")
         )
     }
 
@@ -274,7 +274,7 @@ final class ValidationTests: XCTestCase {
     func test_validateWaterAdded_zero_returnsInvalidWithMessage() {
         XCTAssertEqual(
             ValidationService.validateWaterAdded(0.0),
-            .invalid("Water added must be between 0.001 and 100 liters.")
+            .invalid("Water added must be between 0.001 L and 100.00 L.")
         )
     }
 
@@ -300,7 +300,7 @@ final class ValidationTests: XCTestCase {
     func test_validateTemperature_outOfRange_returnsInvalidWithMessage() {
         XCTAssertEqual(
             ValidationService.validateTemperature(-51.0),
-            .invalid("Temperature must be between -50 and 60 °C.")
+            .invalid("Temperature must be between -50.0 °C and 60.0 °C.")
         )
     }
 
@@ -328,5 +328,50 @@ final class ValidationTests: XCTestCase {
             ValidationService.validateDate(tomorrow, now: fixedNow),
             .invalid("Date cannot be in the future.")
         )
+    }
+
+    // MARK: - Messages in the User's Units
+
+    func test_waterAddedMessage_usesMilliliters() {
+        XCTAssertEqual(
+            ValidationService.validateWaterAdded(0.0, unit: .milliliters),
+            .invalid("Water added must be between 1 mL and 100000 mL.")
+        )
+    }
+
+    func test_waterAddedMessage_usesGallons_withLimitsThatAreThemselvesValid() {
+        // 0.001 L = 0.000264 gal (shown rounded up), 100 L = 26.417 gal (shown rounded down).
+        XCTAssertEqual(
+            ValidationService.validateWaterAdded(0.0, unit: .gallons),
+            .invalid("Water added must be between 0.0003 gal and 26.41 gal.")
+        )
+        XCTAssertTrue(Validators.isValidVolume(UnitConversionService.toLiters(0.0003, from: .gallons)))
+        XCTAssertTrue(Validators.isValidVolume(UnitConversionService.toLiters(26.41, from: .gallons)))
+    }
+
+    func test_maxRetentionMessage_usesMilliliters() {
+        XCTAssertEqual(
+            ValidationService.validateMaxRetention(0.0, unit: .milliliters),
+            .invalid("Max retention capacity must be between 1 mL and 100000 mL.")
+        )
+    }
+
+    func test_temperatureMessage_usesFahrenheit() {
+        XCTAssertEqual(
+            ValidationService.validateTemperature(-51.0, unit: .fahrenheit),
+            .invalid("Temperature must be between -58.0 °F and 140.0 °F.")
+        )
+    }
+
+    // MARK: - Goal Runoff Range
+
+    func test_goalRunoffRange_is5To50Percent() {
+        let range = AppConstants.goalRunoffPercentRange
+        XCTAssertFalse(range.contains(4.9))
+        XCTAssertTrue(range.contains(5.0))
+        XCTAssertTrue(range.contains(15.0))
+        XCTAssertTrue(range.contains(50.0))
+        XCTAssertFalse(range.contains(50.1))
+        XCTAssertEqual(Strings.goalRunoffRange, "Goal Runoff % must be between 5 and 50.")
     }
 }

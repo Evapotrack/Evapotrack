@@ -156,7 +156,7 @@ struct PlantListView: View {
         }
         .adaptiveSheet(isPresented: $isShowingCreatePlant) {
             NavigationStack {
-                CreatePlantView(grow: grow)
+                PlantFormView(mode: .create(grow))
             }
             .preferredColorScheme(settingsVM.colorScheme)
         }

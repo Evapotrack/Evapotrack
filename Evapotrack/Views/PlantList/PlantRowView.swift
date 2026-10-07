@@ -14,8 +14,9 @@ struct PlantRowView: View {
     let onToggleSelection: () -> Void
 
     var body: some View {
-        HStack(spacing: 12) {
-            // Left-side circular selection indicator
+        HStack(spacing: 2) {
+            // Left-side circular selection indicator (44 pt tap target; the
+            // spacing is reduced so the symbol and text stay where they were)
             Button {
                 onToggleSelection()
             } label: {
@@ -23,8 +24,11 @@ struct PlantRowView: View {
                     .font(.title3)
                     .fontWeight(.semibold)
                     .foregroundStyle(isSelected ? Color.evPrimaryBlue : Color.evSlateGray)
+                    .frame(minWidth: 44, minHeight: 44)
+                    .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .accessibilityAddTraits(isSelected ? .isSelected : [])
             .accessibilityLabel(isSelected ? Strings.deselectItem(plant.plantName) : Strings.selectItem(plant.plantName))
 
             // Plant info and status

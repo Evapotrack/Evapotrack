@@ -45,7 +45,7 @@ struct LimitExceededView: View {
                 } label: {
                     Text(Strings.close)
                         .font(.title3.weight(.bold))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.evOnPrimary)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
                         .background(

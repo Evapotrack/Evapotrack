@@ -47,16 +47,26 @@ enum ValidationService {
             : .invalid(Strings.mediumTypeBlank)
     }
 
-    static func validateMaxRetention(_ value: Double) -> ValidationResult {
-        Validators.isValidMaxRetention(value)
+    /// Bounds in the message are shown in the user's water unit.
+    static func validateMaxRetention(_ liters: Double, unit: WaterUnit = .liters) -> ValidationResult {
+        let range = AppConstants.maxRetentionCapacityRange
+        return Validators.isValidMaxRetention(liters)
             ? .valid
-            : .invalid(Strings.maxRetentionRange)
+            : .invalid(Strings.maxRetentionRange(
+                min: DisplayFormatter.waterLimit(range.lowerBound, unit: unit, roundingUp: true),
+                max: DisplayFormatter.waterLimit(range.upperBound, unit: unit, roundingUp: false)
+            ))
     }
 
-    static func validateWaterAdded(_ value: Double) -> ValidationResult {
-        Validators.isValidVolume(value)
+    /// Bounds in the message are shown in the user's water unit.
+    static func validateWaterAdded(_ liters: Double, unit: WaterUnit = .liters) -> ValidationResult {
+        let range = AppConstants.waterAddedRange
+        return Validators.isValidVolume(liters)
             ? .valid
-            : .invalid(Strings.waterAddedRange)
+            : .invalid(Strings.waterAddedRange(
+                min: DisplayFormatter.waterLimit(range.lowerBound, unit: unit, roundingUp: true),
+                max: DisplayFormatter.waterLimit(range.upperBound, unit: unit, roundingUp: false)
+            ))
     }
 
     static func validateRunoff(_ runoff: Double, waterAdded: Double) -> ValidationResult {
@@ -65,10 +75,15 @@ enum ValidationService {
             : .invalid(Strings.runoffRange)
     }
 
-    static func validateTemperature(_ value: Double) -> ValidationResult {
-        Validators.isValidTemperature(value)
+    /// Bounds in the message are shown in the user's temperature unit.
+    static func validateTemperature(_ celsius: Double, unit: TemperatureUnit = .celsius) -> ValidationResult {
+        let range = AppConstants.temperatureRangeCelsius
+        return Validators.isValidTemperature(celsius)
             ? .valid
-            : .invalid(Strings.temperatureRange)
+            : .invalid(Strings.temperatureRange(
+                min: DisplayFormatter.temperature(range.lowerBound, unit: unit),
+                max: DisplayFormatter.temperature(range.upperBound, unit: unit)
+            ))
     }
 
     static func validateHumidity(_ value: Double) -> ValidationResult {

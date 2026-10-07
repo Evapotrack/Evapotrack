@@ -1,5 +1,7 @@
 # Evapotrack - Requirements
 
+> Internal document. Moved out of the public website folder (`docs/`) on 2026-09-28 and updated for the next revision (recommendation engine, Edit Plant, schema V2, watering photos).
+
 ## Product Overview
 
 Evapotrack is an iOS 17+ application for tracking and optimizing plant watering through evapotranspiration data. Users log watering events, and the app calculates retention metrics and recommends next watering amounts based on historical patterns.
@@ -17,13 +19,15 @@ Evapotrack is an iOS 17+ application for tracking and optimizing plant watering 
 - FR-2.1: Users can create plants within a grow with: name, pot size, medium type, max retention capacity, and optional goal runoff %.
 - FR-2.2: Plant names must be unique within a grow (case-insensitive).
 - FR-2.3: Maximum 25 plants per grow.
-- FR-2.4: Plants are immutable after creation (no editing).
+- FR-2.4: Plants can be edited (name, pot size, medium, max retention capacity, goal runoff %). Editing never changes watering logs.
 - FR-2.5: Users can delete plants. Deleting a plant cascade-deletes all watering logs.
 - FR-2.6: Plants include a calculator to derive max retention capacity from a test watering (water added - runoff = retention).
 - FR-2.7: Plants are listed by creation date, newest first.
 
 ### FR-3: Watering Log Management
-- FR-3.1: Users can log watering events with: water added, runoff collected, date/time, and optional temperature and humidity.
+- FR-3.1: Users can log watering events with: water added, runoff collected, date/time, and optional temperature, humidity, and one photo.
+- FR-3.1a: A photo can be opened full screen from History and zoomed (pinch, double-tap), then closed (X, swipe down, VoiceOver escape).
+- FR-3.1b: Retaining more than 105% of max retention capacity asks for confirmation instead of rejecting the log.
 - FR-3.2: Two logs cannot share the same timestamp (compared to the minute) for one plant.
 - FR-3.3: Users can delete individual watering logs.
 - FR-3.4: Logs are immutable after creation (no editing).
@@ -35,9 +39,9 @@ Evapotrack is an iOS 17+ application for tracking and optimizing plant watering 
 - FR-4.1: Retained volume = water added - runoff collected (computed on creation).
 - FR-4.2: Runoff % = (runoff / water added) x 100 (computed on creation).
 - FR-4.3: Interval hours between consecutive logs recalculated on add/delete.
-- FR-4.4: Capacity % = (retained / max retention capacity) x 100, capped at 105%.
-- FR-4.5: Average retained computed from all logs for a plant.
-- FR-4.6: Next water recommendation blends most recent retained with historical average (50/50) and divides by retention factor.
+- FR-4.4: Capacity % = (retained / max retention capacity) x 100, not capped (values above 100% mean the capacity may be set too low).
+- FR-4.5: Expected retention is estimated by RecommendationEngine (damped-trend level, with no-runoff waterings as lower bounds and full-runoff waterings skipped).
+- FR-4.6: Next = expected retention / (1 - goal%), capped by max retention capacity and 100 L, with a plain-language explanation.
 - FR-4.7: Goal runoff amount computed from next recommendation and goal %.
 
 ### FR-5: Display & Units
@@ -62,7 +66,7 @@ Evapotrack is an iOS 17+ application for tracking and optimizing plant watering 
 ## Non-Functional Requirements
 
 ### NFR-1: Data Storage
-- All data stored locally via SwiftData. No network calls, no cloud sync, no third-party SDKs.
+- All data stored locally via SwiftData (schema versioned with a migration plan); photos as files in Application Support. No network calls, no cloud sync, no third-party SDKs.
 
 ### NFR-2: Performance
 - Entity caps (30 grows, 25 plants/grow) keep SwiftData performant on older devices.
@@ -71,7 +75,7 @@ Evapotrack is an iOS 17+ application for tracking and optimizing plant watering 
 ### NFR-3: Platform
 - iOS 17.0+ minimum deployment target.
 - SwiftUI with SwiftData persistence.
-- Supports iPhone and iPad in portrait orientation.
+- iPhone in portrait; iPad in all orientations.
 
 ### NFR-4: Accessibility
 - All interactive elements have accessibility labels.

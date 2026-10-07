@@ -9,78 +9,93 @@
 //
 // All values stored in internal units (liters, Celsius).
 // All stored values are unrounded; rounding is display-only.
+//
+// Part of the current schema (SchemaV2). Refer to it through the
+// top-level typealias defined in Schema.swift.
 
 import Foundation
 import SwiftData
 
-@Model
-final class WateringLog {
+extension SchemaV2 {
 
-    // MARK: - Identity
+    @Model
+    nonisolated final class WateringLog {
 
-    @Attribute(.unique) var id: UUID
+        // MARK: - Identity
 
-    // MARK: - User-Entered Fields
+        @Attribute(.unique) var id: UUID
 
-    /// Volume of water added, in liters. Must be > 0.
-    var waterAdded: Double
+        // MARK: - User-Entered Fields
 
-    /// Volume of runoff collected, in liters. Must be ≥ 0 and < waterAdded.
-    var runoffCollected: Double
+        /// Volume of water added, in liters. Must be > 0.
+        var waterAdded: Double
 
-    /// Date and time the watering occurred.
-    var dateTime: Date
+        /// Volume of runoff collected, in liters. Must be ≥ 0 and ≤ waterAdded.
+        var runoffCollected: Double
 
-    /// Ambient temperature at time of watering, in Celsius (optional).
-    var temperatureCelsius: Double?
+        /// Date and time the watering occurred.
+        var dateTime: Date
 
-    /// Relative humidity at time of watering, 0–100 (optional).
-    var humidityPercent: Double?
+        /// Ambient temperature at time of watering, in Celsius (optional).
+        var temperatureCelsius: Double?
 
-    // MARK: - Calculated Fields (stored unrounded)
+        /// Relative humidity at time of watering, 0–100 (optional).
+        var humidityPercent: Double?
 
-    /// Water retained by the medium: waterAdded - runoffCollected.
-    var retained: Double
+        // MARK: - Calculated Fields (stored unrounded)
 
-    /// Runoff as a percentage of water added: (runoffCollected / waterAdded) × 100.
-    var runoffPercent: Double
+        /// Water retained by the medium: waterAdded - runoffCollected.
+        var retained: Double
 
-    /// Hours since the previous watering log for the same plant.
-    /// nil for the chronologically first log.
-    /// Recalculated by the system when logs are added or deleted.
-    var intervalHours: Double?
+        /// Runoff as a percentage of water added: (runoffCollected / waterAdded) × 100.
+        var runoffPercent: Double
 
-    // MARK: - Relationships
+        /// Hours since the previous watering log for the same plant.
+        /// nil for the chronologically first log.
+        /// Recalculated by the system when logs are added or deleted.
+        var intervalHours: Double?
 
-    @Relationship var plant: Plant?
+        // MARK: - Photo (added in SchemaV2)
 
-    // MARK: - Init
+        /// Identifies the optional photo files in Application Support/WateringPhotos.
+        /// nil when the log has no photo (every log created before SchemaV2).
+        /// Only the identifier is stored, never a file path.
+        var photoFileID: UUID? = nil
 
-    init(
-        id: UUID = UUID(),
-        waterAdded: Double,
-        runoffCollected: Double,
-        dateTime: Date,
-        temperatureCelsius: Double? = nil,
-        humidityPercent: Double? = nil,
-        intervalHours: Double? = nil,
-        plant: Plant? = nil
-    ) {
-        let clampedWater = max(waterAdded, 0.001)
-        let clampedRunoff = max(runoffCollected, 0)
-        self.id = id
-        self.waterAdded = clampedWater
-        self.runoffCollected = clampedRunoff
-        self.dateTime = dateTime
-        self.temperatureCelsius = temperatureCelsius
-        self.humidityPercent = humidityPercent
-        self.plant = plant
+        // MARK: - Relationships
 
-        // Compute derived fields — stored unrounded
-        self.retained = max(0, clampedWater - clampedRunoff)
-        self.runoffPercent = clampedWater > 0
-            ? min((clampedRunoff / clampedWater) * 100.0, 100.0)
-            : 0
-        self.intervalHours = intervalHours
+        @Relationship var plant: Plant?
+
+        // MARK: - Init
+
+        init(
+            id: UUID = UUID(),
+            waterAdded: Double,
+            runoffCollected: Double,
+            dateTime: Date,
+            temperatureCelsius: Double? = nil,
+            humidityPercent: Double? = nil,
+            intervalHours: Double? = nil,
+            photoFileID: UUID? = nil,
+            plant: Plant? = nil
+        ) {
+            let clampedWater = max(waterAdded, 0.001)
+            let clampedRunoff = max(runoffCollected, 0)
+            self.id = id
+            self.waterAdded = clampedWater
+            self.runoffCollected = clampedRunoff
+            self.dateTime = dateTime
+            self.temperatureCelsius = temperatureCelsius
+            self.humidityPercent = humidityPercent
+            self.plant = plant
+
+            // Compute derived fields — stored unrounded
+            self.retained = max(0, clampedWater - clampedRunoff)
+            self.runoffPercent = clampedWater > 0
+                ? min((clampedRunoff / clampedWater) * 100.0, 100.0)
+                : 0
+            self.intervalHours = intervalHours
+            self.photoFileID = photoFileID
+        }
     }
 }

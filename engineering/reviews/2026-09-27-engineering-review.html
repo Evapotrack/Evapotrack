@@ -1,0 +1,1052 @@
+<title>EvapoTrack Engineering Review</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#f4f7fa; --surface:#ffffff; --ink:#18283b; --muted:#536276; --line:#d6dee8;
+  --accent:#2a68b5; --accent-soft:#e2edfa; --code-bg:#eef3f8;
+  --p0:#b3261e; --p1:#bf4a0c; --p2:#8a5a00; --p3:#4a5a6e;
+  --fact:#1f6f4a; --finding:#9a3b12; --rec:#2a68b5;
+  --display:"Nunito", ui-rounded, "SF Pro Rounded", system-ui, sans-serif;
+  --body:"Source Sans 3", -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0f1621; --surface:#161f2c; --ink:#e3eaf2; --muted:#9aa9ba; --line:#2a3748;
+    --accent:#72b1f6; --accent-soft:#1b2b41; --code-bg:#1b2533;
+    --p0:#ff8a80; --p1:#ffab70; --p2:#e8c35a; --p3:#a9b6c6;
+    --fact:#6fd3a0; --finding:#ffab70; --rec:#72b1f6;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0f1621; --surface:#161f2c; --ink:#e3eaf2; --muted:#9aa9ba; --line:#2a3748;
+  --accent:#72b1f6; --accent-soft:#1b2b41; --code-bg:#1b2533;
+  --p0:#ff8a80; --p1:#ffab70; --p2:#e8c35a; --p3:#a9b6c6;
+  --fact:#6fd3a0; --finding:#ffab70; --rec:#72b1f6;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:17px/1.6 var(--body);padding-inline:16px;padding-block:24px 64px}
+.wrap{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:32px}
+@media (min-width:1040px){.wrap{grid-template-columns:230px minmax(0,1fr)}}
+nav.toc{font-size:14px}
+@media (min-width:1040px){nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);align-self:start;max-height:calc(100vh - 32px);overflow:auto}}
+nav.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+nav.toc a{color:var(--muted);text-decoration:none;display:block;padding:3px 8px;border-radius:6px}
+nav.toc a:hover,nav.toc a:focus-visible{color:var(--accent);background:var(--accent-soft);outline:none}
+nav.toc .toc-h{font-family:var(--display);font-weight:800;color:var(--ink);margin:0 0 8px 8px;font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+main{min-width:0;max-width:78ch}
+header.doc{border-bottom:2px solid var(--line);padding-bottom:20px;margin-bottom:8px}
+.eyebrow{font-family:var(--display);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:800;margin:0}
+h1,h2,h3,h4{font-family:var(--display);line-height:1.2;text-wrap:balance;color:var(--ink)}
+h1{font-size:2.1rem;margin:.2em 0 .3em;font-weight:800}
+h2{font-size:1.55rem;margin:2.2em 0 .6em;padding-top:.6em;border-top:1px solid var(--line);font-weight:800}
+h3{font-size:1.2rem;margin:1.7em 0 .5em;font-weight:800}
+h4{font-size:1.02rem;margin:1.3em 0 .4em;font-weight:700}
+p,li{max-width:72ch}
+.meta{color:var(--muted);font-size:15px;display:flex;flex-wrap:wrap;gap:6px 18px;margin:0}
+a{color:var(--accent)}
+code,.mono{font-family:var(--mono);font-size:.84em;background:var(--code-bg);padding:.08em .35em;border-radius:4px;overflow-wrap:anywhere}
+pre{font-family:var(--mono);font-size:13.5px;line-height:1.55;background:var(--code-bg);border:1px solid var(--line);border-radius:8px;padding:14px 16px;overflow-x:auto;margin:1em 0}
+pre code{background:none;padding:0;font-size:inherit}
+.tbl{overflow-x:auto;margin:1em 0 1.4em;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14.5px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;vertical-align:top;padding:8px 11px;border-bottom:1px solid var(--line)}
+th{font-family:var(--display);font-weight:700;font-size:13px;letter-spacing:.02em;background:var(--accent-soft);color:var(--ink)}
+tr:last-child td{border-bottom:none}
+td.num,th.num{text-align:right;white-space:nowrap}
+.tag{display:inline-block;font-family:var(--display);font-weight:800;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:1px 7px;border-radius:999px;border:1.5px solid currentColor;vertical-align:.1em;margin-right:6px;white-space:nowrap}
+.tag.fact{color:var(--fact)} .tag.finding{color:var(--finding)} .tag.rec{color:var(--rec)}
+.sev{display:inline-block;font-family:var(--mono);font-weight:600;font-size:12px;padding:1px 7px;border-radius:5px;color:var(--surface);white-space:nowrap}
+.sev.p0{background:var(--p0)} .sev.p1{background:var(--p1)} .sev.p2{background:var(--p2)} .sev.p3{background:var(--p3)}
+.v{font-family:var(--mono);font-size:11.5px;color:var(--muted);border:1px dashed var(--line);border-radius:5px;padding:0 5px;margin-left:6px;white-space:nowrap}
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin:1.2em 0}
+.summary-grid div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.summary-grid b{display:block;font-family:var(--display);font-size:1.5rem;line-height:1.1}
+.summary-grid span{color:var(--muted);font-size:14px}
+.finding{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--p3);border-radius:8px;padding:12px 16px;margin:14px 0}
+.finding.s0{border-left-color:var(--p0)} .finding.s1{border-left-color:var(--p1)} .finding.s2{border-left-color:var(--p2)}
+.finding h4{margin:0 0 6px;display:flex;flex-wrap:wrap;gap:6px 8px;align-items:baseline}
+.finding h4 .id{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.finding dl{display:grid;grid-template-columns:1fr;gap:2px 14px;margin:0;font-size:15px}
+@media (min-width:640px){.finding dl{grid-template-columns:150px minmax(0,1fr)}}
+.finding dt{font-weight:700;color:var(--muted);font-size:13px;text-transform:uppercase;letter-spacing:.05em;padding-top:3px}
+.finding dd{margin:0 0 6px}
+.callout{background:var(--accent-soft);border-radius:8px;padding:12px 16px;margin:1em 0}
+.callout p:last-child{margin-bottom:0}
+.scope{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.scope section{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 16px 10px}
+.scope h3{margin-top:.6em}
+.scope ul{padding-left:1.1em;margin:.4em 0}
+.scope li{margin:.35em 0}
+ol.seq{padding-left:1.4em} ol.seq li{margin:.35em 0}
+.small{font-size:14px;color:var(--muted)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+
+<div class="wrap">
+<nav class="toc" aria-label="Contents">
+  <p class="toc-h">Contents</p>
+  <ol>
+    <li><a href="#exec">Executive summary</a></li>
+    <li><a href="#inventory">Inventory &amp; method</a></li>
+    <li><a href="#arch">Architecture</a></li>
+    <li><a href="#data">Data model</a></li>
+    <li><a href="#formulas">Watering formulas</a></li>
+    <li><a href="#next">Next recommendation</a></li>
+    <li><a href="#matrix">Algorithm test matrix</a></li>
+    <li><a href="#alg-concerns">Algorithm concerns</a></li>
+    <li><a href="#alg-options">Algorithm options</a></li>
+    <li><a href="#units">Unit conversion</a></li>
+    <li><a href="#mrc">Max Retention Capacity</a></li>
+    <li><a href="#integrity">Persistence &amp; data safety</a></li>
+    <li><a href="#ios">iOS review &amp; UX</a></li>
+    <li><a href="#website">Website review</a></li>
+    <li><a href="#consistency">Website ↔ app</a></li>
+    <li><a href="#photo">Photo feasibility</a></li>
+    <li><a href="#photo-storage">Photo storage</a></li>
+    <li><a href="#photo-size">Photo size</a></li>
+    <li><a href="#photo-ui">Photo UI</a></li>
+    <li><a href="#privacy">Privacy &amp; permissions</a></li>
+    <li><a href="#photo-export">Photo export</a></li>
+    <li><a href="#perf">Performance</a></li>
+    <li><a href="#a11y">Accessibility</a></li>
+    <li><a href="#l10n">Localization</a></li>
+    <li><a href="#testing">Testing</a></li>
+    <li><a href="#release">Build &amp; release</a></li>
+    <li><a href="#debt">Technical debt</a></li>
+    <li><a href="#register">Findings register</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#scope">Next-revision scope</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="doc">
+  <p class="eyebrow">Periodic engineering review · audit only, no code changed</p>
+  <h1>EvapoTrack Engineering Review</h1>
+  <p class="meta"><span>Reviewed 27 Sep 2026</span><span>Repo <code>evapotrack/evapotrack</code> @ <code>89cc8c8</code></span><span>iOS app (<code>Evapotrack/</code>) + website (<code>docs/</code>)</span></p>
+</header>
+
+<p>Labels used throughout: <span class="tag fact">Fact</span> is shown directly by source or configuration. <span class="tag finding">Finding</span> is an issue, inconsistency or risk. <span class="tag rec">Recommendation</span> is a proposed change. Severity: <span class="sev p0">P0</span> critical, <span class="sev p1">P1</span> high, <span class="sev p2">P2</span> medium, <span class="sev p3">P3</span> low. <span class="v">verify</span> marks findings that need a device or Xcode run to confirm.</p>
+
+<!-- ============================================================ -->
+<h2 id="exec">Executive summary</h2>
+
+<p><span class="tag fact">Fact</span> EvapoTrack is a small, tidy SwiftUI + SwiftData app (about 5,400 lines of Swift, 6 XCTest files, no third-party dependencies, no network code, no entitlements) targeting iOS 17. The website is six static HTML pages served by GitHub Pages from <code>docs/</code>. The product description in the brief is accurate: it logs water added and runoff, stores retained volume and runoff %, compares retained against a user-entered Max Retention Capacity (MRC), and recommends a next watering amount from history. Temperature and humidity are recorded and charted but not used in any calculation.</p>
+
+<div class="summary-grid">
+  <div><b>0</b><span>confirmed P0 issues</span></div>
+  <div><b>10</b><span>P1 findings (2 need device verification)</span></div>
+  <div><b>21</b><span>P2 findings</span></div>
+  <div><b>16</b><span>P3 findings</span></div>
+</div>
+
+<p>What matters most, in order:</p>
+<ol>
+  <li><strong>The Next recommendation lags behind a growing plant.</strong> <code>Next = ((lastRetained + allTimeAverageRetained) / 2) / (1 − goal)</code>. Half the estimate always comes from the all-time average, so early small waterings keep pulling Next down for the life of the plant. In a simulation where demand rises 6% per watering, a grower who follows Next exactly gets <em>zero runoff on about 79% of waterings</em>. That violates the app's own protocol ("you must always have runoff"). Zero-runoff logs then understate demand, which feeds the lag. The in-app help also says "the more logs you record, the more accurate the recommendation becomes", which is false for a growing plant.</li>
+  <li><strong>Max Retention Capacity means three different things.</strong> The website table gives container capacity from dry (3 gal soil = 4.5 L). The in-app calculator gives what one test watering retained, which depends on how dry the pot was. The built-in example data and the public screenshot use 3 gal soil = 1.6 L. Combined with a hard rule that rejects any log retaining more than 105% of MRC, and plants that cannot be edited, an underestimated MRC blocks valid logs. The only fix available to the user is to delete the plant and its whole history.</li>
+  <li><strong>Decimal input fails in comma-decimal regions.</strong> Every numeric field is parsed with <code>Double(text)</code>, which only accepts <code>.</code>. On an iPhone set to Spain, Argentina, Colombia, Germany and similar regions, the decimal pad types <code>,</code>, so "1,5" is rejected as "must be a number". This hits the Spanish-speaking audience the app is localized for.</li>
+  <li><strong>A last watering with 100% runoff hides all insights.</strong> Runoff equal to water added is allowed (a deliberate March 22 change), but it makes retained 0, the recommendation returns <code>nil</code>, and the dashboard says "No insights yet" even with dozens of logs.</li>
+  <li><strong>Data integrity basics are good but not ready for schema change.</strong> Canonical units (liters, °C) are stored unrounded, derived values cannot go stale because logs are immutable, and cascade deletes are correct and tested. However, there is no <code>VersionedSchema</code> or migration test, save failures are not rolled back, and there is no restore path except an iOS device backup. Versioning should be added before the photo field.</li>
+  <li><strong>The website claims Android support</strong> (feature card, About paragraph, privacy policy "Room database", support page "Android 8.0 or later"). There is no Android code in this repository.</li>
+</ol>
+
+<p><strong>Photo attachments are feasible and fit the architecture cleanly</strong> with no new permissions. Use SwiftUI <code>PhotosPicker</code> (out-of-process, no Photos permission prompt, no Info.plist key). Import through a file-backed <code>Transferable</code>. Downsample with ImageIO to 2048 px on the long edge and re-encode as HEIC without metadata, which strips GPS. Store the image as a file in Application Support and keep only an optional photo ID on <code>WateringLog</code>. Tapping an attached photo opens it in a larger, closable viewer with zoom, so the grower can inspect the plant up close. Budget about 0.45 MB per photo including a thumbnail, so 1,000 photos is about 450 MB. Details are in the <a href="#photo">Photo attachment feasibility</a> section.</p>
+
+<!-- ============================================================ -->
+<h2 id="inventory">Inventory &amp; method</h2>
+<div class="tbl"><table>
+<thead><tr><th>Area</th><th>Contents</th></tr></thead>
+<tbody>
+<tr><td>iOS app</td><td><code>Evapotrack/</code>: App (2), Models (4), Services (9), ViewModels (5), Views (18), Utilities (7), Resources (asset catalog with 8 color sets, app and launch icons, <code>PrivacyInfo.xcprivacy</code>)</td></tr>
+<tr><td>Project</td><td><code>EvapotrackDev.xcodeproj</code> (Xcode 26.2, objectVersion 77, file-system-synchronized groups), one shared scheme, targets <code>EvapotrackDev</code> (app) and <code>EvapotrackDevTests</code></td></tr>
+<tr><td>Tests</td><td><code>EvapotrackDevTests/</code>: InsightsAlgorithm (20), WateringCalculation (17), UnitConversion (30), Validation (64), Model (13), Navigation/Settings (8): 152 tests. No UI tests.</td></tr>
+<tr><td>Website</td><td><code>docs/</code> (GitHub Pages, <code>CNAME</code> evapotrack.com): index, reference, watering-protocol, privacy-policy, support, flyer; 5 screenshots; 29 MB <code>walkthrough.mp4</code>; Google verification file</td></tr>
+<tr><td>Internal docs</td><td><code>docs/Specification.md</code>, <code>DataModel.md</code>, <code>Architecture.md</code>, <code>Requirements.md</code>, <code>NavigationMap.md</code>, <code>video-watering-protocol-plan.md</code>. These sit inside the public Pages root.</td></tr>
+<tr><td>Ignored / absent</td><td><code>screenshots/</code> (working captures, gitignored), <code>private/</code>, App Store screenshots. No Android project anywhere in the repo.</td></tr>
+</tbody></table></div>
+<p><strong>Method.</strong> I read every Swift file, every test, the project file, the privacy manifest, the color assets and every website page. I checked the formulas against the public dashboard screenshot and they match to the displayed precision: last log 1.00 L / 0.10 L gives Retained 0.24 gal, Capacity 56.2%, Average 0.24 gal, Next 0.28 gal. I ported the calculation code to a script to run the test matrix and compare alternatives. <strong>Limits:</strong> this Linux container has no Swift toolchain or Xcode, so I could not build, run tests, see compiler warnings or test on a device. Items that depend on runtime behavior are marked <span class="v">verify</span>.</p>
+
+<!-- ============================================================ -->
+<h2 id="arch">Architecture</h2>
+<pre><code>EvapotrackApp  (@main · WindowGroup · .modelContainer([Grow, Plant, WateringLog]) · 3 s LaunchView)
+ │   injects SettingsViewModel via .environment; applies color scheme, tint, rounded font
+ ├── Presentation (SwiftUI, iOS 17)
+ │    ├── GrowListView ─── owns the only NavigationStack, @Query grows, example-data loader
+ │    │    └── PlantListView(grow) ── plants from grow.plants (no @Query)
+ │    │         └── PlantDashboardView(plant)
+ │    │              ├── Plant Info · SummaryPanelView · InsightsPanelView · HistoryPanelView
+ │    │              └── HistoryView (list ⇄ Swift Charts; expand/select/delete)
+ │    │                   └── WateringLogRowView (inline expand = the only "detail" view)
+ │    ├── Sheets (adaptiveSheet: sheet on iPhone, fullScreenCover on iPad)
+ │    │    CreateGrowView · CreatePlantView (+ MRC calculator) · AddWateringLogView · SettingsView
+ │    ├── HowToView(context: general | addWatering | chart)   static help, 1 external Link
+ │    └── Components: DeleteConfirmationView · LimitExceededView · LaunchView
+ ├── ViewModels (@Observable @MainActor, configure(modelContext:) pattern)
+ │    CreateGrowVM · CreatePlantVM · AddWateringLogVM · PlantDashboardVM · SettingsVM
+ ├── Services
+ │    ├── CRUD (@MainActor classes): GrowService · PlantService · WateringLogService
+ │    └── Pure (enums): WateringCalculationService · UnitConversionService · ValidationService
+ │                      DataExportService (+ GrowExportDocument) · HapticService
+ ├── Models
+ │    ├── SwiftData @Model: Grow ─cascade→ Plant ─cascade→ WateringLog
+ │    └── UserSettings (Codable JSON in UserDefaults key "userSettings")
+ ├── Utilities: Strings (EN/ES enum) · DisplayFormatter · Validators · Extensions
+ │              DateProvider · Logger (OSLog) · Color+Evapotrack
+ └── Resources: Assets.xcassets (8 light/dark color sets) · PrivacyInfo.xcprivacy
+
+Website (docs/, GitHub Pages): static HTML with inline CSS; no analytics; no JS except the
+flyer's QR generator; YouTube iframe on watering-protocol.html; self-hosted mp4 on index.html.</code></pre>
+<p><span class="tag fact">Fact</span> Build settings for the app target: <code>SWIFT_VERSION = 5.0</code>, <code>SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor</code>, <code>SWIFT_APPROACHABLE_CONCURRENCY = YES</code>, <code>IPHONEOS_DEPLOYMENT_TARGET = 17.0</code>, <code>TARGETED_DEVICE_FAMILY = 1,2</code>, iPhone portrait only, iPad all four orientations, generated Info.plist, <code>ITSAppUsesNonExemptEncryption = NO</code>, bundle id <code>com.evapotrack.app</code>, <code>MARKETING_VERSION = 1.0</code>, <code>CURRENT_PROJECT_VERSION = 1</code>, no Swift packages, no entitlements file, no permission usage strings. The test target does not set MainActor default isolation, so tests use <code>@MainActor</code> where they need it.</p>
+<p><span class="tag fact">Fact</span> Everything runs on the main actor. There is no async work apart from the launch and dismiss timers. That suits the current data scale. It matters for photos, because with MainActor as the default isolation any new image-processing type will run on the main thread unless it is explicitly marked <code>nonisolated</code>.</p>
+
+<!-- ============================================================ -->
+<h2 id="data">Data model</h2>
+<p><span class="tag fact">Fact</span> Persistence is SwiftData with the default store configuration: a single on-disk store in Application Support, autosave on, no CloudKit, no <code>VersionedSchema</code>, no <code>SchemaMigrationPlan</code>. Settings live in UserDefaults as JSON, with a custom decoder that handles missing and legacy keys and is tested.</p>
+<div class="tbl"><table>
+<thead><tr><th>Entity / field</th><th>Type</th><th>Req.</th><th>Default</th><th>Stored or calculated</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td colspan="6"><strong>Grow</strong>: create and delete only; sorted by <code>createdAt</code> descending (<code>@Query</code>)</td></tr>
+<tr><td>id</td><td>UUID</td><td>yes</td><td>UUID()</td><td>stored</td><td><code>@Attribute(.unique)</code>. Note that unique attributes upsert: inserting a duplicate id overwrites the existing row, which matters for any future import.</td></tr>
+<tr><td>growName</td><td>String</td><td>yes</td><td>–</td><td>stored</td><td>1–50 characters, unique case-insensitively (checked in the view model only)</td></tr>
+<tr><td>createdAt</td><td>Date</td><td>yes</td><td>Date()</td><td>stored</td><td></td></tr>
+<tr><td>plants</td><td>[Plant]</td><td>yes</td><td>[]</td><td>relationship</td><td><code>deleteRule: .cascade</code>, inverse <code>Plant.grow</code></td></tr>
+<tr><td colspan="6"><strong>Plant</strong>: create and delete only; sorted by <code>createdAt</code> descending (in memory)</td></tr>
+<tr><td>id, plantName</td><td>UUID, String</td><td>yes</td><td></td><td>stored</td><td>name unique within its grow</td></tr>
+<tr><td>potSize, mediumType</td><td>String</td><td>yes</td><td>–</td><td>stored</td><td>free text, not used in any calculation</td></tr>
+<tr><td>maxRetentionCapacity</td><td>Double (L)</td><td>yes</td><td>–</td><td>stored</td><td>init clamps to ≥ 0.001; validated 0.001–100 L; <strong>cannot be edited</strong></td></tr>
+<tr><td>goalRunoffPercent</td><td>Double</td><td>yes</td><td>15.0 (inline default)</td><td>stored</td><td>init clamps to 0.1–99.9</td></tr>
+<tr><td>createdAt</td><td>Date</td><td>yes</td><td>Date() (inline default)</td><td>stored</td><td></td></tr>
+<tr><td>wateringLogs</td><td>[WateringLog]</td><td>yes</td><td>[]</td><td>relationship</td><td>cascade, inverse <code>WateringLog.plant</code></td></tr>
+<tr><td>grow</td><td>Grow?</td><td>no</td><td>nil</td><td>relationship</td><td>always set by the UI</td></tr>
+<tr><td colspan="6"><strong>WateringLog</strong>: create and delete only (only <code>intervalHours</code> is ever changed); sorted by <code>dateTime</code> descending</td></tr>
+<tr><td>id</td><td>UUID</td><td>yes</td><td>UUID()</td><td>stored</td><td>unique</td></tr>
+<tr><td>waterAdded</td><td>Double (L)</td><td>yes</td><td>–</td><td>stored</td><td>init clamps to ≥ 0.001; validated 0.001–100 L</td></tr>
+<tr><td>runoffCollected</td><td>Double (L)</td><td>yes</td><td>–</td><td>stored</td><td>init clamps to ≥ 0; validated 0 ≤ R ≤ W. The comment at <code>WateringLog.swift:28</code> still says "&lt; waterAdded".</td></tr>
+<tr><td>dateTime</td><td>Date</td><td>yes</td><td>–</td><td>stored</td><td>not in the future; unique per plant to the minute</td></tr>
+<tr><td>temperatureCelsius</td><td>Double?</td><td>no</td><td>nil</td><td>stored</td><td>−50…60 °C; display only</td></tr>
+<tr><td>humidityPercent</td><td>Double?</td><td>no</td><td>nil</td><td>stored</td><td>0…100; display only</td></tr>
+<tr><td>retained</td><td>Double (L)</td><td>yes</td><td>–</td><td><strong>stored, calculated at init</strong></td><td><code>max(0, W − R)</code></td></tr>
+<tr><td>runoffPercent</td><td>Double</td><td>yes</td><td>–</td><td><strong>stored, calculated at init</strong></td><td><code>min(100, R / W × 100)</code></td></tr>
+<tr><td>intervalHours</td><td>Double?</td><td>no</td><td>nil</td><td><strong>stored, recalculated</strong></td><td>recomputed for every log of the plant on add and delete</td></tr>
+<tr><td>plant</td><td>Plant?</td><td>no</td><td>nil</td><td>relationship</td><td></td></tr>
+<tr><td colspan="6"><strong>Not stored, recomputed on every render:</strong> Capacity % (per log, against the plant's current MRC), average retained, Next and goal runoff (<code>PlantDashboardViewModel</code>).</td></tr>
+</tbody></table></div>
+<p><span class="tag finding">Finding</span> <strong>Stale-data risk is low today.</strong> <code>retained</code> and <code>runoffPercent</code> are stored copies of values derived from W and R, but nothing can change W, R or MRC after creation, so they cannot drift. The risk arrives the day log editing is added. Any edit path has to recompute these fields, or they should become computed properties in a schema version bump. <code>intervalHours</code> is recomputed for all of a plant's logs on every add and delete, so it is always consistent with the current set of logs.</p>
+
+<!-- ============================================================ -->
+<h2 id="formulas">Watering formulas (as implemented)</h2>
+<p><span class="tag fact">Fact</span> All quantities are liters unless stated. <em>W</em> = water added, <em>R</em> = runoff collected, <em>g</em> = plant goal runoff % (default 15), <em>MRC</em> = plant Max Retention Capacity. Logs are indexed <em>i = 1…n</em>, newest first.</p>
+<pre><code>// WateringLog.init  (WateringLog.swift:69-84), stored at creation
+W'          = max(W, 0.001)
+R'          = max(R, 0)
+retained_i  = max(0, W' − R')
+runoff%_i   = min(100, R' / W' × 100)
+
+// WateringCalculationService.capacityPercent  (:49-53), computed per render
+capacity%_i = MRC > 0 ? min(105, retained_i / MRC × 100) : 0
+
+// recalculateIntervalHours  (:31-43), on add/delete; oldest log = nil
+interval_i  = max(0, (dateTime_i − dateTime_(i+1)) / 3600)   // hours
+
+// PlantDashboardViewModel.averageRetained  (:51-54)
+avg         = (1/n) · Σ retained_i          // ALL logs, equal weight
+
+// computeNextWaterRecommendation  (:66-86)
+if retained_1 ≤ 0            → nil          // "No insights yet"
+f           = 1 − g/100                      // g clamped to 0.1…99.9 → f ∈ [0.001, 0.999]
+E           = (retained_1 + avg) / 2         // expected retention
+Next        = min( E / f , MRC / f )
+GoalRunoff  = Next · g / 100
+
+// Log validation (AddWateringLogViewModel.validate, :57-125), in canonical units
+0.001 ≤ W ≤ 100     0 ≤ R ≤ W     W − R ≤ 1.05 · MRC     dateTime ≤ now
+no other log for the plant in the same calendar minute
+temperature −50…60 °C (optional)     humidity 0…100 (optional)
+
+// MRC calculator (CreatePlantViewModel.calculate, :138-190)
+MRC_suggested = W_test − R_test   with R_test &gt; 0, R_test ≤ W_test,
+                then formatted to display precision ("%.2f" L/gal, "%.0f" mL) into the text field</code></pre>
+<p>Expanding the blend shows the actual weight each log carries in Next:</p>
+<pre><code>E = (1/2 + 1/(2n)) · retained_1  +  (1/(2n)) · Σ_(i=2..n) retained_i</code></pre>
+<div class="tbl"><table>
+<thead><tr><th class="num">n logs</th><th class="num">weight on newest log</th><th class="num">weight on each older log</th></tr></thead>
+<tbody>
+<tr><td class="num">1</td><td class="num">1.000</td><td class="num">–</td></tr>
+<tr><td class="num">2</td><td class="num">0.750</td><td class="num">0.250</td></tr>
+<tr><td class="num">5</td><td class="num">0.600</td><td class="num">0.100</td></tr>
+<tr><td class="num">10</td><td class="num">0.550</td><td class="num">0.050</td></tr>
+<tr><td class="num">50</td><td class="num">0.510</td><td class="num">0.010</td></tr>
+<tr><td class="num">200</td><td class="num">0.502</td><td class="num">0.0025</td></tr>
+</tbody></table></div>
+<p>Once there are more than a handful of logs, Next is effectively half the latest retained and half the all-time mean. The second-newest log counts as little as the first log of the grow.</p>
+
+<!-- ============================================================ -->
+<h2 id="next">Next-watering recommendation audit</h2>
+<h3>A. Inputs</h3>
+<p><span class="tag fact">Fact</span> Used: the newest log's <code>retained</code>, the mean <code>retained</code> of all logs of the plant, plant <code>goalRunoffPercent</code>, plant <code>maxRetentionCapacity</code> (cap only). "Newest" means the latest <code>dateTime</code>, not the most recently entered, so back-dating a log below existing ones does not change <code>retained_1</code>.</p>
+<p><span class="tag fact">Fact</span> Not used: temperature, humidity, the interval between waterings, time since the last watering, date or season, pot size, medium, runoff % as such, water added as such (only through retained), and logs of other plants. The in-app help states that temperature and humidity are "not used in any calculations", which is accurate. The website does not claim environmental adjustment.</p>
+<h3>B. History used</h3>
+<p>All logs, equal-weight arithmetic mean, blended 50/50 with the most recent log. No window, no median, no weighting by recency beyond that blend, no outlier handling.</p>
+<h3>C. What the model assumes</h3>
+<p>The formula is internally consistent if you read <code>E</code> as the medium's current <em>deficit</em>: the volume it will absorb before draining. Water beyond the deficit becomes runoff. Solving <code>(W − E) / W = g</code> for W gives exactly <code>W = E / (1 − g)</code>. Under constant demand this has a stable fixed point: if the medium really absorbs E, the next runoff is exactly g, which the existing test <code>test_nextWater_producesExactGoalRunoff_whenAbsorptionMatchesEstimate</code> checks. This is sound and matches the protocol: measure in, measure out, and retained is what the medium took.</p>
+<p>The model relies on two things the implementation does not guarantee:</p>
+<ul>
+  <li><strong>Each retained value measures the full deficit.</strong> That holds only when the watering produced runoff, meaning the medium reached capacity. With zero runoff, retained equals W, which is a lower bound on the deficit (a censored observation). The app records it as exact.</li>
+  <li><strong>Deficit is roughly stationary.</strong> Real deficit grows with plant size, shrinks after stress or a transplant, and depends on the interval between waterings. The all-time mean assumes stationarity.</li>
+</ul>
+<h3>D. Behavior under unusual data</h3>
+<div class="tbl"><table>
+<thead><tr><th>Case</th><th>Behavior in code</th><th>Assessment</th></tr></thead>
+<tbody>
+<tr><td>Zero logs</td><td>Insights shows "No insights yet…"</td><td>OK</td></tr>
+<tr><td>One log</td><td>E = retained, Next = retained / f</td><td>Reasonable</td></tr>
+<tr><td>Two logs</td><td>Newest weighted 0.75</td><td>OK</td></tr>
+<tr><td>Many logs</td><td>Newest 0.5 plus mean of all; early logs never fade</td><td><span class="sev p1">P1</span> lag (ALG-1)</td></tr>
+<tr><td>Zero runoff</td><td>Allowed; retained = W treated as exact</td><td><span class="sev p1">P1</span> biased low (ALG-2)</td></tr>
+<tr><td>Runoff = water added</td><td>retained 0 → <code>nil</code> → insights hidden</td><td><span class="sev p1">P1</span> (ALG-3)</td></tr>
+<tr><td>Zero water input</td><td>Blocked by validation (minimum 0.001 L); init clamps</td><td>OK, no division by zero</td></tr>
+<tr><td>Very high runoff (90%)</td><td>Next follows retained down; half weight</td><td>Reasonable</td></tr>
+<tr><td>Very large watering</td><td>If retained ≤ 1.05 MRC it is accepted and moves Next by 50% of the jump, then 0.5/n forever</td><td>Outlier-sensitive (P2)</td></tr>
+<tr><td>Retained &gt; 1.05 × MRC</td><td>Log rejected</td><td><span class="sev p1">P1</span> when MRC is underestimated (MRC-2)</td></tr>
+<tr><td>Missing temperature or humidity</td><td>No effect</td><td>OK</td></tr>
+<tr><td>Changed pot or medium or MRC</td><td>Impossible, plants are immutable; user must create a new plant and lose continuity</td><td>P1 (MRC-2)</td></tr>
+<tr><td>Edited log</td><td>Impossible; delete and re-add</td><td>OK given immutability</td></tr>
+<tr><td>Deleted log</td><td>Dashboard reloads; average and Next recompute; intervals recomputed</td><td>OK</td></tr>
+<tr><td>Goal runoff 50% / 90% / 99.9%</td><td>Next = 2× / 10× / 1000× E; cap MRC/f scales the same way</td><td><span class="sev p2">P2</span> can exceed the 100 L input limit (ALG-4)</td></tr>
+</tbody></table></div>
+<h3>E. Numeric edge cases</h3>
+<ul>
+  <li><strong>Divide by zero or NaN:</strong> protected. W ≥ 0.001 is enforced, MRC ≥ 0.001 is clamped, f ≥ 0.001 is clamped, and <code>capacityPercent</code> guards MRC ≤ 0. A pasted "nan" or "inf" parses with <code>Double()</code> but fails every range check.</li>
+  <li><strong>Negative values:</strong> not reachable. Retained is clamped at 0 and runoff at 0.</li>
+  <li><strong>Percentages over 100:</strong> runoff % is capped at 100. Capacity % intentionally caps at 105.</li>
+  <li><strong>Recommendation below zero:</strong> impossible. Next is always &gt; 0 when non-nil.</li>
+  <li><strong>Recommendation above container capacity:</strong> bounded by MRC/f. Because validation already forces retained ≤ 1.05·MRC, E ≤ 1.05·MRC and <strong>the cap can reduce Next by at most about 4.8%</strong>. In practice the cap is nearly inert.</li>
+  <li><strong>Rounding:</strong> display only (<code>DisplayFormatter</code>). The exception is the MRC calculator, which writes a rounded string back into the input field (MRC-3).</li>
+  <li><strong>Floating point:</strong> no equality comparisons on derived doubles. The duplicate check compares calendar minutes, not doubles.</li>
+  <li><strong>Stale cache:</strong> none. Values are recomputed per render from <code>vm.wateringLogs</code>, which reloads on appear, on sheet dismiss and after delete.</li>
+</ul>
+<h3>F. Consistency with the watering protocol</h3>
+<p><span class="tag finding">Finding</span> The protocol (website steps 1–5 and in-app "Watering Protocol") matches the data captured: measure in, water, collect, measure out, log both. Three mismatches:</p>
+<ol>
+  <li>In-app protocol: "You must always have runoff. Runoff must always be less than Water Added." Validation accepts runoff = 0 and runoff = water added (<code>Validators.swift:52-54</code>).</li>
+  <li>The recommendation depends on reaching runoff (see C), but the website protocol page never says to aim for runoff or mentions the goal %.</li>
+  <li>Following Next exactly can drive the grower into zero-runoff waterings on a growing plant (see the matrix below). The recommendation can lead the grower out of its own protocol.</li>
+</ol>
+
+<!-- ============================================================ -->
+<h2 id="matrix">Algorithm test matrix</h2>
+<p><span class="tag fact">Fact</span> Values below come from a line-for-line port of <code>WateringLog.init</code>, <code>PlantDashboardViewModel.averageRetained</code> and <code>computeNextWaterRecommendation</code>. MRC = 4.5 L (3 gal soil per the website table), goal = 15%. History is listed oldest to newest.</p>
+<div class="tbl"><table>
+<thead><tr><th>Scenario</th><th class="num">Last W</th><th class="num">Last R</th><th>History</th><th class="num">avg</th><th class="num">E</th><th class="num">Next</th><th>Expected / comment</th></tr></thead>
+<tbody>
+<tr><td>First watering</td><td class="num">1.20</td><td class="num">0.18</td><td>none</td><td class="num">1.020</td><td class="num">1.020</td><td class="num">1.200</td><td>Repeats the same watering. Correct.</td></tr>
+<tr><td>Normal, steady</td><td class="num">1.20</td><td class="num">0.18</td><td>4 × (1.20, 0.18)</td><td class="num">1.020</td><td class="num">1.020</td><td class="num">1.200</td><td>Stable fixed point. Correct.</td></tr>
+<tr><td>High runoff (40%)</td><td class="num">1.20</td><td class="num">0.48</td><td>4 × steady</td><td class="num">0.960</td><td class="num">0.840</td><td class="num">0.988</td><td>Reduces, only halfway. Acceptable.</td></tr>
+<tr><td>Zero runoff</td><td class="num">1.20</td><td class="num">0.00</td><td>4 × steady</td><td class="num">1.056</td><td class="num">1.128</td><td class="num">1.327</td><td>Increases 11%, but the true deficit is unknown (≥ 1.2). Should show a warning.</td></tr>
+<tr><td>Runoff = water added</td><td class="num">1.20</td><td class="num">1.20</td><td>4 × steady</td><td class="num">–</td><td class="num">–</td><td class="num"><strong>nil</strong></td><td>Insights vanish. Should fall back to the most recent log with retained &gt; 0 and show a note.</td></tr>
+<tr><td>Small watering</td><td class="num">0.30</td><td class="num">0.05</td><td>4 × steady</td><td class="num">0.866</td><td class="num">0.558</td><td class="num">0.656</td><td>A light top-up halves Next. Should probably discount partial waterings.</td></tr>
+<tr><td>Unusually large</td><td class="num">3.00</td><td class="num">0.45</td><td>4 × steady</td><td class="num">1.326</td><td class="num">1.938</td><td class="num">2.280</td><td>One outlier nearly doubles Next.</td></tr>
+<tr><td>Growth trend</td><td class="num">1.90</td><td class="num">0.28</td><td>0.34 → 1.62 L retained over 6 logs</td><td class="num">0.840</td><td class="num">1.230</td><td class="num">1.447</td><td>Latest demand 1.62 needs about 1.91 L. Next is 24% low, so expect near-zero runoff.</td></tr>
+<tr><td>Long early history</td><td class="num">2.00</td><td class="num">0.30</td><td>30 × 0.34 L retained, 3 × 1.70</td><td class="num">0.464</td><td class="num">1.082</td><td class="num">1.273</td><td>Needs about 2.0 L. Next is 36% low because seedling logs dominate.</td></tr>
+<tr><td>Missing temperature or humidity</td><td colspan="6">No change; environmental data is not an input</td><td>Correct per documentation</td></tr>
+</tbody></table></div>
+<h4>Closed-loop behavior (grower follows Next exactly)</h4>
+<p>Constant true deficit of 1.2 L, starting from a 0.6 L watering. The app never sees more than W, so it climbs 10–18% per watering:</p>
+<pre><code>#1  W=0.600 runoff 0.0%     #5  W=0.959 runoff 0.0%     #9  W=1.209 runoff 0.7%
+#2  W=0.706 runoff 0.0%     #6  W=1.028 runoff 0.0%     #10 W=1.256 runoff 4.5%
+#3  W=0.799 runoff 0.0%     #7  W=1.093 runoff 0.0%     #11 W=1.272 runoff 5.6%
+#4  W=0.883 runoff 0.0%     #8  W=1.153 runoff 0.0%     #12 W=1.285 runoff 6.6%   (goal 15%)</code></pre>
+<p>Demand rising 8% per watering, starting on target: runoff falls to 0% by watering 7 and stays there. Next trails the deficit by about 25% by watering 15.</p>
+<h4>Proposed unit tests (XCTest, pure functions)</h4>
+<pre><code>// Current behaviour, locks in today's algorithm before any change
+test_next_singleLog_equalsRetainedOverRetentionFactor()        // 1.20/0.18 → 1.200
+test_next_steadyHistory_isFixedPoint()                          // 5×(1.20,0.18) → 1.200
+test_next_lastRetainedZero_returnsNil()                         // exists; keep
+test_next_manyOldSmallLogs_weightsHalfOnAllTimeMean()           // 30×0.34 + 3×1.70 → 1.273
+test_next_capNeverReducesMoreThan5Percent_givenValidation()     // property test over valid inputs
+test_next_goal99_9_isBoundedOrRejected()                        // documents ALG-4 until fixed
+test_dashboard_averageRetained_usesAllLogs()                    // VM integration, in-memory container
+// Validation (AddWateringLogViewModel), none exist today
+test_validate_retainedAbove105PercentMRC_rejected()
+test_validate_duplicateMinute_rejected_differentMinute_ok()
+test_validate_commaDecimal_esES_accepted()                      // after LOC-1 fix
+test_validate_errorMessage_usesDisplayUnit()                    // after fix
+// After any algorithm change (see Algorithm options)
+test_next_zeroRunoffLast_neverBelowLastWaterTimes1_15()
+test_next_runoffEqualsWater_fallsBackToLastPositiveRetained()
+test_next_recencyWeighting_tracksLinearGrowthWithin10Percent()
+test_next_closedLoop_constantDeficit_convergesToGoalWithin5Waterings()</code></pre>
+<p class="small">Existing tests pass an <code>averageRetained</code> that could not come from the log passed in (for example last retained 0.95 with average 0.5 and no other logs). <code>test_nextWater_lowRunoff_increasesRecommendation</code> actually recommends 0.853 L after a 1.0 L watering with 5% runoff, which is a decrease compared with the last watering. The name does not describe the behavior. See TEST-3.</p>
+
+<!-- ============================================================ -->
+<h2 id="alg-concerns">Algorithm concerns</h2>
+
+<div class="finding s1"><h4><span class="sev p1">P1</span><span class="id">ALG-1</span>All-time average makes Next lag a changing plant</h4><dl>
+<dt>File</dt><dd><code>PlantDashboardViewModel.swift:51-65</code>; <code>WateringCalculationService.swift:78</code></dd>
+<dt>Current</dt><dd>E = ½·last + ½·mean(all logs). Seedling-stage logs keep equal weight in the mean for the whole grow.</dd>
+<dt>Why it matters</dt><dd>Plants grow. The recommendation undershoots during veg and early flower and overshoots after a demand drop. When it undershoots it produces zero runoff, which breaks the protocol and produces censored data (ALG-2).</dd>
+<dt>Evidence</dt><dd>Simulation (20 seeds, ±10% noise, +6% demand per watering): mean runoff 1.6% against a 15% goal, and 79% of waterings had no runoff. The in-app help at <code>LocalizedStrings.swift:486</code> says accuracy improves with more logs, which is the opposite of this behavior.</dd>
+<dt>Recommendation</dt><dd>Replace the all-time mean with a recency-weighted estimate (see options). Update the help text in the same change.</dd>
+<dt>Code change</dt><dd>Yes (algorithm plus strings). Needs product sign-off.</dd></dl></div>
+
+<div class="finding s1"><h4><span class="sev p1">P1</span><span class="id">ALG-2</span>Zero-runoff logs are treated as exact demand</h4><dl>
+<dt>File</dt><dd><code>Validators.swift:52-54</code>; <code>WateringLog.swift:80</code></dd>
+<dt>Current</dt><dd>R = 0 is valid. retained = W is averaged like any other value.</dd>
+<dt>Why it matters</dt><dd>Without runoff the medium may not have reached capacity, so W is only a lower bound on the deficit. Each such log pulls E down and the next watering is likely to have no runoff either.</dd>
+<dt>Evidence</dt><dd>Closed-loop run above: 8 consecutive zero-runoff waterings before any runoff appears.</dd>
+<dt>Recommendation</dt><dd>Keep accepting R = 0 (it is a real measurement) but: (a) after a zero or near-zero runoff watering (under 2%), recommend at least <code>W_last × (1 + g/100)</code>; (b) show a one-line note, "No runoff last time. Water until you see runoff."; (c) optionally leave censored logs out of the mean.</dd>
+<dt>Code change</dt><dd>Yes</dd></dl></div>
+
+<div class="finding s1"><h4><span class="sev p1">P1</span><span class="id">ALG-3</span>100% runoff on the newest log hides all insights</h4><dl>
+<dt>File</dt><dd><code>WateringCalculationService.swift:72-73</code>; <code>InsightsPanelView.swift:24-37</code></dd>
+<dt>Current</dt><dd>retained_1 = 0 returns nil, so the panel shows "No insights yet. Add watering logs…" even though logs exist. The average is hidden too.</dd>
+<dt>Why it matters</dt><dd>The message is misleading and the grower loses guidance right after an unusual watering, which is when they need it. Validation was changed on 2026-03-22 to allow R = W, so this state is reachable in normal use.</dd>
+<dt>Recommendation</dt><dd>Use the most recent log with retained &gt; 0 as "last" and show a note. If no log has retained &gt; 0, show a specific empty-state message. Keep the R = W validation as the owner decided.</dd>
+<dt>Code change</dt><dd>Yes (small)</dd></dl></div>
+
+<div class="finding s2"><h4><span class="sev p2">P2</span><span class="id">ALG-4</span>Goal runoff up to 99.9% produces absurd recommendations</h4><dl>
+<dt>File</dt><dd><code>CreatePlantViewModel.swift:95</code>; <code>Plant.swift:67</code></dd>
+<dt>Current</dt><dd>Any goal from 0.1 to 99.9 is accepted. At 90% the recommendation is 10 × E, and at 99.9% it is 1000 × E. The MRC/f cap grows by the same factor, so it does not help.</dd>
+<dt>Why it matters</dt><dd>A 5 L retained plant at a 90% goal is told to use 50 L, and a 99.9% goal exceeds the app's own 100 L input limit.</dd>
+<dt>Recommendation</dt><dd>Limit the goal to 5–50% (the drain-to-waste practice range is 10–30%), and clamp Next to <code>AppConstants.waterAddedRange.upperBound</code>.</dd>
+<dt>Code change</dt><dd>Yes</dd></dl></div>
+
+<div class="finding s2"><h4><span class="sev p2">P2</span><span class="id">ALG-5</span>Single outliers and partial waterings move Next by half their size</h4><dl>
+<dt>Current</dt><dd>The newest log always carries at least 50% weight. A 0.3 L top-up halves Next, and one 3 L flush nearly doubles it (matrix rows above).</dd>
+<dt>Recommendation</dt><dd>Consider when revising ALG-1. A weight of about 0.4–0.5 on the newest log with the rest spread over the last few logs keeps responsiveness and dampens one-offs. Optionally exclude logs flagged as a flush or top-up in the future.</dd>
+<dt>Code change</dt><dd>With ALG-1</dd></dl></div>
+
+<div class="finding"><h4><span class="sev p3">P3</span><span class="id">ALG-6</span>Interval is ignored</h4><dl>
+<dt>Current</dt><dd>A watering 1 day after the last and one 4 days after count the same, although deficit scales with time since the last watering.</dd>
+<dt>Recommendation</dt><dd>Consider later: express history as a retained-per-hour rate and predict for the typical interval. Only do this if growers water on irregular schedules. It keeps the measured-history philosophy, since it uses logged timestamps only.</dd>
+<dt>Code change</dt><dd>Consider</dd></dl></div>
+
+<!-- ============================================================ -->
+<h2 id="alg-options">Algorithm improvement opportunities</h2>
+<p><span class="tag fact">Fact</span> What the current algorithm gets right, and any change must keep: it uses only the grower's own measured W and R. It has a clear physical meaning (deficit plus goal runoff). It self-corrects at constant demand. It is explainable in one sentence. Its heavy averaging is good at smoothing stationary noise, and in the pure-noise scenario below it is as good as any alternative.</p>
+<p><span class="tag fact">Fact</span> Synthetic closed-loop comparison, where the grower follows the recommendation exactly. 25 waterings × 20 random seeds; the first 3 waterings are excluded from scoring. These are models, not field data. Use them to rank options, not to predict real outcomes.</p>
+<div class="tbl"><table>
+<thead><tr><th>Candidate (all use only logged W and R)</th><th>Constant demand, start low</th><th>Constant, ±20% noise</th><th>Rising 6% per watering</th><th>40% drop mid-grow</th></tr></thead>
+<tbody>
+<tr><td>Current: ½ last + ½ all-time mean</td><td>8.4 pp · 23% zero</td><td>9.0 pp · 12% zero</td><td><strong>13.5 pp · 79% zero</strong></td><td>10.9 pp · 0% zero</td></tr>
+<tr><td>Last retained only</td><td>1.5 · 9%</td><td>9.9 · 19%</td><td>7.2 · 12%</td><td>4.3 · 0%</td></tr>
+<tr><td>EWMA of retained, α = 0.5</td><td>4.2 · 23%</td><td>9.0 · 12%</td><td>10.0 · 33%</td><td>5.3 · 0%</td></tr>
+<tr><td>EWMA α = 0.5 + censoring rule (ALG-2)</td><td>2.8 · 9%</td><td>9.2 · 11%</td><td>8.9 · 23%</td><td>5.3 · 0%</td></tr>
+<tr><td>Holt level + trend + censoring rule</td><td>3.9 · 9%</td><td>9.6 · 13%</td><td><strong>5.6 · 4%</strong></td><td>6.6 · 9%</td></tr>
+<tr><td>Runoff feedback: W·(1 + (g − r%))</td><td>2.1 · 9%</td><td>9.6 · 17%</td><td>7.4 · 13%</td><td>4.3 · 0%</td></tr>
+</tbody></table></div>
+<p class="small">Cells show the mean absolute distance from the 15% goal in percentage points, then the share of waterings with no runoff. Lower is better for both.</p>
+<p><span class="tag rec">Recommendation</span> Proceed in two steps, and get product sign-off before each:</p>
+<ol>
+  <li><strong>Next revision:</strong> replace the all-time mean with an exponentially weighted mean of retained (α ≈ 0.5, which is roughly the last 3–4 logs). Add the censoring rule (ALG-2), the fallback for retained = 0 (ALG-3), goal bounds and a Next clamp (ALG-4). Keep <code>E / (1 − g)</code> and the MRC cap. The change is local to <code>WateringCalculationService</code>: move averaging out of the view model into a pure <code>recommendation(for logs: [WateringLog], plant:)</code> function so it can be unit tested with realistic histories. Update "What is Next?" help text in EN and ES.</li>
+  <li><strong>Later, if field logs show sustained lag:</strong> evaluate the trend-aware variant (Holt) on real exported histories before shipping it. It tracks growth best but can overshoot after sudden drops.</li>
+</ol>
+<p>Do not add temperature or humidity adjustments. There is no measured basis in the data, and it would move the app away from its measured-history philosophy.</p>
+<p><span class="tag rec">Recommendation</span> Show the reasoning on the dashboard, for example "Based on recent retained of 1.02 L and a 15% goal", so growers can see why Next changed. This is cheap and builds trust.</p>
+
+<!-- ============================================================ -->
+<h2 id="units">Unit conversion audit</h2>
+<p><span class="tag fact">Fact</span> Canonical internal units are liters and °C, stored unrounded. Every input path converts display to canonical before validating and storing (<code>AddWateringLogViewModel:66,76,109,138-144</code>, <code>CreatePlantViewModel:84,113</code>). Every output path converts canonical to display only in <code>DisplayFormatter</code>, the chart axes (<code>HistoryView:340,392,433</code>) and the export (via <code>DisplayFormatter</code>). Constants are correct: 1 US gal = 3.785411784 L (exact), 1 L = 1000 mL, °F = °C × 9/5 + 32. I found no double conversion, no missing conversion, and no case of calculating in display units. Settings changes never touch stored values (tested).</p>
+<div class="finding s2"><h4><span class="sev p2">P2</span><span class="id">UNIT-1</span>Range error messages ignore the user's units</h4><dl>
+<dt>File</dt><dd><code>LocalizedStrings.swift:345-348</code></dd>
+<dt>Current</dt><dd>A mL user sees "must be between 0.001 and 100 liters", and a °F user sees "between -50 and 60 °C".</dd>
+<dt>Recommendation</dt><dd>Format the bounds with <code>DisplayFormatter</code> in the active unit (for example "1–100,000 mL", "−58–140 °F").</dd>
+<dt>Code change</dt><dd>Yes</dd></dl></div>
+<div class="finding"><h4><span class="sev p3">P3</span><span class="id">MRC-3</span>Calculator rounds before storage</h4><dl>
+<dt>File</dt><dd><code>CreatePlantViewModel.swift:186-189</code></dd>
+<dt>Current</dt><dd>The suggested MRC is written to the text field as <code>"%.2f"</code> in the display unit, then parsed on save. In gallons: 1.604 L becomes "0.42" gal, which is 1.590 L (−0.9%).</dd>
+<dt>Recommendation</dt><dd>Keep the unrounded liters value in the view model and use it on save unless the user edits the field. Alternatively show 3 decimals for gallons.</dd>
+<dt>Code change</dt><dd>Yes (small)</dd></dl></div>
+<p class="small">Also noted: "gal" is always US gallons, which could confuse UK users (P3). Temperature validation happens after conversion to °C, which is correct.</p>
+
+<!-- ============================================================ -->
+<h2 id="mrc">Max Retention Capacity</h2>
+<div class="tbl"><table>
+<thead><tr><th>Aspect</th><th>Implementation</th></tr></thead>
+<tbody>
+<tr><td>Initial estimate</td><td>None in the app. The user types it or uses the calculator. The website reference table is the only source of defaults.</td></tr>
+<tr><td>Manual entry</td><td>Create Plant form, in the display unit, validated 0.001–100 L</td></tr>
+<tr><td>Automatic calculation</td><td>Calculator: <code>W_test − R_test</code> (R_test must be &gt; 0)</td></tr>
+<tr><td>Updated</td><td>Never. Plants are immutable.</td></tr>
+<tr><td>Persisted</td><td><code>Plant.maxRetentionCapacity</code>, liters, unrounded (apart from MRC-3)</td></tr>
+<tr><td>Displayed</td><td>Plant Info "Max Capacity"; export "Max Retention"</td></tr>
+<tr><td>Used in</td><td>Capacity % (display), the 105% log validation (hard reject), the Next cap (nearly inert)</td></tr>
+<tr><td>Affected by history</td><td>No. Logs never adjust MRC.</td></tr>
+</tbody></table></div>
+<p><span class="tag fact">Fact</span> Website table check. Every liters to gallons conversion is correct to 1 decimal. The values are fixed fractions of <em>nominal</em> pot volume: Coco/Perlite 70/30 = 52.8% (2.0 L per gallon), Coco = 60%, Soil = 40%, scaled linearly from 1 to 10 gal. The app contains no copy of this table, so there is nothing internal to disagree with it, apart from the example data.</p>
+
+<div class="finding s1"><h4><span class="sev p1">P1</span><span class="id">MRC-1</span>Three incompatible definitions of Max Retention Capacity</h4><dl>
+<dt>Where</dt><dd>Website <code>reference.html:201</code> ("retains after it has fully drained", which means container capacity from dry). App help <code>LocalizedStrings.swift:425</code> and the calculator ("water slowly until runoff starts, then subtract the runoff", which is one watering's retention and depends on how dry the pot was). Example data <code>GrowListView.swift:262-268</code>: "Fabric 3 gal", soil, <strong>1.6 L</strong>, shown publicly in <code>docs/screenshots/06-plant-dashboard.png</code> as 0.42 gal, while the table on the same website says 3 gal soil = <strong>4.5 L (1.2 gal)</strong>.</dd>
+<dt>Why it matters</dt><dd>Capacity % and the 105% validation mean different things depending on which definition the user followed. With the table value, typical waterings show 20–35% "capacity". With a calculator value measured on a moist pot, later waterings are rejected. The production video plan (<code>video-watering-protocol-plan.md</code>) starts from an empty pot with fresh, dry medium, which matches the table, but the app never says so.</dd>
+<dt>Recommendation</dt><dd>Adopt one definition: <em>the most water the medium can take in one watering, starting from dry</em> (container capacity). Say "start with dry medium" in the calculator footer, the How To, and the protocol page. Change the example plant to about 4.5 L (or label it a 1 gal pot). Rename the website phrase "saturation levels" (WEB-2). Consider showing the reference estimate in Create Plant, which needs the pot size and medium to be structured choices rather than free text.</dd>
+<dt>Code change</dt><dd>Yes (strings, example data); website text</dd></dl></div>
+
+<div class="finding s1"><h4><span class="sev p1">P1</span><span class="id">MRC-2</span>Immutable MRC plus a hard 105% rule can block valid logs</h4><dl>
+<dt>File</dt><dd><code>AddWateringLogViewModel.swift:81-87</code>; <code>Plant.swift</code> (no edit path)</dd>
+<dt>Current</dt><dd>A log with retained &gt; 1.05 × MRC is rejected with "Check your Water Added and Runoff values". MRC cannot be corrected.</dd>
+<dt>Why it matters</dt><dd>Measurements that are correct but exceed an underestimated MRC cannot be recorded. The only remedy is deleting the plant, which permanently deletes all of its history. This is a data-integrity problem driven by UX.</dd>
+<dt>Evidence</dt><dd>MRC 0.8 L from a calculator run on moist medium; a later drier watering of 1.5 L with 0.2 L runoff is rejected.</dd>
+<dt>Recommendation</dt><dd>(1) Add an "Edit Plant" path for MRC and goal runoff at minimum. Capacity % recomputes automatically because it is not stored. (2) Change the 105% rule from a block to a confirmation ("Retained is above this plant's Max Retention Capacity. Save anyway, or update capacity?"). (3) Optionally offer "Update capacity to X" when a log exceeds it.</dd>
+<dt>Code change</dt><dd>Yes. This relaxes the documented immutability for Plant only; logs stay immutable.</dd></dl></div>
+
+<!-- ============================================================ -->
+<h2 id="integrity">Persistence &amp; data safety</h2>
+<div class="tbl"><table>
+<thead><tr><th>Event</th><th>What happens (from source)</th><th>Risk</th></tr></thead>
+<tbody>
+<tr><td>Log deleted</td><td>Confirmation overlay, <code>context.delete</code>, removed from the in-memory array, all intervals recomputed, <code>save()</code></td><td>OK. On save failure there is no rollback (DATA-2).</td></tr>
+<tr><td>Plant deleted</td><td>Confirmation, <code>PlantService.deletePlant</code>, cascade to logs (tested)</td><td>OK</td></tr>
+<tr><td>Grow deleted</td><td>Confirmation, cascade to plants and logs (tested)</td><td>OK</td></tr>
+<tr><td>Log edited</td><td>Not possible</td><td>N/A</td></tr>
+<tr><td>Save timing</td><td>Explicit <code>save()</code> after each insert or delete; SwiftData autosave also on</td><td>Good. Nothing is buffered across screens.</td></tr>
+<tr><td>Backgrounding, termination, crash</td><td>Nothing unsaved outside forms, which are intentionally discarded</td><td>Low</td></tr>
+<tr><td>App upgrade</td><td>Automatic lightweight migration only; no versioned schema; no test against a real v1.0 store</td><td>P1 before the next schema change (DATA-1)</td></tr>
+<tr><td>iPhone backup and restore</td><td>The store is in Application Support, which is included in iCloud and Finder backups; UserDefaults too</td><td>OK</td></tr>
+<tr><td>Reinstall or new phone without backup</td><td>All data lost. The text export cannot be imported back.</td><td>P2 (DATA-3). The support page states this correctly.</td></tr>
+<tr><td>Duplicate records</td><td>Same-minute duplicates blocked per plant; UUIDs unique</td><td>OK</td></tr>
+<tr><td>Orphans</td><td><code>Plant.grow</code> is optional but always set by the UI; cascades prevent orphaned logs</td><td>Low</td></tr>
+</tbody></table></div>
+
+<div class="finding s1"><h4><span class="sev p1">P1</span><span class="id">DATA-1</span>No versioned schema or migration test before the next model change</h4><dl>
+<dt>File</dt><dd><code>EvapotrackApp.swift:47</code></dd>
+<dt>Current</dt><dd><code>.modelContainer(for: [Grow.self, Plant.self, WateringLog.self])</code> with implicit lightweight migration.</dd>
+<dt>Why it matters</dt><dd>The next revision adds at least one field (photo filename) and possibly edit support. Adding an optional field with a default is normally a safe lightweight migration. A mistake, such as a non-optional field without a default or a renamed property, fails silently at launch. What the <code>.modelContainer</code> modifier does on failure is <em>unable to determine from current source</em>; it has to be tested.</dd>
+<dt>Recommendation</dt><dd>Define <code>SchemaV1</code> exactly equal to today's models and <code>SchemaV2</code> with the new field, plus a <code>SchemaMigrationPlan</code> with a lightweight stage. Create the <code>ModelContainer</code> explicitly and show an error screen instead of crashing or opening an empty store. Keep a real store file produced by the App Store build as a test fixture and add a migration test.</dd>
+<dt>Code change</dt><dd>Yes</dd></dl></div>
+
+<div class="finding s2"><h4><span class="sev p2">P2</span><span class="id">DATA-2</span>Failed saves leave pending changes in the context</h4><dl>
+<dt>File</dt><dd><code>WateringLogService.swift:23-56</code>, <code>GrowService</code>, <code>PlantService</code></dd>
+<dt>Current</dt><dd>On a thrown <code>save()</code> the inserted or deleted object stays pending and autosave may commit it later. After "Failed to save", a retry is blocked by the duplicate-minute check, because the unsaved log is already in <code>plant.wateringLogs</code>.</dd>
+<dt>Recommendation</dt><dd>Call <code>modelContext.rollback()</code> in the catch blocks, and re-sync <code>plant.wateringLogs</code> if needed. Replace <code>try?</code> in the example-data loader with proper error handling.</dd>
+<dt>Code change</dt><dd>Yes (small)</dd></dl></div>
+
+<div class="finding s2"><h4><span class="sev p2">P2</span><span class="id">DATA-3</span>No restore path except device backup</h4><dl>
+<dt>Current</dt><dd>Export is a padded plain-text report in display units and English, and it cannot be imported.</dd>
+<dt>Recommendation</dt><dd>Consider adding a machine-readable export (CSV per plant or one JSON file in canonical units with UUIDs) and a matching import. Import must not rely on <code>.unique</code> upsert silently overwriting rows; decide explicitly between merging and skipping duplicates.</dd>
+<dt>Code change</dt><dd>Consider</dd></dl></div>
+
+<!-- ============================================================ -->
+<h2 id="ios">iOS review &amp; user experience</h2>
+<p><span class="tag fact">Fact</span> Strengths: a consistent structure (list, dashboard, history), confirmation before every delete, an entity-limit modal instead of silent failure, the example-data loader for first use, context-aware help, iPad adaptations (full-screen covers, grid columns, width caps), and deliberate Dynamic Type handling (accessibility sizes switch grids to one column and allow three-line titles).</p>
+
+<div class="finding s1"><h4><span class="sev p1">P1</span><span class="id">LOC-1</span>Comma decimal input is rejected</h4><dl>
+<dt>File</dt><dd><code>AddWateringLogViewModel.swift:60,71,105,116,130-146</code>; <code>CreatePlantViewModel.swift:78,91,106,142,158</code></dd>
+<dt>Current</dt><dd><code>Double("1,5")</code> returns nil, so the user sees "Water added must be a number". <code>.keyboardType(.decimalPad)</code> shows the region's separator, which is "," in es_ES, es_AR, es_CO, es_CL, de_DE, fr_FR, pt_BR and others.</dd>
+<dt>Why it matters</dt><dd>Users in those regions cannot enter decimal liters or gallons. mL still works. The app is marketed in Spanish.</dd>
+<dt>Recommendation</dt><dd>Parse with a locale-aware parser, for example <code>try? Double(text, format: .number.locale(.current))</code>, falling back to accepting either "." or "," as the decimal mark. Put it in one helper used by all six fields. Add tests for en_US, es_ES and de_DE. Also consider trimming whitespace.</dd>
+<dt>Code change</dt><dd>Yes</dd></dl></div>
+
+<div class="finding s2"><h4><span class="sev p2">P2</span><span class="id">UX-1</span>Forced 3-second splash on every cold launch</h4><dl>
+<dt>File</dt><dd><code>EvapotrackApp.swift:35-42</code>; <code>LaunchView.swift</code></dd>
+<dt>Current</dt><dd>Content is hidden for 3 s after every launch, on top of the system launch screen.</dd>
+<dt>Why it matters</dt><dd>Logging happens with wet hands over a tray. Three seconds per session is the largest fixed delay in the app.</dd>
+<dt>Recommendation</dt><dd>Show the animation once, on first launch or after an update, or shorten it to 0.8 s and allow a tap to skip.</dd>
+<dt>Code change</dt><dd>Yes</dd></dl></div>
+
+<div class="finding s2"><h4><span class="sev p2">P2</span><span class="id">UX-2</span>Two sheets bound to the same flag <span class="v">verify</span></h4><dl>
+<dt>File</dt><dd><code>PlantDashboardView.swift:160</code> and <code>HistoryView.swift:201</code></dd>
+<dt>Current</dt><dd>Both views attach <code>adaptiveSheet(isPresented: $vm.isShowingAddWatering)</code>. While History is pushed, the dashboard is still in the stack, so tapping + in History asks both to present.</dd>
+<dt>Why it matters</dt><dd>SwiftUI usually presents one and logs "already presenting". The behavior can vary by OS version.</dd>
+<dt>Recommendation</dt><dd>Give HistoryView its own <code>@State</code> flag, or keep a single presenter.</dd>
+<dt>Code change</dt><dd>Yes (small)</dd></dl></div>
+
+<div class="finding"><h4><span class="sev p3">P3</span><span class="id">UX-3</span>Smaller friction points</h4><dl>
+<dt>Items</dt><dd>
+<ul>
+<li>Correcting a log typo means delete, re-enter and reset the date (consider duplicating a log into a pre-filled form).</li>
+<li>"Reset Settings" has no confirmation and also resets the language.</li>
+<li>The export completion result is ignored, so failures are silent (<code>SettingsView.swift:203</code>).</li>
+<li>Selecting a log to delete it takes three taps: circle, trash, confirm. A swipe action would be the platform convention.</li>
+<li>The Add form has no default water amount; pre-filling the Next recommendation as a placeholder would save typing.</li>
+</ul></dd>
+<dt>Code change</dt><dd>Optional</dd></dl></div>
+
+<!-- ============================================================ -->
+<h2 id="website">Website review</h2>
+<p><span class="tag fact">Fact</span> Six static pages with inline CSS and a shared dark visual style. There are no analytics or trackers in the site's own code, and all pages have title, description and Open Graph tags plus a viewport meta tag and mobile breakpoints. The screenshot carousel uses scroll-snap. The watering-protocol page embeds YouTube in a standard iframe. The homepage self-hosts a 29 MB mp4 with <code>preload="metadata"</code>. There is no <code>robots.txt</code>, <code>sitemap.xml</code>, canonical link or structured data. The dashboard screenshot matches the current UI.</p>
+
+<div class="finding s1"><h4><span class="sev p1">P1</span><span class="id">WEB-1</span>Android support is stated as fact</h4><dl>
+<dt>Where</dt><dd><code>index.html:323-324</code> ("Designed for iPhone, iPad, and Android"), <code>:331</code> ("for iPhone, iPad, and Android"), <code>privacy-policy.html:60,66</code> ("Android's Room database"), <code>support.html:89</code> ("Android 8.0 (Oreo) or later")</dd>
+<dt>Current</dt><dd>Only the hero badge says "Coming Soon". No Android code exists in this repository. Whether an Android codebase exists elsewhere is <em>unable to determine from current source</em>.</dd>
+<dt>Why it matters</dt><dd>These are unsupported product claims on the support and privacy pages that App Review and users rely on.</dd>
+<dt>Recommendation</dt><dd>Say "iPhone and iPad. Android coming soon" everywhere. Remove the Room/Android wording from the privacy policy until the Android app ships.</dd>
+<dt>Code change</dt><dd>Website text</dd></dl></div>
+
+<div class="finding s2"><h4><span class="sev p2">P2</span><span class="id">WEB-2</span>"Saturation levels" misdescribes Capacity %</h4><dl>
+<dt>Where</dt><dd><code>index.html:312</code></dd>
+<dt>Current</dt><dd>Capacity % = this watering's retained ÷ MRC, which is how much of the capacity was refilled. After watering to runoff the medium is at capacity regardless. The reference page was rewritten on purpose to separate retention from saturation.</dd>
+<dt>Recommendation</dt><dd>"See how much of your medium's capacity each watering refilled."</dd></dl></div>
+
+<div class="finding s2"><h4><span class="sev p2">P2</span><span class="id">WEB-3</span>YouTube embed loads Google tracking on the protocol page</h4><dl>
+<dt>Where</dt><dd><code>watering-protocol.html:167</code></dd>
+<dt>Why it matters</dt><dd>The site's "No tracking" message is about the app, but visitors get YouTube cookies and requests on page load.</dd>
+<dt>Recommendation</dt><dd>Use <code>youtube-nocookie.com</code> and a click-to-load poster, or self-host the clip as on the homepage.</dd></dl></div>
+
+<div class="finding s2"><h4><span class="sev p2">P2</span><span class="id">WEB-4</span>The protocol page omits what the recommendation depends on</h4><dl>
+<dt>Current</dt><dd>It does not say to aim for runoff, does not mention the goal %, and does not say to start the MRC test with dry medium.</dd>
+<dt>Recommendation</dt><dd>Add one step, "Aim for runoff every time (your goal %, default 15%)", and a short note on measuring MRC from dry medium.</dd></dl></div>
+
+<div class="finding"><h4><span class="sev p3">P3</span><span class="id">WEB-5</span>Internal engineering docs are published on evapotrack.com</h4><dl>
+<dt>Where</dt><dd><code>docs/*.md</code> (Specification, DataModel, Architecture, Requirements, NavigationMap, video plan) inside the Pages root</dd>
+<dt>Current</dt><dd>They are served publicly and are out of date: they say iPad is portrait-only, that example data has one plant, that the example button is "disabled after loading", and that <code>save()</code> is private. Commit d8c395b says internal docs were moved out of <code>docs/</code>, but these files are there now.</dd>
+<dt>Recommendation</dt><dd>Move them to a non-published directory, and correct them there.</dd></dl></div>
+
+<div class="finding"><h4><span class="sev p3">P3</span><span class="id">WEB-6</span>SEO and accessibility polish</h4><dl>
+<dt>Items</dt><dd>Add <code>robots.txt</code>, <code>sitemap.xml</code>, <code>&lt;link rel="canonical"&gt;</code> and a <code>SoftwareApplication</code> JSON-LD block. Make screenshot alt text descriptive ("Plant dashboard showing retained, capacity and next watering"). "Interactive charts" overclaims, because the chart has overlay toggles but no point selection. Reference table: add <code>scope</code> attributes on header cells. Footer copyright color <code>#3e4a5c</code> on <code>#141d2f</code> is low contrast (about 1.9:1).</dd></dl></div>
+
+<!-- ============================================================ -->
+<h2 id="consistency">Website ↔ app consistency</h2>
+<div class="tbl"><table>
+<thead><tr><th>Website statement</th><th>Actual app behavior</th><th>Consistent?</th><th>Required action</th></tr></thead>
+<tbody>
+<tr><td>"Designed for iPhone, iPad, and Android"; "Android 8.0 or later"; privacy policy "Room database"</td><td>iOS/iPadOS only in this repo</td><td>No</td><td>Correct the text (WEB-1)</td></tr>
+<tr><td>"Track up to 30 grows with 25 plants each"</td><td>30 grows, 25 per grow, 750 total</td><td>Yes</td><td>–</td></tr>
+<tr><td>"Record water added, runoff collected, temperature, and humidity. Retention and runoff percentages calculated automatically."</td><td>Retained volume (not a retention %), runoff %, capacity %</td><td>Mostly</td><td>Say "retained volume"</td></tr>
+<tr><td>"Next watering recommendations based on historical patterns and your target runoff percentage"</td><td>½ last + ½ all-time mean, divided by (1 − goal)</td><td>Yes</td><td>Revisit if the algorithm changes</td></tr>
+<tr><td>"Interactive charts and overlay toggles"</td><td>Toggle pills; no touch selection</td><td>Partly</td><td>"Charts with temperature and humidity overlays"</td></tr>
+<tr><td>"Monitor plant saturation levels with capacity percentage"</td><td>Capacity % = refill fraction</td><td>No</td><td>Reword (WEB-2)</td></tr>
+<tr><td>"Download grow data as a formatted text file… in your preferred display units"</td><td>Plain-text .txt via <code>fileExporter</code>, display units, English headers</td><td>Yes</td><td>–</td></tr>
+<tr><td>"Milliliters, liters, and gallons. Fahrenheit and Celsius. Light and Dark mode. English and Spanish."</td><td>All present; Light is called "Day"; Spanish is in-app only (not declared to iOS)</td><td>Yes</td><td>Declare the <code>es</code> localization (LOC-2)</td></tr>
+<tr><td>"Portrait optimized"</td><td>iPhone portrait; iPad all orientations</td><td>Yes</td><td>–</td></tr>
+<tr><td>"No accounts. No cloud. No tracking… zero network connections."</td><td>No networking APIs, SDKs or entitlements; one external link opens Safari</td><td>Yes</td><td>Keep true when adding photos</td></tr>
+<tr><td>"Uninstalling the app removes all stored data"</td><td>Correct; device backups keep a copy</td><td>Yes</td><td>Mention backups when photos ship</td></tr>
+<tr><td>Reference: MRC = water retained after full drainage (container capacity)</td><td>Calculator measures one watering; example 3 gal soil = 1.6 L vs table 4.5 L</td><td>No</td><td>Unify (MRC-1)</td></tr>
+<tr><td>Protocol: measure, water, collect, measure, log</td><td>Same fields; app help also says "always have runoff" (validation allows 0 and 100%)</td><td>Partly</td><td>ALG-2/3, WEB-4</td></tr>
+<tr><td>Support FAQ: "use the Download Data button"</td><td>Download Data section; tap the grow row</td><td>Yes</td><td>–</td></tr>
+<tr><td>In-app How To: "Export Data section… Tap Export… system share sheet"</td><td>Section is "Download Data"; tap the grow row; system document picker</td><td>No</td><td>Fix strings (HELP-1)</td></tr>
+<tr><td>Help: "more logs, more accurate recommendation"</td><td>All-time mean lags a growing plant</td><td>No</td><td>ALG-1</td></tr>
+<tr><td>Screenshots (5)</td><td>Match the current UI</td><td>Yes</td><td>Re-shoot after the next revision</td></tr>
+</tbody></table></div>
+
+<!-- ============================================================ -->
+<h2 id="photo">Photo attachment feasibility</h2>
+<p><span class="tag fact">Fact</span> Context that shapes the design: iOS 17 minimum. Logs are immutable after creation, so a photo is chosen in the Add form and there is no edit screen today. History detail is an inline expanding row, not a separate screen. Deletes happen in three places: log, plant cascade and grow cascade. Export is a text report. The project isolates to the main actor by default. The app has no permission strings and no entitlements.</p>
+<div class="tbl"><table>
+<thead><tr><th>API</th><th>Verdict</th><th>Reason</th></tr></thead>
+<tbody>
+<tr><td><strong>SwiftUI <code>PhotosPicker</code></strong> (PhotosUI, iOS 16+)</td><td><strong>Use</strong></td><td>Native SwiftUI and out-of-process. The app only receives what the user picks. No authorization prompt and no <code>NSPhotoLibraryUsageDescription</code>. Supports <code>matching: .images</code> and single selection.</td></tr>
+<tr><td><code>PHPickerViewController</code></td><td>Not needed</td><td>Same engine; would need a UIKit wrapper for no benefit on iOS 17.</td></tr>
+<tr><td><code>PHPhotoLibrary</code> / <code>PHAsset</code></td><td><strong>Avoid</strong></td><td>Requires Photos authorization. Also do not pass <code>photoLibrary: .shared()</code> to the picker, because it only adds asset identifiers you would need permission to use.</td></tr>
+<tr><td><code>Transferable</code> with <code>FileRepresentation(importedContentType: .image)</code></td><td><strong>Use</strong></td><td>The picker copies the original to a temporary file URL, so a 48 MP or ProRAW original is never loaded into memory as <code>Data</code>. <code>loadTransferable(type: Data.self)</code> would load all of it.</td></tr>
+<tr><td>ImageIO (<code>CGImageSource</code> / <code>CGImageDestination</code>)</td><td><strong>Use</strong></td><td>Downsamples during decode (<code>CreateThumbnailAtIndex</code>), applies EXIF orientation, and re-encodes without copying metadata. No full-resolution bitmap is created.</td></tr>
+<tr><td><code>UIImage(data:)</code> then resize</td><td>Avoid for import</td><td>Decodes the full bitmap first: about 195 MB for 48 MP and 48 MB for 12 MP.</td></tr>
+<tr><td>Core Graphics</td><td>Indirect</td><td>Used through ImageIO's <code>CGImage</code>; no custom drawing needed.</td></tr>
+<tr><td>Camera (<code>UIImagePickerController</code>, AVFoundation)</td><td><strong>Exclude</strong></td><td>Would require <code>NSCameraUsageDescription</code>. Out of scope by requirement.</td></tr>
+</tbody></table></div>
+
+<!-- ============================================================ -->
+<h2 id="photo-storage">Photo storage recommendation</h2>
+<div class="tbl"><table>
+<thead><tr><th>Criterion</th><th>A: <code>Data</code> in the model</th><th>A′: <code>@Attribute(.externalStorage) Data?</code></th><th>B: file + filename on the model</th></tr></thead>
+<tbody>
+<tr><td>Store size</td><td>Grows by every photo (1,000 photos ≈ 450 MB inside SQLite)</td><td>Small; blobs kept in a hidden sidecar folder</td><td>Small</td></tr>
+<tr><td>Memory</td><td>Blob loads with the object; risky in lists</td><td>Loaded on property access</td><td>Loaded only when a view asks for it</td></tr>
+<tr><td>Transactional consistency</td><td>Full</td><td>Full</td><td>Needs ordering rules and an orphan sweep</td></tr>
+<tr><td>Cascade delete</td><td>Automatic</td><td>Automatic</td><td>Manual in 3 services</td></tr>
+<tr><td>Migration</td><td>Heavy migrations copy all image bytes</td><td>Lightweight</td><td>Lightweight; images untouched</td></tr>
+<tr><td>Backup (iCloud/Finder)</td><td>Included</td><td>Included</td><td>Included (Application Support)</td></tr>
+<tr><td>Reinstall</td><td>Lost with the store</td><td>Lost</td><td>Lost; consistent with the store</td></tr>
+<tr><td>Export (ZIP later)</td><td>Read blobs</td><td>Read blobs</td><td>Copy files directly</td></tr>
+<tr><td>Corruption isolation</td><td>Image and data share fate</td><td>Mostly isolated</td><td>Fully isolated</td></tr>
+<tr><td>Transparency and control</td><td>Low</td><td>Low (framework-managed paths)</td><td>High (sizes, cleanup, "delete photos only")</td></tr>
+</tbody></table></div>
+<p><span class="tag rec">Recommendation</span> <strong>Option B.</strong> Store the image as a file and keep only an optional photo ID on <code>WateringLog</code>. Option A is ruled out: embedding images directly in the SQLite store becomes undesirable at hundreds of photos. A′ is a reasonable lower-code fallback if you prefer framework-managed consistency, but B keeps the store small and image-free, makes the future ZIP export and "storage used" display trivial, and a corrupt image cannot affect watering data. The extra work in B (three delete paths and one sweep) is small and testable.</p>
+<pre><code>Application Support/
+  default.store                      (existing SwiftData store)
+  WateringPhotos/                    (new; created on first use; backed up)
+    3F2A…9C.heic                     detail image, name = new UUID
+    3F2A…9C_t.heic                   thumbnail
+  WateringPhotos/.incoming/          temp files from the picker; emptied on launch
+
+// SchemaV2 change (lightweight, optional with default)
+@Model final class WateringLog {
+    …
+    var photoFileID: UUID? = nil     // file names derive from it; never store absolute paths
+}</code></pre>
+<p><strong>Ordering rules</strong> (so a crash can only ever leave an unreferenced file, never a reference to a missing file):</p>
+<ol class="seq">
+  <li><strong>Add:</strong> the photo is processed when picked into <code>.incoming/</code>. On Save, atomically move it into <code>WateringPhotos/</code>, then insert the log with <code>photoFileID</code> and <code>save()</code>. If save throws: roll back and delete the moved files. On Cancel: delete the incoming files.</li>
+  <li><strong>Delete a log:</strong> read <code>photoFileID</code>, delete the model, <code>save()</code>, and only after success delete the files.</li>
+  <li><strong>Delete a plant or grow:</strong> collect every descendant <code>photoFileID</code> first, delete, <code>save()</code>, then delete the files.</li>
+  <li><strong>Launch sweep</strong> (background, a few seconds after launch): list <code>WateringPhotos/</code>, fetch all non-nil <code>photoFileID</code>s, delete files nobody references, and empty <code>.incoming/</code>. Decide orphans by reference set, not by file date. That avoids the file-timestamp required-reason API.</li>
+  <li><strong>Missing file:</strong> show a placeholder ("Photo unavailable") and never crash.</li>
+  <li><strong>Editing</strong> (if added later): write the new file, save the model, then delete the old file. Editing other fields must not touch <code>photoFileID</code>.</li>
+</ol>
+
+<!-- ============================================================ -->
+<h2 id="photo-size">Photo size recommendation</h2>
+<pre><code>PhotosPicker(selection:, matching: .images)          // single selection, no photoLibrary
+  ↓ item.loadTransferable(type: PickedImageFile.self)   // FileRepresentation → temp URL
+  ↓ CGImageSourceCreateWithURL(url, [ShouldCache: false])
+  ↓ CGImageSourceCreateThumbnailAtIndex(src, 0, [
+        CreateThumbnailFromImageAlways: true,
+        CreateThumbnailWithTransform:   true,     // bakes EXIF orientation into the pixels
+        ThumbnailMaxPixelSize:          2048,
+        ShouldCacheImmediately:         true ])
+  ↓ CGImageDestination(.heic) quality 0.70, no properties dictionary → no EXIF/GPS/TIFF
+  ↓ same source → 360 px thumbnail, quality 0.60
+  ↓ write both to .incoming/  (all of this in a nonisolated async function, off the main actor)</code></pre>
+<div class="tbl"><table>
+<thead><tr><th>Parameter</th><th>Value</th><th>Reason</th></tr></thead>
+<tbody>
+<tr><td>Detail image, long edge</td><td class="num">2048 px</td><td>About 1.5× the width of the largest iPhone screen (1320 px), so pinch-zoom shows leaf detail such as tip burn or spotting. Four times fewer pixels than a 12 MP original.</td></tr>
+<tr><td>Format</td><td>HEIC (JPEG fallback)</td><td>About half the size of JPEG at similar quality. Every iOS 17 device can encode it in hardware. Fall back to JPEG 0.75 if the HEIC destination cannot be created. Transcode to JPEG only on export.</td></tr>
+<tr><td>Quality</td><td class="num">0.70</td><td>Foliage is high-frequency detail; 0.7 avoids visible artifacts at 2048 px.</td></tr>
+<tr><td>Typical encoded size</td><td class="num">250–600 KB</td><td>Plan with 420 KB.</td></tr>
+<tr><td>Hard size ceiling</td><td class="num">1.5 MB</td><td>If exceeded (very noisy low-light images), re-encode once at 0.55, then at 1600 px.</td></tr>
+<tr><td>Thumbnail</td><td class="num">360 px, q 0.60, ~20–35 KB</td><td>Covers a 120 pt preview at @3x. Generated at import so list thumbnails can be added later without a migration.</td></tr>
+<tr><td>PNG</td><td>Never stored</td><td>Screenshots and PNGs are re-encoded as HEIC too.</td></tr>
+<tr><td>Import memory peak</td><td class="num">≈ 13 MB + encoder</td><td>2048 × 1536 × 4 B decoded, compared with about 195 MB for a full 48 MP decode.</td></tr>
+<tr><td>Display memory</td><td>Expanded row ≈ 4 MB; full screen ≈ 13 MB</td><td>Decode the preview downsampled to its point size × scale. Keep thumbnails in an <code>NSCache</code> with about a 20 MB cost limit.</td></tr>
+</tbody></table></div>
+<h3>Storage impact</h3>
+<div class="tbl"><table>
+<thead><tr><th class="num">Logs with a photo</th><th class="num">Recommended (HEIC 2048 + thumb ≈ 0.45 MB)</th><th class="num">JPEG 2048 q0.75 (≈ 0.8 MB)</th><th class="num">Unprocessed 12 MP HEIC (≈ 2.5 MB)</th><th class="num">Unprocessed 48 MP (≈ 6 MB)</th></tr></thead>
+<tbody>
+<tr><td class="num">50</td><td class="num">23 MB</td><td class="num">40 MB</td><td class="num">125 MB</td><td class="num">300 MB</td></tr>
+<tr><td class="num">100</td><td class="num">45 MB</td><td class="num">80 MB</td><td class="num">250 MB</td><td class="num">600 MB</td></tr>
+<tr><td class="num">500</td><td class="num">225 MB</td><td class="num">400 MB</td><td class="num">1.25 GB</td><td class="num">3 GB</td></tr>
+<tr><td class="num">1,000</td><td class="num">450 MB</td><td class="num">800 MB</td><td class="num">2.5 GB</td><td class="num">6 GB</td></tr>
+<tr><td class="num">5,000</td><td class="num">2.25 GB</td><td class="num">4 GB</td><td class="num">12.5 GB</td><td class="num">30 GB</td></tr>
+</tbody></table></div>
+<p><strong>Limits.</strong> One photo per log is the structural limit, so no extra per-log cap is needed. A full grow (25 plants watered every 2 days for a 120-day cycle, about 1,500 logs) comes to about 675 MB if every log has a photo. Everything in Application Support counts toward the user's iCloud Backup quota (5 GB on the free tier). That is the engineering reason for <em>visibility</em>, not a hard limit: show "Photos: N · X MB" in Settings, computed by summing file sizes in <code>WateringPhotos/</code>. Add a "Remove photos from this grow" action later if users ask. I would not add a global cap; there is no reason to pick an arbitrary number.</p>
+
+<!-- ============================================================ -->
+<h2 id="photo-ui">Photo UI recommendation</h2>
+<h4>Add Watering form</h4>
+<ul>
+  <li>A new last section, <strong>"Photo (optional)"</strong>, after Environment. It contains one row, a <code>PhotosPicker</code> labeled "Add Photo" with a <code>photo</code> symbol. Nothing else changes for users who skip it. The keyboard, focus order and Save behave as today.</li>
+  <li>After picking: show a small spinner row while processing (about 0.1–0.5 s, longer if the original has to download from iCloud; show that and allow Cancel), then a 120 pt aspect-fit preview with <strong>Replace</strong> (opens the picker again) and <strong>Remove</strong>. Save is disabled only while processing.</li>
+  <li>Tapping the preview opens the same expanded viewer described below, so the grower can check the photo before saving.</li>
+  <li>Errors appear inline: "Couldn't load this photo. Try another one."</li>
+</ul>
+<h4>History list (collapsed row)</h4>
+<ul>
+  <li>A small <code>photo</code> SF Symbol after the time, in secondary color. Its presence is also added to the row's accessibility label ("has photo"). No thumbnail in v1: it keeps rows the same height, avoids decode work while scrolling, and the collapsed row is meant for quick scanning. Thumbnails are generated anyway so they can be added later.</li>
+</ul>
+<h4>Expanded row (the app's detail view)</h4>
+<ul>
+  <li>After the field rows: the image at full row width, aspect-fit inside a rounded container with a maximum height of 240 pt (portrait photos letterbox rather than crop, so nothing is hidden).</li>
+  <li>Tapping the image opens the expanded photo viewer (below).</li>
+  <li>No delete or replace controls here, because logs are immutable. Deleting the log deletes its photo, and the delete confirmation says so when a photo exists.</li>
+</ul>
+<h4>Expanded photo viewer (owner requirement)</h4>
+<p><span class="tag fact">Fact</span> Requirement stated by the owner on 27 Sep 2026: when a watering log has a photo, the user can expand it to fill the screen in a closable view, to look at the plant larger and up close.</p>
+<ul>
+  <li><strong>Opens from:</strong> the image in the expanded history row, and the preview in the Add Watering form.</li>
+  <li><strong>Presentation:</strong> <code>.fullScreenCover</code> on iPhone and iPad, on a black background in both Day and Dark mode so the photo is not tinted by the theme. The image starts aspect-fit to the screen, so the whole photo is visible before zooming.</li>
+  <li><strong>Up-close viewing:</strong> pinch to zoom up to 4×, double-tap to zoom to about 2.5× at the tapped point, double-tap again to return to fit, and drag to pan while zoomed. On iOS 17 the most reliable way to get correct pinch anchoring and pan limits is a small <code>UIScrollView</code> wrapped in <code>UIViewRepresentable</code> (minimum zoom 1, maximum 4, content kept centered).</li>
+  <li><strong>Closing:</strong> a Close button (<code>xmark</code>) in the top-trailing corner, at least 44 × 44 pt, always visible. Swipe down closes the viewer when the image is not zoomed. The VoiceOver escape gesture also closes it.</li>
+  <li><strong>Context:</strong> a small caption with the watering's date and time (<code>log.dateTime.longFormatted</code>), so the grower knows which watering the photo belongs to.</li>
+  <li><strong>Resolution and memory:</strong> the viewer decodes the stored 2048 px detail file when it opens (about 13 MB decoded) and releases it on close. 2048 px leaves room to zoom about 1.5× before any upscaling on the largest iPhone screen.</li>
+  <li><strong>Orientation:</strong> the iPhone app is portrait-only, so landscape photos appear letterboxed and zoom fills in the detail. On iPad the viewer rotates with the app.</li>
+  <li><strong>Accessibility:</strong> image labeled with its watering date ("Watering photo, Sep 27, 2026 at 9:05 AM") and the hint "Pinch or double tap to zoom". The Close button is labeled "Close photo". With Reduce Motion on, open and close with a cross-fade instead of a zoom animation.</li>
+  <li><strong>Out of scope for v1:</strong> swiping between photos of different logs, sharing or saving the photo, and editing.</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="privacy">Privacy &amp; permissions</h2>
+<div class="tbl"><table>
+<thead><tr><th>Item</th><th>Today</th><th>After the photo feature</th></tr></thead>
+<tbody>
+<tr><td>Photos read permission (<code>NSPhotoLibraryUsageDescription</code>)</td><td>none</td><td><strong>none</strong> (PhotosPicker needs none)</td></tr>
+<tr><td>Photos add permission (<code>NSPhotoLibraryAddUsageDescription</code>)</td><td>none</td><td><strong>none</strong> (nothing is saved back to Photos)</td></tr>
+<tr><td>Camera (<code>NSCameraUsageDescription</code>)</td><td>none</td><td><strong>none</strong></td></tr>
+<tr><td>Entitlements</td><td>none</td><td>none</td></tr>
+<tr><td>Network</td><td>none</td><td>none. If "Optimize iPhone Storage" is on, iCloud may download the original inside the system picker process; the app makes no connection.</td></tr>
+<tr><td>Privacy manifest</td><td>UserDefaults CA92.1</td><td>Unchanged if the sweep decides orphans by reference set. Add <code>NSPrivacyAccessedAPICategoryFileTimestamp</code> / <code>C617.1</code> only if code reads file dates. Add <code>DiskSpace</code> only if it checks free space. Summing file sizes needs neither.</td></tr>
+<tr><td>App Store privacy label</td><td>Data Not Collected</td><td>Unchanged (photos never leave the device)</td></tr>
+<tr><td>Third-party SDKs</td><td>none</td><td>none (ImageIO, PhotosUI and UniformTypeIdentifiers are system frameworks)</td></tr>
+</tbody></table></div>
+<p><span class="tag rec">Recommendation</span> <strong>Metadata.</strong> A photo picked from the library can carry GPS coordinates in EXIF, which would reveal where plants are grown. Re-encoding without copying source properties removes all EXIF, GPS, TIFF and maker notes on import, so stored files and anything exported later contain no location. Add a unit test that imports a fixture with GPS and asserts the output has no <code>{GPS}</code> dictionary. Update the privacy policy to say optional photos are stored on the device only, with location and camera metadata removed.</p>
+
+<!-- ============================================================ -->
+<h2 id="photo-export">Photo export</h2>
+<p><span class="tag fact">Fact</span> The current export is <code>DataExportService.exportGrow</code>, a plain-text String wrapped in <code>GrowExportDocument</code> (<code>.plainText</code>) and written with <code>.fileExporter</code> from Settings.</p>
+<div class="tbl"><table>
+<thead><tr><th>Option</th><th>Pros</th><th>Cons</th></tr></thead>
+<tbody>
+<tr><td>A: data plus a photo indicator column</td><td>Two-line change; export stays small</td><td>Images are not portable</td></tr>
+<tr><td>B: ZIP with CSV + JPEGs</td><td>Real archive and backup path; pairs with DATA-3</td><td>No public zip API in Foundation (use the <code>NSFileCoordinator</code> <code>.forUploading</code> directory-zip behavior, or write a minimal zip writer). Needs a new <code>FileDocument</code> type and progress UI for large grows.</td></tr>
+<tr><td>C: PDF report with images</td><td>Readable</td><td>Large, slow, layout work; not re-importable</td></tr>
+<tr><td>D: exclude images silently</td><td>No work</td><td>Users may think photos were exported</td></tr>
+</tbody></table></div>
+<p><span class="tag rec">Recommendation</span> <strong>Next revision: A.</strong> Add a "Photo" column (✓ / —) only when at least one log in the plant has a photo. Leave the existing column layout untouched otherwise, and state in the export footer text that photos are not included. <strong>Later: B</strong>, delivered together with a machine-readable export and import (DATA-3), transcoding HEIC to JPEG with dated file names. Add a snapshot test of the current text export before touching <code>DataExportService</code>.</p>
+
+<!-- ============================================================ -->
+<h2 id="perf">Performance</h2>
+<p><span class="tag fact">Fact</span> No material problems at current scale. Per-render work is O(n) over one plant's logs: sort, group by day, average, chart mapping. Fetches are small, there is no main-thread I/O besides the SwiftData saves, and there are no timers or observers that leak. Haptic generators are reused.</p>
+<ul>
+  <li><span class="sev p3">P3</span> <code>HistoryView.groupedLogs</code> and the chart data are recomputed on every body evaluation, including selection taps. Fine up to a few thousand logs; cache in the view model if logs grow further.</li>
+  <li><span class="sev p3">P3</span> Catmull-Rom interpolation can draw the retained curve beyond the real data (overshoot) between points. Use <code>.monotone</code>.</li>
+  <li><span class="sev p3">P3</span> Changing the language rebuilds whole screens with <code>.id(language)</code>. This is intentional and fine.</li>
+  <li><span class="sev p2">P2</span> Photos: all image decode and encode must run in <code>nonisolated</code> async functions, because the target's default isolation is MainActor. Use ImageIO thumbnails, never <code>UIImage(contentsOfFile:)</code> for full images in rows. Load file bytes off the main actor. Verify with Instruments (Allocations, Time Profiler) on a 48 MP original on the oldest supported device (iPhone XS / XR).</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="a11y">Accessibility</h2>
+<div class="finding s1"><h4><span class="sev p1">P1</span><span class="id">A11Y-1</span>Watering log rows may read "Expand log details" instead of their values <span class="v">verify</span></h4><dl>
+<dt>File</dt><dd><code>WateringLogRowView.swift:146-148</code></dd>
+<dt>Current</dt><dd><code>.accessibilityLabel(isExpanded ? "Collapse log details" : "Expand log details")</code> is applied to the VStack that holds the time, water, retained and capacity text, without <code>.accessibilityElement(children:)</code>.</dd>
+<dt>Why it matters</dt><dd>Depending on how SwiftUI resolves this, VoiceOver either reads only "Expand log details" or repeats it on each child. Either way the history values may be unreachable.</dd>
+<dt>Recommendation</dt><dd>Use <code>.accessibilityElement(children: .combine)</code> with a composed label ("9:05 AM, 1.00 L added, 0.90 L retained, capacity 56%, has photo"), keep the expand/collapse as <code>.accessibilityHint</code>, and add <code>.accessibilityAction</code> for select. Test with VoiceOver.</dd></dl></div>
+<ul>
+  <li><span class="sev p2">P2</span> <strong>Contrast (light "Day" mode):</strong> the primary blue <code>#4a90e2</code> used for values, section dates and links measures 3.0:1 on the background and 3.3:1 on white. That passes only for large text; body, callout and subheadline need 4.5:1. <strong>Dark mode:</strong> white on <code>#5da3f5</code> (Calculate button, help button) is 2.6:1. Recommend a darker light-mode blue (for example <code>#2f6fbf</code>, about 5:1) and dark text on the blue buttons in dark mode.</li>
+  <li><span class="sev p2">P2</span> <strong>Touch targets:</strong> selection circles (title3 symbol, about 24 pt) and toolbar trash, gear and help buttons have no 44 × 44 pt frame; only the + buttons do. The specification claims 44 pt everywhere.</li>
+  <li><span class="sev p3">P3</span> <strong>Chart:</strong> the label only gives a point count. Add <code>AXChartDescriptorRepresentable</code> (Audio Graphs) or a label with the min, max and latest values.</li>
+  <li><span class="sev p3">P3</span> The Delete and Limit overlays are custom views with <code>.isModal</code>. Check that focus moves into them and that the escape gesture dismisses.</li>
+  <li><span class="tag fact">Fact</span> Good already: labels on every icon button, decorative images hidden, and accessibility sizes reflow to one column.</li>
+  <li><strong>Photo labels:</strong> preview and full-screen image labeled <code>Strings.wateringPhoto(log.dateTime.longFormatted)</code>, "Watering photo, Sep 27, 2026 at 9:05 AM" / "Foto de riego, …". The picker row reads "Add photo, optional". The Remove button reads "Remove photo". The viewer's Close button is labeled and the zoom view supports the escape gesture.</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="l10n">Localization</h2>
+<p><span class="tag fact">Fact</span> All UI strings go through <code>Strings</code> (<code>LocalizedStrings.swift</code>), a hand-written EN/ES enum switched by an in-app setting, with no <code>.strings</code> or String Catalog. Spanish coverage of UI strings is complete. Pluralization is hand-written for "planta/plantas", which is correct for these two languages.</p>
+<ul>
+  <li><span class="sev p1">P1</span> LOC-1 comma decimals (above).</li>
+  <li><span class="sev p2">P2</span> <strong>LOC-2</strong> Spanish is not declared to iOS: <code>knownRegions = (en, Base)</code>, no <code>es.lproj</code>, no <code>CFBundleLocalizations</code>. The App Store will list English only. System-provided UI (DatePicker, document picker, and later PhotosPicker) follows the <em>device</em> language, not the in-app choice. Dates use <code>formatted()</code> with the device locale, so an English device with the app set to ES shows English month names. Recommend adding <code>es</code> to the project localizations (an empty String Catalog is enough to declare it) and formatting dates with <code>.locale(Locale(identifier: Strings.current == .spanish ? "es" : "en"))</code>.</li>
+  <li><span class="sev p3">P3</span> <strong>LOC-3</strong> Export text is English-only (<code>DataExportService.swift:22-114</code>). <code>ServiceError.errorDescription</code> is English but is not shown to users.</li>
+  <li><span class="sev p3">P3</span> <strong>HELP-1</strong> The "How to Download" help describes an "Export Data" section, an "Export" button and a share sheet (<code>LocalizedStrings.swift:441-451</code>). The UI has a "Download Data" section, the grow row as the button, and a document picker.</li>
+</ul>
+<h4>New strings for the photo feature (EN / ES)</h4>
+<div class="tbl"><table>
+<thead><tr><th>Key</th><th>English</th><th>Spanish</th></tr></thead>
+<tbody>
+<tr><td>photoSection</td><td>Photo (optional)</td><td>Foto (opcional)</td></tr>
+<tr><td>addPhoto</td><td>Add Photo</td><td>Agregar Foto</td></tr>
+<tr><td>replacePhoto / removePhoto</td><td>Replace / Remove</td><td>Reemplazar / Quitar</td></tr>
+<tr><td>processingPhoto</td><td>Preparing photo…</td><td>Preparando foto…</td></tr>
+<tr><td>photoLoadFailed</td><td>Couldn't load this photo. Try another one.</td><td>No se pudo cargar esta foto. Prueba con otra.</td></tr>
+<tr><td>photoUnavailable</td><td>Photo unavailable</td><td>Foto no disponible</td></tr>
+<tr><td>wateringPhoto(date)</td><td>Watering photo, %@</td><td>Foto de riego, %@</td></tr>
+<tr><td>hasPhoto</td><td>has photo</td><td>con foto</td></tr>
+<tr><td>viewPhotoHint</td><td>Double tap to view full screen</td><td>Toca dos veces para ver en pantalla completa</td></tr>
+<tr><td>closePhoto</td><td>Close photo</td><td>Cerrar foto</td></tr>
+<tr><td>photoViewerZoomHint</td><td>Pinch or double tap to zoom</td><td>Pellizca o toca dos veces para ampliar</td></tr>
+<tr><td>deleteLogMessageWithPhoto(date)</td><td>Delete the log from %@ and its photo? This action cannot be undone.</td><td>¿Eliminar el registro de %@ y su foto? Esta acción no se puede deshacer.</td></tr>
+<tr><td>photoStorage(count, size)</td><td>Photos: %d · %@</td><td>Fotos: %d · %@</td></tr>
+<tr><td>exportPhotosNote</td><td>Photos are not included in the text export.</td><td>Las fotos no se incluyen en la exportación de texto.</td></tr>
+</tbody></table></div>
+<p class="small">Grow and plant delete messages should add "and their photos" when any exist. Singular and plural for the photo count: "1 foto / 2 fotos", using the existing hand-written pattern.</p>
+
+<!-- ============================================================ -->
+<h2 id="testing">Testing</h2>
+<p><span class="tag fact">Fact</span> The 152 unit tests cover pure functions well: validators, unit conversion, display formatting, interval recomputation, capacity %, the Next formula, cascade deletes (in-memory container) and settings persistence. Missing:</p>
+<div class="tbl"><table>
+<thead><tr><th>Gap</th><th>Priority</th><th>Proposed tests</th></tr></thead>
+<tbody>
+<tr><td>AddWateringLogViewModel validation</td><td><span class="sev p1">P1</span></td><td>105% rule; duplicate minute; optional temperature and humidity parsing; comma decimals; unit conversion on save</td></tr>
+<tr><td>Recommendation with realistic histories</td><td><span class="sev p1">P1</span></td><td>The matrix above, closed-loop convergence, growth tracking, zero or full runoff, goal bounds</td></tr>
+<tr><td>Migration</td><td><span class="sev p1">P1</span></td><td>Open a v1.x store fixture with SchemaV2; assert counts and values; <code>photoFileID == nil</code></td></tr>
+<tr><td>WateringLogService add and delete</td><td><span class="sev p2">P2</span></td><td>Interval recompute, rollback on failure, file cleanup order with photos</td></tr>
+<tr><td>PlantDashboardViewModel</td><td><span class="sev p2">P2</span></td><td>Average, Next and fallback from an in-memory container</td></tr>
+<tr><td>DataExportService</td><td><span class="sev p2">P2</span></td><td>Snapshot of the current text output; photo column only when needed</td></tr>
+<tr><td>Photo pipeline</td><td><span class="sev p2">P2</span></td><td>Max dimension ≤ 2048; orientation baked in (fixture with EXIF orientation 6); <code>{GPS}</code> removed; HEIC decodes; size ceiling path; panorama aspect; PNG input</td></tr>
+<tr><td>PhotoStore</td><td><span class="sev p2">P2</span></td><td>Move, delete, sweep; unreferenced files removed; referenced files kept; missing file tolerated</td></tr>
+<tr><td>UI smoke tests</td><td><span class="sev p3">P3</span></td><td>Create grow, plant and log; delete; language switch; Dynamic Type XXXL snapshots; open, zoom and close the photo viewer</td></tr>
+<tr><td>Test hygiene</td><td><span class="sev p3">P3</span></td><td>NavigationTests write to <code>UserDefaults.standard</code> of the host app; use a suite name</td></tr>
+</tbody></table></div>
+<p><span class="tag finding">Finding</span> <span class="sev p2">P2</span> <strong>TEST-3</strong> Algorithm tests pass hand-picked <code>averageRetained</code> values that could not come from the log histories in the test, and one name (<code>…lowRunoff_increasesRecommendation</code>) describes the opposite of what happens relative to the last watering. Move to history-based fixtures when refactoring the algorithm into a function that takes logs.</p>
+
+<!-- ============================================================ -->
+<h2 id="release">Build &amp; release</h2>
+<ul>
+  <li><span class="sev p1">P1</span> <strong>REL-1</strong> <code>MARKETING_VERSION = 1.0</code> and <code>CURRENT_PROJECT_VERSION = 1</code> in both configurations, while commits are labeled "v1.1" and the app is live (App Store id 6761138265). App Store Connect rejects an upload whose version and build are not higher than an existing one. Which version is live is <em>unable to determine from current source</em>; check App Store Connect and bump before archiving.</li>
+  <li><span class="tag fact">Fact</span> Signing: automatic, team set. Not reviewed or changed, as instructed.</li>
+  <li><span class="tag fact">Fact</span> Compiler, concurrency and deprecation warnings are <em>unable to determine</em> here (no Xcode). Known-sensitive spots: <code>nonisolated(unsafe) let plant</code> in two view models, <code>nonisolated(unsafe) static var current</code> in <code>Strings</code>, and <code>Text + Text</code> concatenation in <code>HowToView</code> and <code>DeleteConfirmationView</code>, which is deprecated in iOS 26 SDKs in favor of interpolation. Run a Release build with "Treat warnings as errors" once to get a baseline.</li>
+  <li><span class="tag fact">Fact</span> The iPad supports all orientations; <code>Specification.md</code> says portrait only (doc fix). iPhone is portrait only.</li>
+  <li><span class="tag fact">Fact</span> The privacy manifest is present and correct for current API use. Encryption export is set to NO, which is correct.</li>
+  <li><span class="sev p3">P3</span> The target and product are named <code>EvapotrackDev</code> (the display name is "Evapotrack"). This is cosmetic but shows up in crash logs and the test module name.</li>
+</ul>
+
+<!-- ============================================================ -->
+<h2 id="debt">Technical debt</h2>
+<p>Ordered by impact on correctness, then reliability, maintainability, performance and user impact. I am not recommending refactors for style alone.</p>
+<div class="tbl"><table>
+<thead><tr><th>Sev</th><th>Item</th><th>Where</th><th>Action</th></tr></thead>
+<tbody>
+<tr><td><span class="sev p2">P2</span></td><td>Recommendation logic split between the view model (average) and the service (blend), so it is hard to test with real histories</td><td><code>PlantDashboardViewModel:51-65</code></td><td>One pure function over <code>[WateringLog]</code></td></tr>
+<tr><td><span class="sev p2">P2</span></td><td>Numeric parsing duplicated in six places with <code>Double(text)</code></td><td>Add Log and Create Plant view models</td><td>One locale-aware <code>NumberInput.parse</code> helper</td></tr>
+<tr><td><span class="sev p2">P2</span></td><td>No rollback in service catch blocks</td><td>Services</td><td>DATA-2</td></tr>
+<tr><td><span class="sev p3">P3</span></td><td>The "Saved" overlay is copy-pasted in three forms; the toolbar icon-button style is repeated about 15 times</td><td>Create and Add views</td><td>Extract when next touched</td></tr>
+<tr><td><span class="sev p3">P3</span></td><td>Stale comments and docs: <code>WateringLog.swift:28</code> says runoff "&lt;"; Specification says portrait-only, "save() is private", "button disabled"; Requirements says portrait-only</td><td>Comments and docs</td><td>Update</td></tr>
+<tr><td><span class="sev p3">P3</span></td><td>Magic numbers: 105% factor, goal 15, 3 s launch, 10 chart dots, chart heights. Most are already in <code>AppConstants</code>.</td><td>Various</td><td>Move the rest when touched</td></tr>
+<tr><td><span class="sev p3">P3</span></td><td>Unused: <code>Strings.theme</code>, <code>themeFooter</code>; <code>HistoryView.overlayAxisColor</code>; <code>Date.daysBetween</code>; <code>WateringLogService.fetchLogs</code> is a trivial wrapper</td><td>Various</td><td>Delete</td></tr>
+<tr><td><span class="sev p3">P3</span></td><td>Force unwrap <code>URL(string:)!</code> on a constant</td><td><code>HowToView.swift:158</code></td><td>Safe; leave</td></tr>
+<tr><td><span class="sev p3">P3</span></td><td>Custom <code>Strings</code> enum instead of a String Catalog</td><td>Utilities</td><td>Keep for now. Migrating is a separate project and would change the in-app language switching.</td></tr>
+</tbody></table></div>
+
+<!-- ============================================================ -->
+<h2 id="register">Findings register</h2>
+<div class="tbl"><table>
+<thead><tr><th>ID</th><th>Sev</th><th>Area</th><th>File / symbol</th><th>Summary</th><th>Code change</th></tr></thead>
+<tbody>
+<tr><td>ALG-1</td><td><span class="sev p1">P1</span></td><td>Algorithm</td><td>PlantDashboardViewModel.averageRetained; computeNextWaterRecommendation</td><td>All-time mean makes Next lag growing plants; zero-runoff spiral</td><td>Yes</td></tr>
+<tr><td>ALG-2</td><td><span class="sev p1">P1</span></td><td>Algorithm</td><td>Validators.isValidRunoff; WateringLog.init</td><td>Zero-runoff logs treated as exact demand</td><td>Yes</td></tr>
+<tr><td>ALG-3</td><td><span class="sev p1">P1</span></td><td>Algorithm / UX</td><td>computeNextWaterRecommendation:72</td><td>100% runoff on the newest log hides all insights</td><td>Yes</td></tr>
+<tr><td>MRC-1</td><td><span class="sev p1">P1</span></td><td>Concept / website</td><td>reference.html; LocalizedStrings:425; GrowListView:262</td><td>Three definitions of MRC; example 1.6 L vs table 4.5 L</td><td>Yes + web</td></tr>
+<tr><td>MRC-2</td><td><span class="sev p1">P1</span></td><td>Data integrity</td><td>AddWateringLogViewModel:81-87; Plant</td><td>Immutable MRC plus hard 105% block</td><td>Yes</td></tr>
+<tr><td>LOC-1</td><td><span class="sev p1">P1</span></td><td>Input</td><td>Add Log and Create Plant view models</td><td>Comma decimals rejected</td><td>Yes</td></tr>
+<tr><td>DATA-1</td><td><span class="sev p1">P1</span></td><td>Persistence</td><td>EvapotrackApp:47</td><td>No versioned schema or migration test</td><td>Yes</td></tr>
+<tr><td>A11Y-1</td><td><span class="sev p1">P1</span></td><td>Accessibility</td><td>WateringLogRowView:146</td><td>Row label may hide values from VoiceOver (verify)</td><td>Yes</td></tr>
+<tr><td>WEB-1</td><td><span class="sev p1">P1</span></td><td>Website</td><td>index, privacy-policy, support</td><td>Android support stated as fact</td><td>Web</td></tr>
+<tr><td>REL-1</td><td><span class="sev p1">P1</span></td><td>Release</td><td>project.pbxproj</td><td>Version 1.0 (1) (verify against App Store Connect)</td><td>Config</td></tr>
+<tr><td>ALG-4</td><td><span class="sev p2">P2</span></td><td>Algorithm</td><td>CreatePlantViewModel:95</td><td>Goal up to 99.9% gives absurd Next</td><td>Yes</td></tr>
+<tr><td>ALG-5</td><td><span class="sev p2">P2</span></td><td>Algorithm</td><td>computeNextWaterRecommendation</td><td>Outliers and top-ups move Next by half</td><td>With ALG-1</td></tr>
+<tr><td>DATA-2</td><td><span class="sev p2">P2</span></td><td>Persistence</td><td>Services</td><td>No rollback after failed save</td><td>Yes</td></tr>
+<tr><td>DATA-3</td><td><span class="sev p2">P2</span></td><td>Persistence</td><td>DataExportService</td><td>No import or restore path</td><td>Consider</td></tr>
+<tr><td>UNIT-1</td><td><span class="sev p2">P2</span></td><td>Units</td><td>LocalizedStrings:345-348</td><td>Error bounds always in L and °C</td><td>Yes</td></tr>
+<tr><td>UX-1</td><td><span class="sev p2">P2</span></td><td>UX</td><td>EvapotrackApp:35-42</td><td>3 s splash every launch</td><td>Yes</td></tr>
+<tr><td>UX-2</td><td><span class="sev p2">P2</span></td><td>UX</td><td>PlantDashboardView:160; HistoryView:201</td><td>Two sheets on one binding (verify)</td><td>Yes</td></tr>
+<tr><td>A11Y-2</td><td><span class="sev p2">P2</span></td><td>Accessibility</td><td>Assets: evPrimaryBlue</td><td>Light-mode blue text 3.0:1; white on blue 2.6:1 in dark mode</td><td>Yes</td></tr>
+<tr><td>A11Y-3</td><td><span class="sev p2">P2</span></td><td>Accessibility</td><td>Row views, toolbars</td><td>Touch targets under 44 pt</td><td>Yes</td></tr>
+<tr><td>LOC-2</td><td><span class="sev p2">P2</span></td><td>Localization</td><td>project.pbxproj knownRegions</td><td>Spanish not declared; dates use device locale</td><td>Yes</td></tr>
+<tr><td>WEB-2</td><td><span class="sev p2">P2</span></td><td>Website</td><td>index.html:312</td><td>"Saturation" wording</td><td>Web</td></tr>
+<tr><td>WEB-3</td><td><span class="sev p2">P2</span></td><td>Website privacy</td><td>watering-protocol.html:167</td><td>YouTube embed tracking</td><td>Web</td></tr>
+<tr><td>WEB-4</td><td><span class="sev p2">P2</span></td><td>Website</td><td>watering-protocol.html</td><td>Protocol omits runoff goal and dry-start MRC</td><td>Web</td></tr>
+<tr><td>TEST-1</td><td><span class="sev p2">P2</span></td><td>Tests</td><td>EvapotrackDevTests</td><td>No view model, service or export tests</td><td>Yes</td></tr>
+<tr><td>TEST-2</td><td><span class="sev p2">P2</span></td><td>Tests</td><td>–</td><td>No migration test (with DATA-1)</td><td>Yes</td></tr>
+<tr><td>TEST-3</td><td><span class="sev p2">P2</span></td><td>Tests</td><td>InsightsAlgorithmTests</td><td>Unrealistic fixtures, misleading name</td><td>Yes</td></tr>
+<tr><td>PERF-1</td><td><span class="sev p2">P2</span></td><td>Performance</td><td>(photo)</td><td>Image work must be nonisolated</td><td>With photos</td></tr>
+<tr><td>DEBT-1</td><td><span class="sev p2">P2</span></td><td>Debt</td><td>see table</td><td>Split algorithm; duplicated parsing</td><td>Yes</td></tr>
+<tr><td>HELP-2</td><td><span class="sev p2">P2</span></td><td>Help text</td><td>LocalizedStrings:486</td><td>"More logs, more accurate" is false</td><td>Yes</td></tr>
+<tr><td>PRIV-1</td><td><span class="sev p2">P2</span></td><td>Privacy docs</td><td>privacy-policy.html</td><td>Must describe local photos before shipping them</td><td>Web</td></tr>
+<tr><td>EXP-1</td><td><span class="sev p2">P2</span></td><td>Export</td><td>DataExportService</td><td>Needs a snapshot test before any change</td><td>Yes</td></tr>
+<tr><td>MRC-3</td><td><span class="sev p3">P3</span></td><td>Units</td><td>CreatePlantViewModel:186</td><td>Calculator rounds before storage</td><td>Yes</td></tr>
+<tr><td>ALG-6</td><td><span class="sev p3">P3</span></td><td>Algorithm</td><td>–</td><td>Interval ignored</td><td>Consider</td></tr>
+<tr><td>UX-3</td><td><span class="sev p3">P3</span></td><td>UX</td><td>various</td><td>Small friction points</td><td>Optional</td></tr>
+<tr><td>A11Y-4</td><td><span class="sev p3">P3</span></td><td>Accessibility</td><td>HistoryView chart</td><td>No chart descriptor</td><td>Optional</td></tr>
+<tr><td>LOC-3</td><td><span class="sev p3">P3</span></td><td>Localization</td><td>DataExportService</td><td>Export English-only</td><td>Optional</td></tr>
+<tr><td>HELP-1</td><td><span class="sev p3">P3</span></td><td>Help text</td><td>LocalizedStrings:441-451</td><td>Download help names the wrong controls</td><td>Yes</td></tr>
+<tr><td>WEB-5</td><td><span class="sev p3">P3</span></td><td>Website</td><td>docs/*.md</td><td>Internal docs published and stale</td><td>Move</td></tr>
+<tr><td>WEB-6</td><td><span class="sev p3">P3</span></td><td>Website</td><td>all pages</td><td>SEO, alt text, contrast polish</td><td>Web</td></tr>
+<tr><td>PERF-2</td><td><span class="sev p3">P3</span></td><td>Performance</td><td>HistoryView</td><td>Per-body regrouping; Catmull-Rom overshoot</td><td>Optional</td></tr>
+<tr><td>TEST-4</td><td><span class="sev p3">P3</span></td><td>Tests</td><td>NavigationTests</td><td>Writes to shared UserDefaults</td><td>Yes</td></tr>
+<tr><td>REL-2</td><td><span class="sev p3">P3</span></td><td>Release</td><td>project</td><td>Warnings baseline unknown; iOS 26 Text+Text deprecation</td><td>Check</td></tr>
+<tr><td>REL-3</td><td><span class="sev p3">P3</span></td><td>Release</td><td>project</td><td>Target named EvapotrackDev</td><td>Optional</td></tr>
+<tr><td>DEBT-2</td><td><span class="sev p3">P3</span></td><td>Debt</td><td>see table</td><td>Duplicated overlays, dead code, stale comments</td><td>Optional</td></tr>
+<tr><td>UNIT-2</td><td><span class="sev p3">P3</span></td><td>Units</td><td>WaterUnit</td><td>"gal" is US only</td><td>Optional</td></tr>
+<tr><td>DATA-4</td><td><span class="sev p3">P3</span></td><td>Persistence</td><td>GrowListView.loadExampleData</td><td><code>try? save()</code> fails silently</td><td>Yes</td></tr>
+<tr><td>SET-1</td><td><span class="sev p3">P3</span></td><td>UX</td><td>SettingsView</td><td>Reset has no confirmation; export result ignored</td><td>Optional</td></tr>
+</tbody></table></div>
+
+<!-- ============================================================ -->
+<h2 id="roadmap">Implementation roadmap</h2>
+<h3>Phase 1: Correctness</h3>
+<ol class="seq">
+  <li>Locale-aware number parsing helper used by all numeric fields, with tests (LOC-1).</li>
+  <li>Error messages in the display unit (UNIT-1).</li>
+  <li>Recommendation: move to a pure function over logs; add the retained = 0 fallback (ALG-3), the zero-runoff floor and note (ALG-2), goal bounds of 5–50% and a clamp at 100 L (ALG-4). Lock the current behavior with tests first.</li>
+  <li>With sign-off: recency-weighted estimate (EWMA, α ≈ 0.5) in place of the all-time mean (ALG-1). Update "What is Next?" EN/ES and remove "more logs, more accurate".</li>
+  <li>MRC definition: calculator and help say "start with dry medium"; fix example data (MRC-1); keep the calculator value unrounded (MRC-3).</li>
+</ol>
+<h3>Phase 2: Reliability and data integrity</h3>
+<ol class="seq">
+  <li>SchemaV1 equal to the current models, explicit <code>ModelContainer</code> with a migration plan and an error screen; a store fixture from the App Store build; migration test (DATA-1).</li>
+  <li>Rollback on failed saves; remove the silent <code>try?</code> (DATA-2, DATA-4).</li>
+  <li>Edit Plant (MRC, goal runoff; optionally name, pot and medium); make the 105% rule a confirmation (MRC-2).</li>
+  <li>Single presenter for the Add sheet (UX-2).</li>
+  <li>Snapshot test of the text export (EXP-1).</li>
+</ol>
+<h3>Phase 3: Photo attachment</h3>
+<ol class="seq">
+  <li>SchemaV2: <code>WateringLog.photoFileID: UUID? = nil</code> (lightweight stage); migration test with a v1 fixture.</li>
+  <li><code>PhotoStore</code> (nonisolated): directory management in Application Support, atomic move, delete, reference-set sweep, size total.</li>
+  <li><code>ImagePipeline</code> (nonisolated): ImageIO downsample to 2048 and 360, orientation baked in, HEIC 0.70 with no metadata, JPEG fallback, 1.5 MB ceiling.</li>
+  <li><code>PickedImageFile: Transferable</code> using <code>FileRepresentation(importedContentType: .image)</code>.</li>
+  <li><code>AddWateringLogViewModel</code> photo state (none, processing, ready, failed); Save moves incoming to final; Cancel cleans up.</li>
+  <li><code>AddWateringLogView</code>: "Photo (optional)" section with PhotosPicker, preview, Replace and Remove.</li>
+  <li>Deletion: <code>WateringLogService.deleteLog</code>, <code>PlantService.deletePlant</code>, <code>GrowService.deleteGrow</code> collect IDs and delete files after a successful save; update the delete messages.</li>
+  <li>Launch sweep (deferred, background).</li>
+  <li><code>WateringLogRowView</code>: photo indicator in the collapsed row; preview in the expanded row; tap to open the expanded, closable photo viewer (pinch and double-tap zoom, Close button, swipe down to close). The same viewer opens from the Add form preview.</li>
+  <li>Accessibility labels and hints; EN/ES strings (table above).</li>
+  <li>Export: "Photo" column when relevant and a note in the footer.</li>
+  <li>Settings: "Photos: N · X MB".</li>
+  <li>Privacy policy and support FAQ text; confirm Info.plist and entitlements are unchanged and the privacy manifest is unchanged (no file timestamps read).</li>
+  <li>Tests: pipeline (dimensions, orientation, GPS removed), store (move, delete, sweep, missing file), service deletions, view model states, migration.</li>
+  <li>Device checks: 48 MP HEIC, ProRAW, panorama, Live Photo, HDR, screenshot PNG, an iCloud-only original with "Optimize Storage", low storage, airplane mode, VoiceOver, XXXL Dynamic Type, iPad landscape, oldest supported device with Instruments.</li>
+</ol>
+<h3>Phase 4: UX, accessibility, localization</h3>
+<ol class="seq">
+  <li>VoiceOver row fix and verification (A11Y-1); contrast tokens (A11Y-2); 44 pt targets (A11Y-3).</li>
+  <li>Splash once or skippable (UX-1).</li>
+  <li>Declare <code>es</code>; locale-aware date formatting (LOC-2); fix download help text (HELP-1).</li>
+  <li>Dashboard line explaining how Next was derived.</li>
+</ol>
+<h3>Phase 5: Website and technical debt</h3>
+<ol class="seq">
+  <li>Remove Android claims (WEB-1); fix "saturation" (WEB-2); privacy-enhanced YouTube (WEB-3); protocol additions (WEB-4); privacy policy photo paragraph (PRIV-1).</li>
+  <li>Move internal <code>.md</code> docs out of <code>docs/</code> and correct them (WEB-5); robots.txt, sitemap and alt text (WEB-6).</li>
+  <li>Remove dead code; update stale comments; extract the duplicated overlay (DEBT-2).</li>
+  <li>Bump the version and build; get a warnings baseline (REL-1, REL-2).</li>
+</ol>
+
+<!-- ============================================================ -->
+<h2 id="scope">What should actually change in the next EvapoTrack revision?</h2>
+<div class="scope">
+<section>
+<h3>Must fix</h3>
+<ul>
+  <li>Comma-decimal input parsing (LOC-1)</li>
+  <li>Insights fallback when the newest log has 100% runoff (ALG-3)</li>
+  <li>Zero-runoff floor and note (ALG-2)</li>
+  <li>Edit Plant for MRC and goal; 105% rule becomes a confirmation (MRC-2)</li>
+  <li>One MRC definition in app help, calculator and example data (MRC-1)</li>
+  <li>Versioned schema, explicit container, migration test, before any model change (DATA-1)</li>
+  <li>Rollback on failed saves (DATA-2)</li>
+  <li>Verify and fix VoiceOver on log rows (A11Y-1)</li>
+  <li>Remove Android claims from site, privacy and support (WEB-1)</li>
+  <li>Version and build bump (REL-1)</li>
+</ul>
+</section>
+<section>
+<h3>Should fix</h3>
+<ul>
+  <li>Recency-weighted recommendation plus help text, after sign-off (ALG-1, HELP-2)</li>
+  <li>Goal runoff bounds and a Next clamp (ALG-4)</li>
+  <li><strong>Optional watering-log photos</strong> as specified in Phase 3</li>
+  <li>Error messages in display units (UNIT-1)</li>
+  <li>Splash once or skippable (UX-1); single Add sheet presenter (UX-2)</li>
+  <li>Contrast and touch targets (A11Y-2, A11Y-3)</li>
+  <li>Declare Spanish; localized dates (LOC-2)</li>
+  <li>Website: saturation wording, privacy-enhanced YouTube, protocol additions, privacy policy photo text</li>
+  <li>View model, service, export and photo tests; realistic algorithm fixtures</li>
+</ul>
+</section>
+<section>
+<h3>Consider</h3>
+<ul>
+  <li>Machine-readable export and import (restore path), later ZIP with photos</li>
+  <li>Trend-aware (Holt) recommendation, tested on real exported histories</li>
+  <li>Interval-normalized demand</li>
+  <li>List thumbnails; chart point selection; Audio Graph</li>
+  <li>Structured pot and medium choices that pre-fill MRC from the reference table</li>
+  <li>Duplicate-log-to-form for fixing typos</li>
+  <li>Moving internal docs out of the public site; SEO files</li>
+</ul>
+</section>
+<section>
+<h3>Do not change</h3>
+<ul>
+  <li>Canonical liters and °C stored unrounded; display-only rounding</li>
+  <li>Retained, runoff % and capacity % formulas</li>
+  <li><code>E / (1 − goal)</code> structure and the measured-history basis; no environmental "adjustments"</li>
+  <li>Local-only storage, zero networking, no SDKs, no accounts</li>
+  <li>Watering log immutability (photo chosen at creation)</li>
+  <li>Cascade delete rules and entity limits</li>
+  <li>In-app EN/ES <code>Strings</code> mechanism, for now</li>
+  <li>The existing text export layout (add to it only)</li>
+  <li>Signing, App Store metadata</li>
+</ul>
+</section>
+</div>
+
+<p class="small" style="margin-top:2em">Sources: repository <code>evapotrack/evapotrack</code> at <code>89cc8c8</code>. The simulations are line-for-line ports of <code>WateringLog.init</code>, <code>PlantDashboardViewModel</code> and <code>WateringCalculationService</code> in Python with synthetic demand. Contrast ratios are computed from <code>Assets.xcassets</code> color values with the WCAG 2.x formula. Nothing in the repository was modified.</p>
+</main>
+</div>

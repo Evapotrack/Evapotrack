@@ -11,12 +11,15 @@ import Foundation
 enum Strings {
     nonisolated(unsafe) static var current: AppLanguage = .english
     private static var es: Bool { current == .spanish }
+    /// Locale matching the app's language (see AppLanguage.locale).
+    static var locale: Locale { current.locale }
 
     // MARK: - Navigation Titles
 
     static var myGrows: String { es ? "Mis Cultivos" : "My Grows" }
     static var addGrow: String { es ? "Agregar Cultivo" : "Add Grow" }
     static var addPlant: String { es ? "Agregar Planta" : "Add Plant" }
+    static var editPlant: String { es ? "Editar Planta" : "Edit Plant" }
     static var addWateringEvent: String { es ? "Agregar Evento de Riego" : "Add Watering Event" }
     static var settings: String { es ? "Configuración" : "Settings" }
     static var howTo: String { es ? "Cómo Usar" : "How To" }
@@ -52,6 +55,9 @@ enum Strings {
     static var clear: String { es ? "Limpiar" : "Clear" }
     static var resetSettings: String { es ? "Restablecer Configuración" : "Reset Settings" }
     static var saved: String { es ? "Guardado" : "Saved" }
+    static var edit: String { es ? "Editar" : "Edit" }
+    static var saveAnyway: String { es ? "Guardar de Todos Modos" : "Save Anyway" }
+    static var reviewValues: String { es ? "Revisar" : "Review" }
     static var ok: String { "OK" }
 
     // MARK: - Labels
@@ -63,7 +69,8 @@ enum Strings {
     static var interval: String { es ? "Intervalo" : "Interval" }
     static var retained: String { es ? "Retenido" : "Retained" }
     static var capacityLabel: String { es ? "Capacidad" : "Capacity" }
-    static var average: String { es ? "Promedio" : "Average" }
+    static var expected: String { es ? "Esperado" : "Expected" }
+    static var expectedRetentionLabel: String { es ? "Retención esperada" : "Expected retention" }
     static var next: String { es ? "Siguiente" : "Next" }
     static var viewAllLogs: String { es ? "Ver Todos los Registros" : "View All Logs" }
     static var date: String { es ? "Fecha" : "Date" }
@@ -124,7 +131,8 @@ enum Strings {
     static var noPlantsYet: String { es ? "Sin Plantas" : "No Plants Yet" }
     static var tapToAddPlant: String { es ? "para agregar tu primera planta." : "to add your first plant." }
     static var noWateringLogsYet: String { es ? "Aún no hay registros de riego." : "No watering logs yet." }
-    static var noInsightsYet: String { es ? "Aún no hay análisis. Agrega registros de riego para ver recomendaciones." : "No insights yet. Add watering logs to see recommendations." }
+    static var insightsNoHistory: String { es ? "Aún no hay registros de riego. Registra el agua agregada y el drenaje para obtener una recomendación." : "No watering logs yet. Log water added and runoff to get a recommendation." }
+    static var insightsNoUsableData: String { es ? "Aún no hay suficientes datos de drenaje: todos los riegos hasta ahora drenaron por completo. Sigue registrando el agua agregada y el drenaje." : "Not enough runoff data yet: every watering so far drained completely. Keep logging water added and runoff." }
     static var howToGetStarted: String { es ? "Cómo Empezar" : "How to Get Started" }
     static var tryExampleData: String { es ? "Probar Datos de Ejemplo" : "Try Example Data" }
 
@@ -134,9 +142,16 @@ enum Strings {
     static var themeFooter: String { es ? "Cambiar entre modo Día y Oscuro." : "Switch between Day and Dark mode." }
     static var exportFooter: String { es ? "Exportar datos del cultivo como archivo de texto." : "Export grow data as a text file." }
     static var timestampFooter: String { es ? "Esta marca de tiempo se registra cuando guardas el cultivo." : "This timestamp is recorded when you save the grow." }
-    static var maxRetentionDescription: String { es ? "El volumen máximo de agua que el medio puede retener antes de que comience el drenaje." : "The maximum volume of water the medium can hold before runoff begins." }
-    static var calculatorFooter: String { es ? "¿No conoces tu capacidad? Usa la calculadora para derivarla de un riego de prueba." : "Don't know your capacity? Use the calculator to derive it from a test watering." }
-    static var goalRunoffDescription: String { es ? "El porcentaje de drenaje que el algoritmo Siguiente intentará alcanzar. Por defecto 15% si se deja en blanco." : "The runoff percentage the Next algorithm will target. Defaults to 15% if left blank." }
+    static var maxRetentionDescription: String { es ? "La mayor cantidad de agua que el medio puede retener: lo que absorbe cuando empieza seco y se riega hasta que comienza el drenaje." : "The most water the medium can hold: what it takes in when it starts dry and is watered until runoff begins." }
+    static var editCapacityFooter: String { es ? "Cambiar la capacidad mantiene cada registro de riego tal como se midió. El % de Capacidad y Siguiente usan el nuevo valor." : "Changing the capacity keeps every watering log as measured. Capacity % and Next use the new value." }
+    static var calculatorFooter: String { es ? "¿No la conoces? Empieza con el medio seco, riega despacio hasta que aparezca drenaje y deja que termine de drenar. Ingresa ambas cantidades y la calculadora resta el drenaje." : "Don't know it? Start with dry medium, water slowly until runoff appears, and let it finish draining. Enter both amounts and the calculator subtracts the runoff." }
+    static var goalRunoffDescription: String {
+        let range = AppConstants.goalRunoffPercentRange
+        let low = Int(range.lowerBound), high = Int(range.upperBound)
+        return es
+            ? "El porcentaje de drenaje que Siguiente intentará alcanzar, entre \(low)% y \(high)%. Por defecto 15% si se deja en blanco."
+            : "The runoff percentage Next will aim for, from \(low)% to \(high)%. Defaults to 15% if left blank."
+    }
     static var optional: String { es ? "Opcional" : "Optional" }
 
     // MARK: - Delete Confirmations
@@ -147,18 +162,23 @@ enum Strings {
 
     static func deleteGrowMessage(_ name: String) -> String {
         es
-            ? "¿Estás seguro de que quieres eliminar \"\(name)\"? Todas las plantas y sus registros de riego en este cultivo serán eliminados permanentemente. Esta acción no se puede deshacer."
-            : "Are you sure you want to delete \"\(name)\"? All plants and their watering logs in this grow will be permanently deleted. This action cannot be undone."
+            ? "¿Estás seguro de que quieres eliminar \"\(name)\"? Todas las plantas de este cultivo, sus registros de riego y sus fotos serán eliminados permanentemente. Esta acción no se puede deshacer."
+            : "Are you sure you want to delete \"\(name)\"? All plants in this grow, their watering logs, and their photos will be permanently deleted. This action cannot be undone."
     }
 
     static func deletePlantMessage(_ name: String) -> String {
         es
-            ? "¿Estás seguro de que quieres eliminar \"\(name)\"? Todos los registros de riego de esta planta serán eliminados permanentemente. Esta acción no se puede deshacer."
-            : "Are you sure you want to delete \"\(name)\"? All watering logs for this plant will be permanently deleted. This action cannot be undone."
+            ? "¿Estás seguro de que quieres eliminar \"\(name)\"? Todos los registros de riego de esta planta y sus fotos serán eliminados permanentemente. Esta acción no se puede deshacer."
+            : "Are you sure you want to delete \"\(name)\"? All watering logs for this plant, and their photos, will be permanently deleted. This action cannot be undone."
     }
 
-    static func deleteLogMessage(_ dateFormatted: String) -> String {
-        es
+    static func deleteLogMessage(_ dateFormatted: String, hasPhoto: Bool = false) -> String {
+        if hasPhoto {
+            return es
+                ? "¿Eliminar el registro de \(dateFormatted) y su foto? Esta acción no se puede deshacer."
+                : "Delete the log from \(dateFormatted) and its photo? This action cannot be undone."
+        }
+        return es
             ? "¿Eliminar el registro de \(dateFormatted)? Esta acción no se puede deshacer."
             : "Delete the log from \(dateFormatted)? This action cannot be undone."
     }
@@ -193,6 +213,7 @@ enum Strings {
     static var backLabel: String { es ? "Atrás" : "Back" }
     static var addGrowLabel: String { es ? "Agregar Cultivo" : "Add Grow" }
     static var addPlantLabel: String { es ? "Agregar Planta" : "Add Plant" }
+    static var editPlantLabel: String { es ? "Editar planta" : "Edit plant" }
     static var addWateringLabel: String { es ? "Agregar Riego" : "Add Watering" }
     static var deleteGrowLabel: String { es ? "Eliminar Cultivo" : "Delete Grow" }
     static var deletePlantLabel: String { es ? "Eliminar Planta" : "Delete Plant" }
@@ -201,8 +222,15 @@ enum Strings {
     static var showLogs: String { es ? "Mostrar Registros" : "Show Logs" }
     static var showChart: String { es ? "Mostrar Gráfico" : "Show Chart" }
     static var dismissDialog: String { es ? "Cerrar diálogo" : "Dismiss dialog" }
-    static var expandLogDetails: String { es ? "Expandir detalles del registro" : "Expand log details" }
-    static var collapseLogDetails: String { es ? "Contraer detalles del registro" : "Collapse log details" }
+    static var expanded: String { es ? "Expandido" : "Expanded" }
+    static var collapsed: String { es ? "Contraído" : "Collapsed" }
+    static func logRowAccessibility(time: String, added: String, retained: String, capacity: String, hasPhoto: Bool) -> String {
+        let summary = es
+            ? "\(time), \(added) agregados, \(retained) retenidos, capacidad \(capacity)"
+            : "\(time), \(added) added, \(retained) retained, capacity \(capacity)"
+        guard hasPhoto else { return summary }
+        return summary + (es ? ", con foto" : ", has photo")
+    }
     static var doubleTapExpandCollapse: String { es ? "Toca dos veces para expandir o contraer detalles" : "Double tap to expand or collapse details" }
     static var savedLabel: String { es ? "Guardado" : "Saved" }
 
@@ -258,6 +286,38 @@ enum Strings {
         es ? "Calculadora Drenaje Recolectado en \(unit)" : "Calculator Runoff Collected in \(unit)"
     }
 
+    // MARK: - Photos
+
+    static var photoSection: String { es ? "Foto" : "Photo" }
+    static var photoFooter: String {
+        es
+            ? "Opcional. La foto se guarda solo en este dispositivo, sin su ubicación ni otros datos de la cámara."
+            : "Optional. The photo is saved only on this device, without its location or other camera details."
+    }
+    static var addPhoto: String { es ? "Agregar Foto" : "Add Photo" }
+    static var replacePhoto: String { es ? "Reemplazar" : "Replace" }
+    static var removePhoto: String { es ? "Quitar" : "Remove" }
+    static var chooseAnotherPhoto: String { es ? "Elegir Otra Foto" : "Choose Another Photo" }
+    static var preparingPhoto: String { es ? "Preparando foto…" : "Preparing photo…" }
+    static var photoFailed: String { es ? "No se pudo agregar esta foto." : "This photo couldn't be added." }
+    static var photoUnavailable: String { es ? "Foto no disponible" : "Photo unavailable" }
+    static var viewPhoto: String { es ? "Ver foto" : "View photo" }
+    static var viewPhotoHint: String { es ? "Abre la foto en pantalla completa." : "Opens the photo full screen." }
+    static var closePhoto: String { es ? "Cerrar foto" : "Close photo" }
+    static func wateringPhotoLabel(_ date: String) -> String {
+        es ? "Foto del riego, \(date)" : "Watering photo, \(date)"
+    }
+    static var storage: String { es ? "Almacenamiento" : "Storage" }
+    static var photos: String { es ? "Fotos" : "Photos" }
+    static func photoStorageLabel(_ count: Int, size: String) -> String {
+        es ? "Fotos: \(count) · \(size)" : "Photos: \(count) · \(size)"
+    }
+    static var storageFooter: String {
+        es
+            ? "Las fotos de riego se guardan solo en este dispositivo y se incluyen en sus copias de seguridad. Nunca se suben ni se incluyen en la exportación. Eliminar un registro de riego elimina su foto."
+            : "Watering photos are stored only on this device and are included in its backups. They are never uploaded or included in the export. Deleting a watering log deletes its photo."
+    }
+
     // MARK: - Chart
 
     static var temp: String { es ? "Temp" : "Temp" }
@@ -302,6 +362,12 @@ enum Strings {
 
     // MARK: - Content Unavailable
 
+    static var dataStoreErrorTitle: String { es ? "No se pudieron abrir tus datos" : "Your data couldn't be opened" }
+    static var dataStoreErrorMessage: String {
+        es
+            ? "Evapotrack no pudo abrir sus datos. No se ha eliminado nada. Cierra la app por completo y vuelve a abrirla. Si sigue ocurriendo, contacta a soporte en evapotrack.com/support. No elimines la app: eso borraría tus datos."
+            : "Evapotrack couldn't open its data. Nothing has been deleted. Close the app completely and open it again. If this keeps happening, contact support at evapotrack.com/support. Don't delete the app. That would remove your data."
+    }
     static var growNotFound: String { es ? "Cultivo No Encontrado" : "Grow Not Found" }
     static var plantNotFound: String { es ? "Planta No Encontrada" : "Plant Not Found" }
 
@@ -329,6 +395,7 @@ enum Strings {
     static var failedDeleteLog: String { es ? "No se pudo eliminar el registro. Inténtalo de nuevo." : "Failed to delete log. Please try again." }
     static var unableToSave: String { es ? "No se pudo guardar. Inténtalo de nuevo." : "Unable to save. Please try again." }
     static var failedToSave: String { es ? "Error al guardar. Inténtalo de nuevo." : "Failed to save. Please try again." }
+    static var failedToLoadExampleData: String { es ? "No se pudo cargar el cultivo de ejemplo. Inténtalo de nuevo." : "Couldn't load the example grow. Please try again." }
 
     // MARK: - Validation Errors
 
@@ -342,19 +409,35 @@ enum Strings {
     static var plantNameDuplicate: String { es ? "Ya existe una planta con este nombre en este cultivo." : "A plant with this name already exists in this grow." }
     static var potSizeBlank: String { es ? "El tamaño de la maceta no debe estar en blanco." : "Pot size must not be blank." }
     static var mediumTypeBlank: String { es ? "El tipo de medio no debe estar en blanco." : "Medium type must not be blank." }
-    static var maxRetentionRange: String { es ? "La capacidad máx. de retención debe estar entre 0.001 y 100 litros." : "Max retention capacity must be between 0.001 and 100 liters." }
-    static var waterAddedRange: String { es ? "El agua agregada debe estar entre 0.001 y 100 litros." : "Water added must be between 0.001 and 100 liters." }
+    static func maxRetentionRange(min: String, max: String) -> String {
+        es ? "La capacidad máx. de retención debe estar entre \(min) y \(max)." : "Max retention capacity must be between \(min) and \(max)."
+    }
+    static func waterAddedRange(min: String, max: String) -> String {
+        es ? "El agua agregada debe estar entre \(min) y \(max)." : "Water added must be between \(min) and \(max)."
+    }
     static var runoffRange: String { es ? "El drenaje debe ser ≥ 0 y ≤ al agua agregada." : "Runoff must be ≥ 0 and ≤ water added." }
-    static var temperatureRange: String { es ? "La temperatura debe estar entre -50 y 60 °C." : "Temperature must be between -50 and 60 °C." }
+    static func temperatureRange(min: String, max: String) -> String {
+        es ? "La temperatura debe estar entre \(min) y \(max)." : "Temperature must be between \(min) and \(max)."
+    }
     static var humidityRange: String { es ? "La humedad debe estar entre 0 y 100%." : "Humidity must be between 0 and 100%." }
     static var dateInFuture: String { es ? "La fecha no puede ser en el futuro." : "Date cannot be in the future." }
     static var maxRetentionMustBeNumber: String { es ? "La capacidad máx. de retención debe ser un número." : "Max retention capacity must be a number." }
     static var goalRunoffMustBeNumber: String { es ? "El % de drenaje objetivo debe ser un número." : "Goal Runoff % must be a number." }
-    static var goalRunoffRange: String { es ? "El % de drenaje objetivo debe estar entre 0.1 y 99.9." : "Goal Runoff % must be between 0.1 and 99.9." }
+    static var goalRunoffRange: String {
+        let range = AppConstants.goalRunoffPercentRange
+        let low = Int(range.lowerBound), high = Int(range.upperBound)
+        return es ? "El % de drenaje objetivo debe estar entre \(low) y \(high)." : "Goal Runoff % must be between \(low) and \(high)."
+    }
     static var waterAddedMustBeNumber: String { es ? "El agua agregada debe ser un número." : "Water added must be a number." }
     static var runoffMustBeNumber: String { es ? "El drenaje debe ser un número." : "Runoff must be a number." }
     static var runoffMustBePositive: String { es ? "El drenaje recolectado debe ser mayor que 0." : "Runoff collected must be greater than 0." }
-    static var retainedExceedsCapacity: String { es ? "El volumen retenido excede el 105% de la Capacidad Máx. de Retención. Verifica tus valores de Agua Agregada y Drenaje." : "Retained volume exceeds 105% of Max Retention Capacity. Check your Water Added and Runoff values." }
+    static var calculatorRunoffTooLarge: String { es ? "El drenaje debe ser menor que el agua agregada para medir la capacidad." : "Runoff must be less than the water added to measure capacity." }
+    static var retainedOverCapacityTitle: String { es ? "Más que la capacidad de la maceta" : "More than the pot's capacity" }
+    static func retainedOverCapacityMessage(_ retained: String, capacity: String) -> String {
+        es
+            ? "Este riego retuvo \(retained), más que la Capacidad Máx. de Retención de esta planta (\(capacity)). Revisa el Agua Agregada y el Drenaje. Si son correctos, la capacidad puede estar configurada demasiado baja; puedes editarla desde el panel de la planta."
+            : "This watering retained \(retained), more than this plant's Max Retention Capacity (\(capacity)). Check Water Added and Runoff. If they're right, the capacity may be set too low; you can edit it from the plant's dashboard."
+    }
     static var duplicateLogTimestamp: String { es ? "Ya existe un registro de riego en esta fecha y hora." : "A watering log already exists at this date and time." }
     static var temperatureMustBeNumber: String { es ? "La temperatura debe ser un número." : "Temperature must be a number." }
     static var humidityMustBeNumber: String { es ? "La humedad debe ser un número." : "Humidity must be a number." }
@@ -363,6 +446,66 @@ enum Strings {
 
     static func goalLabel(_ percent: String) -> String {
         es ? "Objetivo (\(percent))" : "Goal (\(percent))"
+    }
+
+    // MARK: - Recommendation Explanation
+
+    static func basisRecentWaterings(_ retained: String, goal: String) -> String {
+        es
+            ? "Basado en el agua retenida reciente de \(retained) y un objetivo de drenaje de \(goal)."
+            : "Based on recent retained water of \(retained) and a \(goal) runoff goal."
+    }
+    static func basisSingleWatering(_ retained: String, goal: String) -> String {
+        es
+            ? "Basado en tu único riego con drenaje (\(retained) retenidos) y un objetivo de drenaje de \(goal)."
+            : "Based on your one watering with runoff (\(retained) retained) and a \(goal) runoff goal."
+    }
+    static func basisNoRunoffYet(_ amount: String) -> String {
+        es
+            ? "Ninguno de tus riegos ha producido drenaje todavía, así que la planta necesita al menos \(amount). Riega hasta ver drenaje."
+            : "None of your waterings has produced runoff yet, so the plant needs at least \(amount). Water until you see runoff."
+    }
+    static func noteNoRunoffRaised(_ amount: String) -> String {
+        es
+            ? "Tu último riego (\(amount)) no produjo drenaje, así que Siguiente se aumentó para ayudar a lograr drenaje."
+            : "Your last watering (\(amount)) produced no runoff, so Next was increased to help reach runoff."
+    }
+    static func noteNoRunoffNotLowered(_ amount: String) -> String {
+        es
+            ? "Tu último riego (\(amount)) no produjo drenaje. Fue menos de lo que la planta suele tomar, así que no redujo Siguiente."
+            : "Your last watering (\(amount)) produced no runoff. It was less than the plant usually takes, so it didn't lower Next."
+    }
+    static var noteFullRunoff: String {
+        es
+            ? "Tu último riego drenó por completo (100% de drenaje), así que no se usa. Siguiente se basa en riegos anteriores."
+            : "Your last watering drained completely (100% runoff), so it isn't used. Next is based on earlier waterings."
+    }
+    static var noteDemandRising: String {
+        es
+            ? "Tu planta ha estado tomando más agua recientemente, así que Siguiente incluye parte de ese aumento."
+            : "Your plant has been taking more water recently, so Next includes part of that increase."
+    }
+    static var noteDemandFalling: String {
+        es
+            ? "Tu planta ha estado tomando menos agua recientemente, así que Siguiente incluye parte de esa disminución."
+            : "Your plant has been taking less water recently, so Next includes part of that decrease."
+    }
+    static func noteLimitedByCapacity(_ capacity: String) -> String {
+        es
+            ? "Limitado por la Capacidad Máx. de Retención de esta planta (\(capacity)). Si los riegos retienen más con frecuencia, edita la capacidad de la planta."
+            : "Limited by this plant's Max Retention Capacity (\(capacity)). If waterings regularly retain more, edit the plant's capacity."
+    }
+    static func noteGoalAdjusted(_ requested: String, used: String) -> String {
+        let range = AppConstants.goalRunoffPercentRange
+        let bounds = "\(Int(range.lowerBound))–\(Int(range.upperBound))%"
+        return es
+            ? "El objetivo de drenaje de esta planta (\(requested)) está fuera del rango admitido de \(bounds), así que se usó \(used). Edita la planta para cambiarlo."
+            : "This plant's goal runoff (\(requested)) is outside the supported \(bounds) range, so \(used) was used. Edit the plant to change it."
+    }
+    static func noteLimitedByMaximumWater(_ maximum: String) -> String {
+        es
+            ? "Limitado a \(maximum), el riego más grande que Evapotrack registra."
+            : "Limited to \(maximum), the largest watering Evapotrack records."
     }
 
     // MARK: - How To Content
@@ -374,11 +517,11 @@ enum Strings {
         es ? [
             "Evapotrack te ayuda a rastrear y optimizar el riego de tus plantas registrando cuánta agua agregas y cuánta drena.",
             "La app calcula métricas clave como el volumen Retenido, % de Capacidad, y una cantidad de riego recomendada basada en tu historial.",
-            "Todos los datos se almacenan localmente en tu dispositivo. Puedes descargar tus datos directamente desde Configuración."
+            "Todos los datos, incluidas las fotos de riego, se almacenan localmente en tu dispositivo. Puedes descargar tus datos directamente desde Configuración."
         ] : [
             "Evapotrack helps you track and optimize watering for your plants by recording how much water you add and how much runs off.",
             "The app calculates key metrics like Retained volume, Capacity %, and a recommended Next watering amount based on your history.",
-            "All data is stored locally on your device. You can download your data directly from Settings."
+            "All data, including watering photos, is stored locally on your device. You can download your data directly from Settings."
         ]
     }
 
@@ -389,12 +532,12 @@ enum Strings {
             "Un Cultivo es un grupo que contiene una o más plantas. Usa cultivos para organizar plantas por ubicación, ciclo, o cualquier agrupación que tenga sentido para ti.",
             "Toca + en la pantalla Mis Cultivos para crear un nuevo cultivo. Cada cultivo registra su nombre y la fecha de creación.",
             "Toca un cultivo para abrir su lista de plantas. Desde ahí, toca + para agregar plantas a ese cultivo.",
-            "Eliminar un cultivo eliminará permanentemente todas las plantas dentro de él y todos sus registros de riego."
+            "Eliminar un cultivo eliminará permanentemente todas las plantas dentro de él y todos sus registros de riego y fotos."
         ] : [
             "A Grow is a group that contains one or more plants. Use grows to organize plants by location, cycle, or any grouping that makes sense for you.",
             "Tap + on the My Grows screen to create a new grow. Each grow records its name and the date it was created.",
             "Tap a grow to open its plant list. From there, tap + to add plants to that grow.",
-            "Deleting a grow will permanently delete all plants inside it and all of their watering logs."
+            "Deleting a grow will permanently delete all plants inside it and all of their watering logs and photos."
         ]
     }
 
@@ -405,14 +548,14 @@ enum Strings {
             "Abre un cultivo, luego toca + para comenzar a crear una nueva planta.",
             "Ingresa los campos requeridos: Nombre de la Planta, Tamaño de Maceta, Tipo de Medio, y Capacidad Máx. de Retención.",
             "Si ya conoces tu Capacidad Máx. de Retención, ingrésala directamente. Si no, usa la calculadora incorporada para derivarla de un riego de prueba.",
-            "Las plantas no pueden editarse después de su creación. Asegúrate de que todos los campos sean correctos antes de guardar.",
-            "Eliminar una planta eliminará permanentemente todos sus registros de riego."
+            "Puedes editar una planta más tarde desde su panel (Editar junto a Información de la Planta). Sus registros de riego no cambian.",
+            "Eliminar una planta eliminará permanentemente todos sus registros de riego y fotos."
         ] : [
             "Open a grow, then tap + to start creating a new plant.",
             "Enter the required fields: Plant Name, Pot Size, Medium Type, and Max Retention Capacity.",
             "If you already know your Max Retention Capacity, enter it directly. Otherwise, use the built-in calculator to derive it from a test watering.",
-            "Plants cannot be edited after creation. Make sure all fields are correct before saving.",
-            "Deleting a plant will permanently delete all of its watering logs."
+            "You can edit a plant later from its dashboard (Edit next to Plant Info). Its watering logs are not changed.",
+            "Deleting a plant will permanently delete all of its watering logs and photos."
         ]
     }
 
@@ -420,17 +563,19 @@ enum Strings {
     static var whatIsMaxRetentionHighlight: String { es ? "Capacidad Máx. de Retención" : "Max Retention Capacity" }
     static var whatIsMaxRetentionBullets: [String] {
         es ? [
-            "La Capacidad Máx. de Retención es el volumen máximo de agua que tu medio de cultivo puede absorber y retener antes de que comience el drenaje.",
-            "Este valor es fundamental para cómo Evapotrack calcula el % de Capacidad, el Promedio Retenido, y la Cantidad de Riego Siguiente.",
-            "Para determinarla: riega tu medio lentamente hasta que comience el drenaje, luego resta el drenaje del agua que agregaste. El resultado es tu Capacidad Máx. de Retención.",
-            "Un medio más saturado producirá más drenaje. Una Capacidad Máx. de Retención precisa lleva a mejores recomendaciones.",
-            "Para valores estimados de retención por tamaño de maceta y medio, visita evapotrack.com/reference."
+            "La Capacidad Máx. de Retención es la mayor cantidad de agua que tu medio puede retener: lo que absorbe cuando empieza seco y se riega hasta que comienza el drenaje.",
+            "Evapotrack la usa para el % de Capacidad (cuánto de esa capacidad rellenó un riego) y como límite superior de Siguiente.",
+            "No es la cantidad para dar en cada riego: es el límite de la maceta. Siguiente suele ser menor, porque se basa en lo que tu planta ha retenido recientemente.",
+            "Para medirla: empieza con el medio seco, riega despacio hasta que aparezca drenaje, deja que la maceta termine de drenar y resta el drenaje del agua que agregaste. La calculadora de Agregar Planta hace la cuenta.",
+            "Un % de Capacidad mayor que 100% significa que un riego retuvo más que el valor que ingresaste. Edita la planta para actualizarlo.",
+            "Para valores estimados por tamaño de maceta y medio, visita evapotrack.com/reference."
         ] : [
-            "Max Retention Capacity is the maximum volume of water your growing medium can absorb and hold before runoff begins.",
-            "This value is central to how Evapotrack calculates Capacity %, Average Retained, and the Next Watering Amount.",
-            "To determine it: water your medium slowly until runoff starts, then subtract the runoff from the water you added. The result is your Max Retention Capacity.",
-            "A more saturated medium will produce more runoff. An accurate Max Retention Capacity leads to better recommendations.",
-            "For estimated retention values by pot size and medium, visit evapotrack.com/reference."
+            "Max Retention Capacity is the most water your medium can hold: what it takes in when it starts dry and is watered until runoff begins.",
+            "Evapotrack uses it for Capacity % (how much of that capacity a watering refilled) and as an upper limit for Next.",
+            "It isn't the amount to give every time; it's the pot's limit. Next is usually less, because it's based on what your plant has recently retained.",
+            "To measure it: start with dry medium, water slowly until runoff appears, let the pot finish draining, then subtract the runoff from the water you added. The Add Plant calculator does the math.",
+            "A Capacity % above 100% means a watering retained more than the value you entered. Edit the plant to update it.",
+            "For estimated values by pot size and medium, visit evapotrack.com/reference."
         ]
     }
 
@@ -439,15 +584,17 @@ enum Strings {
     static var howToDownloadDataBullets: [String] {
         es ? [
             "Abre la lista de plantas de un cultivo, luego toca el ícono de engranaje para abrir Configuración.",
-            "Desplázate hasta la sección Exportar Datos. Esta sección solo aparece cuando Configuración se abre desde dentro de un cultivo.",
-            "Toca Exportar para generar un archivo de texto formateado con todas las plantas del cultivo, sus detalles, y cada registro de riego.",
+            "Desplázate hasta la sección Descargar Datos. Esta sección solo aparece cuando Configuración se abre desde dentro de un cultivo.",
+            "Toca la fila del cultivo (con el ícono de compartir) para generar un archivo de texto formateado con todas las plantas del cultivo, sus detalles, y cada registro de riego.",
             "Los valores se exportan en tus unidades de visualización elegidas (unidad de agua y unidad de temperatura).",
+            "Las fotos no se incluyen en el archivo; se quedan en tu dispositivo. El archivo indica qué registros tienen foto.",
             "Elige dónde guardar o compartir el archivo usando el menú de compartir del sistema."
         ] : [
             "Open a grow's plant list, then tap the gear icon to open Settings.",
-            "Scroll to the Export Data section. This section only appears when Settings is opened from within a grow.",
-            "Tap Export to generate a formatted text file containing all plants in the grow, their details, and every watering log.",
+            "Scroll to the Download Data section. This section only appears when Settings is opened from within a grow.",
+            "Tap the grow's row (with the share icon) to generate a formatted text file containing all plants in the grow, their details, and every watering log.",
             "Values are exported in your chosen display units (water unit and temperature unit).",
+            "Photos are not included in the file; they stay on your device. The file notes which logs have a photo.",
             "Choose where to save or share the file using the system share sheet."
         ]
     }
@@ -461,12 +608,14 @@ enum Strings {
             "Ingresa Agua Agregada y Drenaje Recolectado. Ambos son requeridos.",
             "Establece la Fecha y Hora correctas. No se permiten fechas futuras.",
             "Temperatura y Humedad son opcionales. Se registran para tu referencia pero no se usan en los cálculos.",
+            "También puedes agregar una foto (opcional) para recordar cómo se veía la planta. Se elige con el selector de fotos del sistema, así que Evapotrack no necesita acceso a tu fototeca. En el historial, expande el registro y toca la foto para verla en pantalla completa.",
             "Los registros no pueden editarse después de su creación. Si un registro es incorrecto, elimínalo y crea uno nuevo."
         ] : [
             "From a plant's dashboard, tap + to add a new watering event.",
             "Enter Water Added and Runoff Collected. Both are required.",
             "Set the correct Date and Time. Future dates are not allowed.",
             "Temperature and Humidity are optional. They are recorded for your reference but are not used in any calculations.",
+            "You can also add a photo (optional) to remember how the plant looked. It's chosen with the system photo picker, so Evapotrack doesn't need access to your photo library. In History, expand the log and tap the photo to view it full screen.",
             "Logs cannot be edited after creation. If a log is incorrect, delete it and create a new one."
         ]
     }
@@ -475,15 +624,17 @@ enum Strings {
     static var whatIsNextHighlight: String { es ? "Siguiente" : "Next" }
     static var whatIsNextBullets: [String] {
         es ? [
-            "Siguiente es la cantidad de agua recomendada que se muestra en el panel de Análisis. Te indica cuánto regar la próxima vez para alcanzar tu % de Drenaje Objetivo.",
-            "Puede aumentar o disminuir según tu historial para mantener tu drenaje lo más cerca posible de tu % de Drenaje Objetivo.",
-            "La estimación se basa en tu historial reciente de riego — promedia tu último Retenido con tu promedio general para predecir la absorción.",
-            "Cuantos más registros guardes, más precisa será la recomendación."
+            "Siguiente es la cantidad recomendada para tu próximo riego, que se muestra en el panel de Análisis. Busca alcanzar tu % de Drenaje Objetivo.",
+            "Evapotrack estima cuánta agua retendrá la planta antes de que empiece el drenaje, usando tus propias mediciones. Los riegos recientes cuentan más, así que Siguiente acompaña a la planta cuando crece o se desacelera.",
+            "Un riego sin drenaje solo muestra que la planta necesitaba al menos esa cantidad, así que Siguiente aumenta. Un riego que drenó por completo no se usa.",
+            "Un riego inusual puede reducir Siguiente como máximo en una cuarta parte, así que un pequeño riego de refuerzo no lo desvía.",
+            "Siguiente nunca supone que la maceta retiene más que su Capacidad Máx. de Retención. La nota bajo Análisis explica en qué se basa Siguiente."
         ] : [
-            "Next is the recommended water amount shown in the Insights panel. It tells you how much to water next time to hit your Goal Runoff %.",
-            "It may increase or decrease based on your history to keep your runoff as close to your Goal Runoff % as possible.",
-            "The estimate is based on your recent watering history — it averages your last Retained amount with your overall average to predict absorption.",
-            "The more logs you record, the more accurate the recommendation becomes."
+            "Next is the recommended amount for your next watering, shown in the Insights panel. It aims for your Goal Runoff %.",
+            "Evapotrack estimates how much water the plant will retain before runoff starts, using your own measurements. Recent waterings count the most, so Next follows the plant as it grows or slows down.",
+            "A watering with no runoff only shows the plant needed at least that much, so Next goes up. A watering that drained completely isn't used.",
+            "One unusual watering can lower Next by at most a quarter, so a small top-up won't throw it off.",
+            "Next never assumes the pot holds more than its Max Retention Capacity. The note under Insights explains what Next is based on."
         ]
     }
 
@@ -524,17 +675,17 @@ enum Strings {
     static var wateringProtocolHighlight: String { es ? "Protocolo" : "Protocol" }
     static var wateringProtocolBullets: [String] {
         es ? [
-            "Riega tu medio lenta y uniformemente, siempre apuntando al drenaje.",
-            "Siempre debes tener drenaje. El drenaje siempre debe ser menor que el Agua Agregada.",
-            "Tu meta de drenaje se basa en el % de Drenaje Objetivo establecido para cada planta (por defecto 15%).",
+            "Riega tu medio lenta y uniformemente, siempre buscando drenaje.",
+            "Apunta a tu % de Drenaje Objetivo (se define para cada planta, 15% por defecto). El drenaje es lo que le indica a Evapotrack que el medio se llenó.",
             "Recolecta todo el drenaje en una bandeja y mídelo después de que la maceta termine de drenar.",
-            "Resta el Drenaje Recolectado del Agua Agregada. Este es tu volumen Retenido — la cantidad de agua que el medio realmente absorbió."
+            "Registra lo que realmente ocurrió, aunque no haya habido drenaje o todo haya drenado. Evapotrack ajusta Siguiente en consecuencia.",
+            "Resta el Drenaje Recolectado del Agua Agregada. Este es tu volumen Retenido: la cantidad de agua que el medio realmente absorbió."
         ] : [
             "Water your medium slowly and evenly, always aiming for runoff.",
-            "You must always have runoff. Runoff must always be less than Water Added.",
-            "Your runoff goal is based on the Goal Runoff % set for each plant (default 15%).",
+            "Aim for your Goal Runoff % (set for each plant, 15% by default). Runoff is how Evapotrack knows the medium was filled.",
             "Collect all runoff in a tray and measure it after the pot finishes draining.",
-            "Subtract Runoff Collected from Water Added. This is your Retained volume — the amount of water the medium actually absorbed."
+            "Log what actually happened, even if there was no runoff or everything drained. Evapotrack adjusts Next accordingly.",
+            "Subtract Runoff Collected from Water Added. This is your Retained volume: the amount of water the medium actually absorbed."
         ]
     }
     static var wateringProtocolLinkLabel: String { es ? "Ver protocolo completo en evapotrack.com" : "View full protocol at evapotrack.com" }

@@ -1,5 +1,7 @@
 # Evapotrack - Data Model
 
+> Internal document. Moved out of the public website folder (`docs/`) on 2026-09-28 and updated for the next revision (recommendation engine, Edit Plant, schema V2, watering photos).
+
 ## Entity Relationship Diagram
 
 ```
@@ -15,6 +17,7 @@
 │              │       │              │       │ retained         │
 │              │       │ wateringLogs │       │ runoffPercent    │
 │              │       │ grow?        │       │ intervalHours?   │
+│              │       │ createdAt    │       │ photoFileID?     │
 │              │       │              │       │ plant?           │
 └──────────────┘       └──────────────┘       └──────────────────┘
      cascade                cascade
@@ -38,7 +41,8 @@
 | potSize | String | Yes | Descriptive (e.g. "Fabric 3 gal") |
 | mediumType | String | Yes | Descriptive (e.g. "soil") |
 | maxRetentionCapacity | Double | Yes | Liters, 0.001-100.0 |
-| goalRunoffPercent | Double | Yes | 0.1-99.9, defaults to 15.0 |
+| goalRunoffPercent | Double | Yes | Stored 0.1-99.9 (model clamp); new entries 5-50; defaults to 15.0 |
+| createdAt | Date | Yes | Set on creation |
 | wateringLogs | [WateringLog] | Yes | @Relationship(deleteRule: .cascade) |
 | grow | Grow? | No | Inverse of Grow.plants |
 
@@ -55,6 +59,7 @@
 | retained | Double | Computed | waterAdded - runoffCollected |
 | runoffPercent | Double | Computed | (runoff / waterAdded) x 100 |
 | intervalHours | Double? | System | Hours since previous log, recalculated |
+| photoFileID | UUID? | No | SchemaV2. Names the photo files in Application Support/WateringPhotos; nil for no photo. Never a path. |
 | plant | Plant? | No | Inverse of Plant.wateringLogs |
 
 ## UserSettings (UserDefaults, not SwiftData)
@@ -74,7 +79,8 @@
 
 ## Storage Details
 
-- **SwiftData** manages Grow, Plant, and WateringLog as @Model classes.
+- **SwiftData** manages Grow, Plant, and WateringLog as @Model classes, declared inside `SchemaV2` (current) with a frozen `SchemaV1` and `EvapotrackMigrationPlan` (lightweight V1→V2).
+- **Photo files** live outside the database; deleting a log, plant or grow deletes its photo files after the deletion is saved.
 - **UserDefaults** stores UserSettings as JSON via `AppConstants.userSettingsKey`.
 - All numeric values stored unrounded in internal units (liters, Celsius).
 - Display formatting applied at render time only.

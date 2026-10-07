@@ -23,6 +23,22 @@ enum DisplayFormatter {
         return "\(formatNumber(converted, decimals: unit.displayPrecision)) \(unit.abbreviation)"
     }
 
+    /// A range limit in the user's water unit, rounded so the value shown is
+    /// itself valid: a minimum rounds up (adding decimals if needed so it stays
+    /// close to the real limit), a maximum rounds down.
+    static func waterLimit(_ liters: Double, unit: WaterUnit, roundingUp: Bool) -> String {
+        let value = UnitConversionService.fromLiters(liters, to: unit)
+        var decimals = unit.displayPrecision
+        var shown = directedRound(value, decimals: decimals, up: roundingUp)
+        if roundingUp {
+            while decimals < 6, shown > value * 1.5 {
+                decimals += 1
+                shown = directedRound(value, decimals: decimals, up: true)
+            }
+        }
+        return "\(formatNumber(shown, decimals: decimals)) \(unit.abbreviation)"
+    }
+
     // MARK: - Temperature
 
     /// Format an internal Celsius value for display in the user's chosen unit.
@@ -64,6 +80,14 @@ enum DisplayFormatter {
     }
 
     // MARK: - Private
+
+    private static func directedRound(_ value: Double, decimals: Int, up: Bool) -> Double {
+        let factor = pow(10.0, Double(decimals))
+        let scaled = value * factor
+        // The tolerance keeps values such as 0.001 x 1000 from rounding past themselves.
+        let rounded = up ? (scaled - 1e-9).rounded(.up) : (scaled + 1e-9).rounded(.down)
+        return rounded / factor
+    }
 
     private static func formatNumber(_ value: Double, decimals: Int) -> String {
         let clamped = max(0, min(decimals, 10))

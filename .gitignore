@@ -30,3 +30,7 @@ apple-app-store-screenshots/
 
 # Copyright deposit materials (submitted to U.S. Copyright Office)
 copyright-deposit/
+
+# Python
+__pycache__/
+*.pyc
