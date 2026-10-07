@@ -1,5 +1,7 @@
 # EvapoTrack: recommended decisions for approval (2026-10-06)
 
+> **For approval, use [`2026-10-07-plan.md`](2026-10-07-plan.md).** It groups these decisions into one phased plan and moves A13 ("Leave out of Next") into 1.2, because the V2 data model hasn't shipped yet.
+
 This document turns the reviews into one recommended set of decisions. It judges each option against what the app is for and how it is used in practice. Section 5 is a final review of the set as a whole. Approve, change or reject each item in section 6.
 
 Companion documents:
@@ -164,7 +166,7 @@ Confidence: **High** = clear on evidence; **Medium** = judgment call with good r
 | # | Item | Version | Confidence |
 |---|---|---|---|
 | A12 | "Collecting runoff" guidance, including *don't let fabric pots go bone-dry; if one does, re-wet slowly in passes until runoff appears, then log the total* | 1.2 (text) | High |
-| A13 | "Leave out of Next" option on a watering (runoff not measured / flush / water ran straight through) | 1.3 (schema version) | High |
+| A13 | "Leave out of Next" option on a watering (runoff not measured / flush / water ran straight through) | **1.2** (one optional field in the unreleased V2 model; see the 2026-10-07 plan) | High |
 | A14 | Channeling check: runoff ≥ 2× goal and retained ≤ 75% of Expected → ask, show the re-wet steps, offer A13 | 1.3 | Medium-High |
 | A15 | "…and the unit (mL, L or gal)" added to the over-capacity alert | 1.2 (text) | High |
 | A16 | Optional runoff EC and pH, shown as trends | Later | Medium |
