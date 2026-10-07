@@ -24,7 +24,7 @@ Each release folder (`v1.1/`, …) holds evidence and screenshots for that relea
 | Version shown in the app | `Evapotrack v1.1 (1)` (Settings footer, seen on device 2026-10-06) |
 | Source commit (best evidence) | `c063360` (2026-04-01), "v1.1: Dynamic Type polish for accessibility text sizes", the last commit before 2026-10 that changed app code |
 | Proposed tag | `v1.1` → `c063360` |
-| Version in the repository | **Still 1.0 (1).** The bump to 1.1 was made in Xcode for the archive and never committed (see the runbook, step B2) |
+| Version in the repository | Was left at 1.0 (1): the bump to 1.1 was made in Xcode for the archive and not committed. **Recorded as 1.1 (1) on 2026-10-07** (commit `c961813`) |
 | Released | **Unknown: check App Store Connect** → Evapotrack → App Store → version history |
 | Evidence | [`v1.1/device-screenshots/`](v1.1/device-screenshots/) from an iPhone after an automatic update |
 
