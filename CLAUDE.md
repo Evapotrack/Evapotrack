@@ -22,6 +22,10 @@ EvapoTrack is an offline iOS/iPadOS app (SwiftUI + SwiftData, iOS 17+) that trac
 - The website in `docs/` on `release/1.2` describes the photo feature. It is published by merging into `main` on release day, not before.
 - Plan Phase 5 adds, **only after the build and tests are green**: text-size layout fixes, the launch screen re-timed to about 1.5 s, in-app guidance, the unit hint in the over-capacity alert, and "Leave out of Next" (an optional field added to the still-unreleased `SchemaV2`; see `engineering/plans/2026-10-07-plan.md`).
 
+## Android and website timing
+- The Android app is a separate private repository, `Evapotrack/Evapotrack-Android` (Kotlin/Compose, v1.1 parity, paused since 2026-04-21 before real-device testing). The website says only "Android coming soon" until it is live on Google Play.
+- The website is updated only after the matching iOS version is live on the App Store. PR #1 is held for this, and `release/1.2`'s website text is published on 1.2's release day.
+
 ## Terms
 - **Next:** the app's **suggested amount for the next watering** (an amount of water, not a time). Every screen, help text, document and website page must keep this meaning.
 - **Expected:** the estimate of what the plant will retain; Next = Expected ÷ (1 − goal runoff).
