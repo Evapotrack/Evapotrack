@@ -12,6 +12,8 @@ EvapoTrack is an offline iOS/iPadOS app (SwiftUI + SwiftData, iOS 17+). It track
 - `main`: App Store **v1.1 (1)** code (`c063360`), plus the **live website** in `docs/`.
 - `release/1.2`: the next release (revision 2 + fixes), unreleased and never compiled. It has its own, more detailed `CLAUDE.md` for the 1.2 code (schema versions, photos, recommendation engine). It reaches `main` only on release day.
 - `claude/wonderful-edison-i0ukly` (revision 2 as written) and `claude/matts-hydroponics-outreach-vwiicq` (camera photos, not chosen): kept as history.
+- **Android:** a separate private repository, `Evapotrack/Evapotrack-Android` (Kotlin/Compose, v1.1 parity, paused since 2026-04-21 before real-device testing). The website says only "Android coming soon" until it is live on Google Play.
+- **Website changes wait for the app:** the website is updated only after the matching iOS version is live on the App Store (PR #1 is held for this).
 
 ## Terms
 - **Next:** the app's **suggested amount for the next watering**, an amount of water and not a time. Keep this meaning everywhere.
