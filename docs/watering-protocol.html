@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Evapotrack - Watering Protocol</title>
+    <link rel="canonical" href="https://evapotrack.com/watering-protocol.html">
     <meta name="description" content="Learn how to measure water retention using Evapotrack's watering protocol. Step-by-step video walkthrough.">
     <meta property="og:title" content="Evapotrack - Watering Protocol">
     <meta property="og:description" content="Learn how to measure water retention using Evapotrack's watering protocol. Step-by-step video walkthrough.">
@@ -62,7 +63,8 @@
             text-align: center;
         }
 
-        .video-wrapper iframe {
+        .video-wrapper iframe,
+        .video-poster {
             display: block;
             margin: 0 auto;
             max-width: 100%;
@@ -72,6 +74,28 @@
             box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
             background: #000;
             border: none;
+        }
+
+        .video-poster {
+            position: relative;
+            cursor: pointer;
+            color: #ffffff;
+            font: inherit;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .video-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.75;
+        }
+
+        .video-poster span {
+            position: absolute;
+            inset: auto 0 24px 0;
+            font-weight: 600;
         }
 
         /* Steps */
@@ -142,7 +166,7 @@
         footer a:hover { text-decoration: underline; }
 
         footer .copyright {
-            color: #3e4a5c;
+            color: #8896ab;
             font-size: 0.78rem;
         }
 
@@ -164,7 +188,22 @@
         <p class="intro">The watering protocol is a simple method for tracking exactly how much water your plants retain. By measuring water in and runoff out, you build a data-driven picture of your plant's hydration over time.</p>
 
         <div class="video-wrapper">
-            <iframe src="https://www.youtube.com/embed/zwpFjsNX0Pk" title="Evapotrack Watering Protocol" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <!-- Nothing loads from YouTube until the visitor clicks; then the
+                 privacy-enhanced (youtube-nocookie.com) player is used. -->
+            <button type="button" class="video-poster" id="protocol-video" aria-label="Play the Evapotrack Watering Protocol video (loads from YouTube)">
+                <img src="app-icon-256.png" alt="">
+                <span>&#9654; Play video (loads from YouTube)</span>
+            </button>
+            <script>
+                document.getElementById('protocol-video').addEventListener('click', function () {
+                    var frame = document.createElement('iframe');
+                    frame.src = 'https://www.youtube-nocookie.com/embed/zwpFjsNX0Pk?autoplay=1';
+                    frame.title = 'Evapotrack Watering Protocol';
+                    frame.allow = 'autoplay; encrypted-media; picture-in-picture';
+                    frame.allowFullscreen = true;
+                    this.replaceWith(frame);
+                });
+            </script>
         </div>
 
         <div class="steps">
@@ -172,13 +211,28 @@
             <ol>
                 <li><strong>Measure your water.</strong> Before watering, measure the exact volume of water you plan to use.</li>
                 <li><strong>Water your plant.</strong> Pour the measured water slowly and evenly through the medium.</li>
+                <li><strong>Aim for runoff every time.</strong> Runoff shows the medium was filled. Aim for your plant's Goal Runoff % (15% by default); the app's <strong>Next</strong> (the suggested amount for your next watering) is designed to get you there.</li>
                 <li><strong>Collect runoff.</strong> Catch all the water that drains out the bottom into a tray or container.</li>
                 <li><strong>Measure the runoff.</strong> Measure the volume of runoff collected.</li>
-                <li><strong>Log it in Evapotrack.</strong> Enter the water added and runoff collected. The app calculates retained volume, runoff percentage, and capacity automatically.</li>
+                <li><strong>Log it in Evapotrack.</strong> Enter the water added and runoff collected. The app calculates retained volume, runoff percentage, and capacity automatically. Log what really happened, even with no runoff or 100% runoff.</li>
             </ol>
         </div>
 
+        <div class="tip">Measuring Max Retention Capacity: start with dry medium, water slowly until runoff appears, let the pot finish draining, and subtract the runoff from the water you added. The Add Plant calculator does the math.</div>
+
         <div class="tip">Need a starting point for your Max Retention Capacity? Check the <a href="reference.html">water retention reference table</a> for estimates by pot size and growing medium.</div>
+
+        <div class="steps" style="margin: 40px 0 0;">
+            <h2>Tips for Accurate Numbers</h2>
+        </div>
+
+        <div class="tip"><strong>Collecting runoff.</strong> Use a saucer or tray wider than the pot. Wait until dripping stops (usually 10&ndash;30 minutes), then measure the runoff and empty the saucer. Don't let the pot sit in its runoff.</div>
+
+        <div class="tip"><strong>Don't let fabric pots go bone-dry.</strong> Dry coco pulls away from the fabric, and water runs straight down the sides. You see lots of runoff while the plant is still dry. If it happens, water slowly in a few passes until runoff appears, then log the total.</div>
+
+        <div class="tip"><strong>Water at a consistent dryness.</strong> The suggested Next amount works best when you water at about the same dryness each time (lift the pot to check) or on a regular schedule.</div>
+
+        <div class="tip"><strong>Automated or multi-shot watering.</strong> Log one entry per day with the day's total water and total runoff, then split the suggested Next amount across your shots.</div>
     </div>
 
     <footer>
