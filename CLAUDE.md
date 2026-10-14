@@ -24,7 +24,7 @@ EvapoTrack is an offline iOS/iPadOS app (SwiftUI + SwiftData, iOS 17+) that trac
 
 ## Android and website timing
 - The Android app is a separate private repository, `Evapotrack/Evapotrack-Android` (Kotlin/Compose, v1.1 parity, paused since 2026-04-21 before real-device testing). The website says only "Android coming soon" until it is live on Google Play.
-- The website is updated only after the matching iOS version is live on the App Store. PR #1 is held for this, and `release/1.2`'s website text is published on 1.2's release day.
+- The website is updated only after the matching iOS version is live on the App Store. PR #1 is held for this, and `release/1.2`'s website text is published on 1.2's release day. The only exception is accuracy fixes for the app already live, made at the owner's request: PR #2, merged 2026-10-14 (Android coming soon, Next wording).
 
 ## Terms
 - **Next:** the app's **suggested amount for the next watering** (an amount of water, not a time). Every screen, help text, document and website page must keep this meaning.
