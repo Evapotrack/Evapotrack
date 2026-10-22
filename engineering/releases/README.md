@@ -63,6 +63,22 @@ Each release folder (`v1.1/`, …) holds evidence and screenshots for that relea
 - 2026-03-21: copyright notices, the dark-mode screenshot set, and the first website.
 - 2026-03-22: the second example plant (coco, 5 gal), 100% runoff allowed, and iPad improvements.
 
+## Copyright registration
+
+| | |
+|---|---|
+| Registration number | **TXu 2-569-711** (U.S. Copyright Office; "TXu" = unpublished literary work, which includes computer programs) |
+| Title of work | Evapotrack |
+| Type | Computer program; year of completion 2026; not a work made for hire |
+| Effective date of registration | **March 21, 2026** (the date the application and deposit reached the Office) |
+| Registration decision date | October 15, 2026 (certificate received by 2026-10-22) |
+| What was deposited | The app's source code as of 2026-03-21: the first and last 25 pages (about 2,500 lines) with the `© 2026 Evapotrack` headers added in `8ca9c0e`, plus screenshots. Prepared in `copyright-deposit/` (gitignored, never on GitHub) |
+| Limitation of claim (as printed) | Material excluded: computer program. New material included: computer program |
+
+- **Covers** the program as it stood on 2026-03-21, before v1.0 was released (hence "unpublished"). v1.0 and v1.1 are built on that code. The 1.2 additions (new recommendation engine, photos, Edit Plant, schema migration) are new material, which a later registration can cover if wanted.
+- **Doesn't cover** the method behind Next or the name. The name is a trademark matter: a USPTO application for "EVAPOTRACK" (standard character mark, class 009) was filed on 2026-03-22.
+- **Where the paper certificate lives:** with the owner, plus a scan in the Mac's gitignored `private/` or `copyright-deposit/` folder. Never commit it: it shows a home address.
+
 ## Unreleased work (not built, not tested, not merged)
 
 | Branch | Date | Content | Status |
