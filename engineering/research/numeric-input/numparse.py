@@ -20,7 +20,14 @@ def parse(text, loc):
     s = s.replace('−', '-')
     sign = ''
     if s[0] in '+-': sign, s = s[0], s[1:]
-    s = ''.join(c for c in s if c not in SPACES)
+    marks = [c for c in s if c in SPACES]
+    if marks:
+        # Spaces/apostrophes may only separate thousands; '1 5' is rejected.
+        mark = marks[0]
+        if any(c in SPACES and c != mark for c in s): return None
+        cut = min([i for i, c in enumerate(s) if c in '.,'] or [len(s)])
+        if not grouped_ok(s[:cut], mark): return None
+        s = s.replace(mark, '')
     if not s: return None
     dots, commas = s.count('.'), s.count(',')
     if dots and commas:
@@ -63,6 +70,9 @@ tests = [
  ('', 'en_US', None), ('   ', 'en_US', None), ('abc', 'en_US', None), ('1..2', 'en_US', None), ('1,2,3', 'en_US', None),
  ('1e3', 'en_US', None), ('nan', 'en_US', None), ('inf', 'en_US', None), ('0x10', 'en_US', None), ('.', 'en_US', None),
  ('1.2.3', 'de_DE', None), ('1,234,5', 'en_US', None), ('12,34.5', 'en_US', None), ('+2', 'en_US', 2.0), ('--2', 'en_US', None),
+ # Spaces and apostrophes only as thousands separators (2026-10-22)
+ ('1 500', 'en_US', 1500.0), ("1'234.5", 'en_US', 1234.5), ('12\u00a0345', 'fr_FR', 12345.0),
+ ('1 5', 'en_US', None), ('0 5', 'es_ES', None), ('1 23', 'fr_FR', None), ('12 3,5', 'fr_FR', None), ("1'5", 'en_US', None), ("1 234'567", 'en_US', None),
 ]
 bad = 0
 for inp, loc, exp in tests:

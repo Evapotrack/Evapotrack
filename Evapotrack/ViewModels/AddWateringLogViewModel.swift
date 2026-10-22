@@ -214,8 +214,10 @@ final class AddWateringLogViewModel {
     /// Prepares a picked photo off the main actor. `load` returns the picked
     /// file (the view passes PhotosPickerItem.loadTransferable). Picking again
     /// replaces the previous photo; a result that arrives after a newer pick
-    /// or after the form closed is discarded.
+    /// or after the form closed is discarded. After saving, the photo belongs
+    /// to the log (its files have moved), so the form can no longer change it.
     func loadPhoto(_ load: @escaping @Sendable () async throws -> PickedImageFile?) {
+        guard !didSave else { return }
         photoTask?.cancel()
         discardPreparedPhoto()
         let requestID = UUID()
@@ -250,6 +252,7 @@ final class AddWateringLogViewModel {
 
     /// Removes the photo from the form (before saving).
     func removePhoto() {
+        guard !didSave else { return }
         photoTask?.cancel()
         photoRequestID = nil
         discardPreparedPhoto()

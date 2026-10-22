@@ -16,7 +16,7 @@ EvapoTrack is an offline iOS/iPadOS app (SwiftUI + SwiftData, iOS 17+) that trac
 ## Current status (update this when it changes)
 - **Live on the App Store: 1.1 (1)**, built from `c063360` (proposed tag `v1.1`). `main` matches it once the website/records pull request is merged.
 - **Next release: 1.2 (1)** on branch `release/1.2`. It is revision 2 merged on 2026-10-07, and has **not yet been compiled, tested or released**. No Swift toolchain was available when it was written. It reaches `main` only on release day, because `main`'s `docs/` folder is the live website (plan, Phase 7).
-- Tests: 268 written, 0 run. Build and run them in Xcode first, and expect small compile fixes. One migration test is skipped until a store from the App Store build is captured (`EvapotrackDevTests/Fixtures/README.md`).
+- Tests: 269 written (268 from revision 2, plus one added by the 2026-10-22 review fixes), 0 run. Build and run them in Xcode first, and expect small compile fixes. One migration test is skipped until a store from the App Store build is captured (`EvapotrackDevTests/Fixtures/README.md`).
 - Every claim in the reports is at "implemented + syntax-checked" level only. See the verification-levels table in the implementation report.
 - Version in the project: 1.2 (1) on `release/1.2`. Commit any version or build change before archiving, and tag the archived commit. Never change signing.
 - The website in `docs/` on `release/1.2` describes the photo feature. It is published by merging into `main` on release day, not before.

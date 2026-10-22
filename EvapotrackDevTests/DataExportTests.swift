@@ -88,12 +88,22 @@ final class DataExportTests: XCTestCase {
         }
     }
 
+    /// Containers made by this test. A ModelContext doesn't keep its container
+    /// alive, so the test holds them until it ends.
+    private var containers: [ModelContainer] = []
+
+    private func makeContext() throws -> ModelContext {
+        let container = try PersistenceController.makeInMemoryContainer()
+        containers.append(container)
+        return ModelContext(container)
+    }
+
     // MARK: - Format
 
     /// The export format before photos were added. Written before any format
     /// change; a grow without photos must still export exactly like this.
     func test_export_withoutPhotos_matchesEstablishedFormat() throws {
-        let context = ModelContext(try PersistenceController.makeInMemoryContainer())
+        let context = try makeContext()
         let grow = makeGrow(in: context)
 
         assertLines(export(grow), [
@@ -152,7 +162,7 @@ final class DataExportTests: XCTestCase {
     /// A plant with photos gets a Photo column; the export ends with a note
     /// that photos are not included. Plants without photos are unchanged.
     func test_export_withPhoto_addsPhotoColumnAndNote() throws {
-        let context = ModelContext(try PersistenceController.makeInMemoryContainer())
+        let context = try makeContext()
         let grow = makeGrow(in: context, photoOnFirstBasilLog: UUID())
 
         assertLines(export(grow), [
@@ -211,7 +221,7 @@ final class DataExportTests: XCTestCase {
     }
 
     func test_export_emptyGrow() throws {
-        let context = ModelContext(try PersistenceController.makeInMemoryContainer())
+        let context = try makeContext()
         let grow = Grow(growName: "Empty", createdAt: Self.date(1, 0, 0))
         context.insert(grow)
 

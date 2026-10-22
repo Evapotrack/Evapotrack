@@ -47,6 +47,9 @@ final class NumericInputTests: XCTestCase {
         assertParses("1.234,56", "pt_BR", 1234.56)
         assertParses("1\u{202F}234,5", "fr_FR", 1234.5)
         assertParses("1 234,5", "fr_FR", 1234.5)
+        assertParses("1 500", "en_US", 1500)
+        assertParses("1'234.5", "en_US", 1234.5)
+        assertParses("12\u{00A0}345", "fr_FR", 12345)
     }
 
     // MARK: - Decimal period regions
@@ -80,7 +83,10 @@ final class NumericInputTests: XCTestCase {
         let rejected: [(String, String)] = [
             ("", "en_US"), ("   ", "en_US"), ("abc", "en_US"), ("1..2", "en_US"), ("1,2,3", "en_US"),
             ("1e3", "en_US"), ("nan", "en_US"), ("inf", "en_US"), ("0x10", "en_US"), (".", "en_US"),
-            ("1.2.3", "de_DE"), ("1,234,5", "en_US"), ("12,34.5", "en_US"), ("--2", "en_US")
+            ("1.2.3", "de_DE"), ("1,234,5", "en_US"), ("12,34.5", "en_US"), ("--2", "en_US"),
+            // Spaces and apostrophes that don't separate thousands
+            ("1 5", "en_US"), ("0 5", "es_ES"), ("1 23", "fr_FR"), ("12 3,5", "fr_FR"), ("1'5", "en_US"),
+            ("1 234'567", "en_US")
         ]
         for (text, identifier) in rejected {
             XCTAssertNil(parse(text, identifier), "\"\(text)\" in \(identifier) should be rejected")

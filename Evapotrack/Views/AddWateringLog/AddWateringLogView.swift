@@ -103,6 +103,9 @@ struct AddWateringLogView: View {
             } footer: {
                 Text(Strings.photoFooter)
             }
+            // Taps pass through the "Saved" overlay; the photo has already moved
+            // into the log's storage, so its row can't be opened or changed.
+            .disabled(vm.showSaveConfirmation)
 
             if let error = vm.validationError {
                 Section {

@@ -450,15 +450,17 @@ enum Strings {
 
     // MARK: - Recommendation Explanation
 
-    static func basisRecentWaterings(_ retained: String, goal: String) -> String {
+    // `expected` is the engine's estimate (after trend and capacity limits),
+    // not a measured amount, so these never call it "retained".
+    static func basisRecentWaterings(_ expected: String, goal: String) -> String {
         es
-            ? "Basado en el agua retenida reciente de \(retained) y un objetivo de drenaje de \(goal)."
-            : "Based on recent retained water of \(retained) and a \(goal) runoff goal."
+            ? "Basado en una retención esperada de \(expected), según tus riegos recientes, y un objetivo de drenaje de \(goal)."
+            : "Based on an expected retention of \(expected), from your recent waterings, and a \(goal) runoff goal."
     }
-    static func basisSingleWatering(_ retained: String, goal: String) -> String {
+    static func basisSingleWatering(_ expected: String, goal: String) -> String {
         es
-            ? "Basado en tu único riego con drenaje (\(retained) retenidos) y un objetivo de drenaje de \(goal)."
-            : "Based on your one watering with runoff (\(retained) retained) and a \(goal) runoff goal."
+            ? "Basado en tu único riego con drenaje (retención esperada de \(expected)) y un objetivo de drenaje de \(goal)."
+            : "Based on your one watering with runoff (expected retention \(expected)) and a \(goal) runoff goal."
     }
     static func basisNoRunoffYet(_ amount: String) -> String {
         es

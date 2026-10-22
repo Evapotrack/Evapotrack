@@ -34,7 +34,14 @@ nonisolated enum NumericInput {
             sign = String(first)
             body.removeFirst()
         }
-        body.removeAll { groupingMarks.contains($0) }
+        // Spaces and apostrophes may only separate thousands ("1 500", "1'234,5").
+        // Anything else ("1 5") is rejected instead of being read as another number.
+        if let mark = body.first(where: { groupingMarks.contains($0) }) {
+            guard body.allSatisfy({ !groupingMarks.contains($0) || $0 == mark }) else { return nil }
+            let integerEnd = body.firstIndex(where: { $0 == "." || $0 == "," }) ?? body.endIndex
+            guard isGrouped(String(body[..<integerEnd]), by: mark) else { return nil }
+            body.removeAll { $0 == mark }
+        }
         guard !body.isEmpty else { return nil }
 
         let dots = body.filter { $0 == "." }.count

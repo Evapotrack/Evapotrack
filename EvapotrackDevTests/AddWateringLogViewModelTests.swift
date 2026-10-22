@@ -15,11 +15,21 @@ final class AddWateringLogViewModelTests: XCTestCase {
 
     private let now = Date(timeIntervalSince1970: 1_760_000_000)
 
+    /// Containers made by this test. A ModelContext doesn't keep its container
+    /// alive, so the test holds them until it ends.
+    private var containers: [ModelContainer] = []
+
+    private func makeContext() throws -> ModelContext {
+        let container = try PersistenceController.makeInMemoryContainer()
+        containers.append(container)
+        return ModelContext(container)
+    }
+
     private func makeVM(
         capacity: Double = 1.0,
         waterUnit: WaterUnit = .liters
     ) throws -> (AddWateringLogViewModel, Plant, ModelContext) {
-        let context = ModelContext(try PersistenceController.makeInMemoryContainer())
+        let context = try makeContext()
         let grow = Grow(growName: "Tent")
         context.insert(grow)
         let plant = Plant(plantName: "P1", potSize: "1 gal", mediumType: "soil", maxRetentionCapacity: capacity, grow: grow)
