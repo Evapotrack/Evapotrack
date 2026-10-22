@@ -76,8 +76,27 @@ Each release folder (`v1.1/`, …) holds evidence and screenshots for that relea
 | Limitation of claim (as printed) | Material excluded: computer program. New material included: computer program |
 
 - **Covers** the program as it stood on 2026-03-21, before v1.0 was released (hence "unpublished"). v1.0 and v1.1 are built on that code. The 1.2 additions (new recommendation engine, photos, Edit Plant, schema migration) are new material, which a later registration can cover if wanted.
-- **Doesn't cover** the method behind Next or the name. The name is a trademark matter: a USPTO application for "EVAPOTRACK" (standard character mark, class 009) was filed on 2026-03-22.
+- **Doesn't cover** the method behind Next or the name. The name is a trademark matter (below).
 - **Where the paper certificate lives:** with the owner, plus a scan in the Mac's gitignored `private/` or `copyright-deposit/` folder. Never commit it: it shows a home address.
+
+## Trademark (USPTO)
+
+| | |
+|---|---|
+| Mark | **EVAPOTRACK**, standard characters (any font, size or color), Principal Register |
+| Serial number | **99716922** |
+| Filed | 2026-03-22, basis **1(b), intent to use** |
+| Class | 009: downloadable mobile application software for tracking plant watering, monitoring water retention, and providing watering recommendations |
+| Status (checked 2026-10-22) | **Live, pending.** Examined and **published for opposition on 2026-09-08**. Not registered: no registration number or date yet |
+
+**What still has to happen** (because the basis is intent to use):
+1. If nobody opposed, the USPTO issues a **Notice of Allowance**, normally about 8 weeks after publication (so around early November 2026). It is e-mailed to the correspondence address.
+2. File a **Statement of Use** within 6 months of the Notice of Allowance (extensions are available in 6-month steps, for a fee). The app has been on the App Store since March 2026, so this can be filed right away. Specimen: a screenshot of the App Store page showing "Evapotrack" with the Get/download button, plus the date of first use and first use in commerce (v1.0's release date, from App Store Connect).
+3. After the Statement of Use is accepted, the mark **registers** and gets a registration number.
+
+**Symbol:** use **™** until then. **®** only after registration. (The live site and marketing files use neither; nothing needs changing.)
+
+Look-up: USPTO trademark search → serial 99716922 (status and documents).
 
 ## Unreleased work (not built, not tested, not merged)
 
