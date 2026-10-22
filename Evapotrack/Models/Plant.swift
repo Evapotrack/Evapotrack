@@ -69,7 +69,10 @@ extension SchemaV2 {
             self.potSize = potSize
             self.mediumType = mediumType
             self.maxRetentionCapacity = max(maxRetentionCapacity, 0.001)
-            // Clamp to valid range — prevents division by zero in recommendation algorithm
+            // Safety guard only (from v1.1): keeps 1 − goal away from zero. The form
+            // accepts AppConstants.goalRunoffPercentRange (5–50%), and the engine
+            // limits stored values to that range with a visible note. Kept wider so
+            // goals saved by v1.1 are never changed in the store.
             self.goalRunoffPercent = min(max(goalRunoffPercent, 0.1), 99.9)
             self.createdAt = createdAt
             self.wateringLogs = []
