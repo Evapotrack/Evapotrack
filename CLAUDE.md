@@ -6,7 +6,7 @@ EvapoTrack is an offline iOS/iPadOS app (SwiftUI + SwiftData, iOS 17+). It track
 - **Where things stand and what to do next:** `engineering/plans/2026-10-07-status.md`.
 - **The approved plan:** `engineering/plans/2026-10-07-plan.md`. How to do each step: `engineering/plans/2026-10-06-runbook.md`.
 - **Every change, and how to restore any prior state:** `engineering/changes/`. Add each new change there: what changed, the prior state, why, and how to undo it.
-- **Release history** (which commit became each App Store version): `engineering/releases/README.md`.
+- **Release history** (which commit became each App Store version), plus the **copyright registration** (TXu 2-569-711) and **trademark** status (EVAPOTRACK, serial 99716922, pending): `engineering/releases/README.md`.
 
 ## Branches
 - `main`: App Store **v1.1 (1)** code (`c063360`), plus the **live website** in `docs/`. The site was last changed by PR #2 (2026-10-14): accuracy fixes only (Android coming soon, Next wording).
