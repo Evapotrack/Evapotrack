@@ -17,12 +17,33 @@
 | 6 | Apple Developer Team ID in `project.pbxproj` | All branches | ✅ Not secret: it is embedded in every signed app and needed to build |
 | 7 | Developer name in git author metadata | Every commit since 2026-03-01 | ✅ Already public: an individual developer's name is shown as the seller on the App Store |
 | 8 | App price, `$99/year` program fee | Commit message and old docs | ✅ Public information |
+| 10 | **A different person's full name** (the Mac account name Xcode wrote into file headers, and an `xcuserdata` folder name) | First commit `87f5ee3` (2026-03-01): template files' "Created by" lines. Removed from current files on 2026-03-12 (`941d10a`); still readable in history | ⚠️ **Only in history.** Xcode boilerplate, not authorship; but it is someone's name. Owner to confirm whose |
+| 11 | Apple account-recovery notes (lost access when a business phone plan expired; the 2FA and re-verification steps) | `docs/ReleasePlan.md` and `docs/ProjectStatus.md` on the kept branch `claude/matts-hydroponics-outreach-vwiicq` (2026-07-26). No phone number, password or code | ⚠️ Account-security context; out of date (access was restored before v1.1 shipped) |
 | 9 | **Old `Progress.md`** (at `docs/Progress.md`, then `Progress.md`), removed on 2026-03-22 (`b5770f6`, "keep development hours off public repo") | **Still readable in past commits** (2026-03-12 → 2026-03-22). It contains development hours, the trademark filing fee, an Apple Developer enrollment order number, and notes on an Apple support ticket. Nothing that gives access to an account | ⚠️ **Only in history.** Removing it needs a history rewrite (decision below) |
 
 ## Done in this audit
 
 - `.gitignore` now blocks signing files and credentials (`*.p12`, `*.p8`, `AuthKey_*.p8`, `*.cer`, `*.mobileprovision`, `.env`, `*.pem`, `*.key`). It also blocks certificate scans and photos (`*certificate*.jpg/png/pdf`), which belong in `private/`.
 - `.gitignore`'s `screenshots/` rule became `/screenshots/`. The old rule also matched the website's `docs/screenshots/`, so a new website screenshot would have been silently left out of a commit. Files already tracked are unaffected.
+
+## GitHub facts (2026-10-22)
+
+- `Evapotrack` is a **personal account**, not an organization. `Evapotrack/Evapotrack` is public: **0 forks, 0 stars**, and it has GitHub Pages on (evapotrack.com).
+- The account's only other public repository is `cantillon-crush`, which is unrelated and outside this audit. All other repositories, including `Evapotrack-Android`, are private.
+
+## Recommendation (2026-10-22)
+
+**Make `Evapotrack/Evapotrack` private, and keep evapotrack.com public. Don't rewrite history.**
+
+- Going private hides items 9–11 and the source code all at once. Every commit hash, record and PR link stays valid, and the "never force-push" rule is kept.
+- A history rewrite (option B) only hides items 9 and 10. It breaks every record, and doesn't recall copies that already exist.
+- **What going private cannot do:** recall copies already made. Anyone who cloned the repo, and public code archives that crawl GitHub, may keep the old content. With 0 forks the exposure is small, and nothing in it gives access to an account.
+- **Keeping the website up is the critical part.** The App Store listing's privacy policy and support URLs, and the in-app Watering Protocol link, all point at evapotrack.com. There are two ways to keep it up:
+  - **C1. Website in its own public repository (free; recommended).** Create a public repository with only `docs/` (for example `Evapotrack/evapotrack.com`), with Pages on. Move the custom domain to it, check https://evapotrack.com and the privacy page, then make this repository private.
+    - DNS at Namecheap doesn't change: the A records are GitHub Pages' shared addresses.
+    - HTTPS can take minutes to an hour to re-issue for the new repository. Do it at a quiet time, and verify the domain in GitHub (Settings › Pages › Verified domains, one TXT record at Namecheap) to prevent takeover while it moves.
+    - Release-day steps change from "merge into `main`" to "copy `release/1.2`'s `docs/` into the website repository". Runbook F4 and `CLAUDE.md` need that update.
+  - **C2. GitHub Pro ($4/month) and flip to private.** Pages keeps publishing from a private repository on Pro. There's nothing to move and the workflow is unchanged, but it costs about $48 a year. Subscribe first and confirm, then change visibility; on the free plan, flipping first takes the site down.
 
 ## Decision for the owner: the old `Progress.md` in history
 
