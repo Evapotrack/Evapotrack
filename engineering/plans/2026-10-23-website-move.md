@@ -8,6 +8,18 @@
   - The six internal documents that `main` also publishes are left out: Architecture, DataModel, NavigationMap, Requirements, Specification, video plan. They stay here in `engineering/app-docs/`.
   - Every page, image, the video, `CNAME` and the Search Console file are byte-for-byte the same.
 - GitHub doesn't let the cloud session create repositories (HTTP 403), so you create the empty one.
+- **How any session rebuilds the contents** (the prepared copy lived only in a temporary cloud container). From this repository, with the new repository cloned at `../evapotrack-website`:
+
+  ```sh
+  git fetch origin main
+  git archive origin/main docs | tar -x -C ../evapotrack-website
+  cd ../evapotrack-website
+  rm docs/Architecture.md docs/DataModel.md docs/NavigationMap.md docs/Requirements.md docs/Specification.md docs/video-watering-protocol-plan.md
+  # add README.md (what the repository is; everything in docs/ is public; site matches the live app; don't change CNAME or DNS)
+  git add -A && git commit -m "evapotrack.com as live (from Evapotrack/Evapotrack main <hash>)" && git push -u origin main
+  ```
+
+  Check that `index.html`, `privacy-policy.html`, `support.html`, `reference.html`, `watering-protocol.html`, `CNAME` and `walkthrough.mp4` are identical to `main`'s (`cmp`). If `main`'s `docs/` has changed since `6094e32`, use the current `main`: the new repository must match the live site.
 
 ## Steps (you, about 20 minutes; do 4 and 5 back to back)
 
