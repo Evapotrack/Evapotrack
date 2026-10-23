@@ -23,10 +23,29 @@ elevenlabs-ai-audios/
 Youtube/
 
 # Working screenshots (simulator captures, not for public repo)
-screenshots/
+/screenshots/
 
 # App Store screenshots (exact pixel dimensions for submission)
 apple-app-store-screenshots/
 
 # Copyright deposit materials (submitted to U.S. Copyright Office)
 copyright-deposit/
+
+# Signing and credentials: never commit (added 2026-10-22, privacy audit)
+*.p12
+*.p8
+*.cer
+*.certSigningRequest
+*.mobileprovision
+*.provisionprofile
+AuthKey_*.p8
+.env
+.env.*
+*.pem
+*.key
+
+# Personal and legal documents (certificates, IDs, receipts): keep in private/
+*certificate*.jpg
+*certificate*.jpeg
+*certificate*.png
+*certificate*.pdf

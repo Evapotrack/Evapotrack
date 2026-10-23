@@ -1,0 +1,107 @@
+Closed-loop results: the grower pours the app's Next every time. 200 runs per grow; the first 3 waterings are not scored.
+in-range = runoff within goal +/-5 points; zero = waterings with no runoff; >2x = runoff above twice the goal;
+error = mean distance from the goal (points); dry = hours/days the plant hit the dry limit (mean per grow);
+water = water poured as % of the ideal amount (plant use / (1 - goal)).
+
+C1  Photoperiod, coco/perlite 70/30, 3 gal fabric, hand-watered daily (4 wk veg + 9 wk flower)  (Max Retention Capacity 6.0 L, goal 15%)
+    engine             in-range   zero    >2x  error   dry  water
+    v1.1 (live)            1.8%  19.2%   0.0%  13.1  57.13    63%
+    revision 2            61.1%   0.3%   0.0%   4.6   0.00    99%
+    rev2 + a_up 0.7       62.2%   0.2%   0.0%   4.4   0.00   100%
+
+C2  Autoflower, coco 100%, 3 gal, hand-watered daily (11 weeks)  (Max Retention Capacity 6.8 L, goal 15%)
+    engine             in-range   zero    >2x  error   dry  water
+    v1.1 (live)            0.0%  39.7%   0.0%  13.6  58.83    34%
+    revision 2            54.2%   4.6%   0.1%   5.5   0.00    99%
+    rev2 + a_up 0.7       56.6%   3.3%   0.1%   5.2   0.00   100%
+
+C3  Photoperiod, coco 100%, 5 gal, every 2 days in veg then daily in flower  (Max Retention Capacity 11.4 L, goal 15%)
+    engine             in-range   zero    >2x  error   dry  water
+    v1.1 (live)            0.0%  18.3%   0.0%  13.5  70.94    63%
+    revision 2            47.4%   3.8%   4.4%   7.3   7.75    97%
+    rev2 + a_up 0.7       47.4%   3.3%   6.6%   8.1   4.38   102%
+
+C4  Research-style drip, coir 3.45 L pots, one daily irrigation, 30% drainage goal  (Max Retention Capacity 2.0 L, goal 30%)
+    engine             in-range   zero    >2x  error   dry  water
+    v1.1 (live)           22.1%   0.0%   0.0%  10.0   0.00    88%
+    revision 2            65.4%   0.0%   0.0%   4.3   0.00    98%
+    rev2 + a_up 0.7       65.6%   0.0%   0.0%   4.2   0.00    99%
+
+C6  Water-when-light (lift test), coco/perlite 70/30, 5 gal, interval varies 1-4 days  (Max Retention Capacity 10.0 L, goal 15%)
+    engine             in-range   zero    >2x  error   dry  water
+    v1.1 (live)            0.0%  17.9%   0.0%  13.5  47.17    73%
+    revision 2            31.6%   6.4%   8.6%  10.1  12.21    97%
+    rev2 + a_up 0.7       38.0%   5.2%  10.1%   9.7  12.24    99%
+
+C7  Irregular: daily but Saturdays skipped (+10% random skips), coco/perlite 70/30, 3 gal  (Max Retention Capacity 6.0 L, goal 15%)
+    engine             in-range   zero    >2x  error   dry  water
+    v1.1 (live)            0.7%  21.4%   0.0%  13.4  70.57    50%
+    revision 2            14.4%   9.1%  13.2%  12.0  13.63    88%
+    rev2 + a_up 0.7       13.8%   7.8%  19.3%  12.8  13.30    91%
+
+C5  Automated drip, coco/perlite 70/30, 2 gal, 4 shots/day (12/12 flower), logged as one log per day with daily totals
+    engine             in-range   zero    >2x  error  dry h
+    v1.1 (live)           45.8%   0.2%   0.0%   6.0    0.0
+    revision 2            71.4%   0.0%   0.0%   3.7    0.0
+    rev2 + a_up 0.7       71.1%   0.0%   0.0%   3.7    0.0
+
+C5  Automated drip, coco/perlite 70/30, 2 gal, 4 shots/day (12/12 flower), logged as one log per shot
+    engine             in-range   zero    >2x  error  dry h
+    v1.1 (live)           29.4%  16.7%   0.2%   9.1    0.0
+    revision 2            11.2%  13.2%   8.3%  10.8    0.0
+    rev2 + a_up 0.7       10.0%  12.4%  15.1%  11.3    0.0
+
+Sensitivity (C1 and C2): does the picture change if the grower behaves differently, or coco does not channel?
+    grow variant                            engine             in-range   zero    >2x  error   dry  water
+    C1   waters on until runoff appears     v1.1 (live)            4.8%  13.1%   0.1%  12.4  37.09    76%
+    C1   waters on until runoff appears     revision 2            61.4%   0.1%   0.0%   4.5   0.00    99%
+    C1   no channeling in dry coco          v1.1 (live)            2.1%  89.6%   0.0%  14.3  51.95    67%
+    C1   no channeling in dry coco          revision 2            61.1%   0.8%   0.0%   4.6   0.00    99%
+    C2   waters on until runoff appears     v1.1 (live)            2.2%  19.7%   0.0%  12.9  33.90    72%
+    C2   waters on until runoff appears     revision 2            56.4%   0.5%   0.0%   5.0   0.00    99%
+    C2   no channeling in dry coco          v1.1 (live)            0.0%  99.9%   0.0%  15.0  57.72    39%
+    C2   no channeling in dry coco          revision 2            55.2%   7.0%   0.0%   5.4   0.00    99%
+
+C1 replay, seed 1: what the grower would type into the app (sampled days)
+  v1.1 (live)
+    day  added  runoff  retained  runoff%  temp  RH   (plant used)
+      1   1.00    0.54      0.46    53.5%  25.5   65%  (0.47)
+      2   0.55    0.03      0.52     4.7%  25.2   62%  (0.53)
+      3   0.60    0.02      0.58     2.5%  25.0   65%  (0.59)
+      4   0.65    0.05      0.60     7.5%  26.8   62%  (0.61)
+      5   0.65    0.09      0.56    13.7%  25.8   63%  (0.57)
+      6   0.65    0.00      0.65     0.7%  25.9   65%  (0.64)
+      7   0.70    0.04      0.66     6.3%  25.9   64%  (0.65)
+     14   0.90    0.01      0.89     1.0%  26.0   67%  (0.91)
+     21   1.00    0.00      1.00     0.1%  26.7   65%  (1.10)
+     28   1.15    0.01      1.14     0.9%  25.3   64%  (1.21)
+     35   1.25    0.01      1.24     0.9%  24.6   58%  (1.59)
+     42   1.30    0.03      1.27     2.3%  24.4   54%  (2.08)
+     49   1.40    0.00      1.40     0.0%  24.1   57%  (2.15)
+     56   1.50    0.04      1.46     2.5%  25.9   52%  (2.22)
+     63   1.55    0.02      1.53     1.5%  25.3   53%  (2.64)
+     70   1.60    0.06      1.54     3.5%  24.6   48%  (2.64)
+     77   1.65    0.00      1.65     0.0%  25.3   50%  (2.53)
+     84   1.70    0.04      1.66     2.2%  23.3   47%  (2.00)
+     91   1.75    0.02      1.73     0.9%  24.7   46%  (1.82)
+  revision 2
+    day  added  runoff  retained  runoff%  temp  RH   (plant used)
+      1   1.00    0.54      0.46    53.5%  25.5   65%  (0.47)
+      2   0.55    0.03      0.52     4.7%  25.2   62%  (0.53)
+      3   0.60    0.02      0.58     2.5%  25.0   65%  (0.59)
+      4   0.65    0.05      0.60     7.5%  26.8   62%  (0.61)
+      5   0.70    0.14      0.56    19.8%  25.8   63%  (0.57)
+      6   0.70    0.05      0.65     7.8%  25.9   65%  (0.64)
+      7   0.75    0.09      0.66    12.6%  25.9   64%  (0.65)
+     14   1.00    0.13      0.87    12.6%  26.0   64%  (0.88)
+     21   1.30    0.29      1.01    22.4%  25.4   65%  (1.01)
+     28   1.45    0.20      1.25    13.7%  25.6   65%  (1.25)
+     35   1.90    0.14      1.76     7.2%  25.7   54%  (1.76)
+     42   2.15    0.25      1.90    11.4%  24.7   53%  (1.91)
+     49   2.70    0.29      2.41    10.6%  25.2   57%  (2.41)
+     56   2.65    0.35      2.30    13.2%  24.2   51%  (2.30)
+     63   2.85    0.48      2.37    16.7%  25.7   52%  (2.37)
+     70   3.00    0.55      2.45    18.4%  25.8   47%  (2.44)
+     77   3.05    0.62      2.43    20.2%  24.8   49%  (2.44)
+     84   2.70    0.48      2.22    17.8%  24.7   47%  (2.22)
+     91   2.20    0.41      1.79    18.8%  23.7   43%  (1.78)
