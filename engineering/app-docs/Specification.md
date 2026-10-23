@@ -57,7 +57,7 @@ ViewModels use a `configure(modelContext:)` method called from `.onAppear` rathe
 | Humidity | 0-100% (optional) | humidityRange |
 | Date/time | Not in the future, unique per plant (to the minute) | - |
 | Goal runoff % | 5-50 when entered (optional, defaults to 15%); older out-of-range values are kept but clamped when used | goalRunoffPercentRange |
-| Numbers | Parsed with the device region's decimal separator ("1,5" and "1.5") | NumericInput |
+| Numbers | Parsed with the device region's decimal separator ("1,5" and "1.5"). Spaces and apostrophes are accepted only as thousands separators ("1 500"); "1 5" is rejected (2026-10-22) | NumericInput |
 
 ## Algorithm: Next Water Recommendation
 

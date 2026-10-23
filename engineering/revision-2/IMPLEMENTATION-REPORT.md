@@ -142,7 +142,7 @@ It estimates **D**, the volume the medium absorbs before free drainage starts, f
 - **Runoff = 100%:** no information about D, so it is skipped with a note.
 - **Robustness:** the effective observation is floored at 75% of the forecast, so one top-up or odd watering lowers the estimate by at most a quarter. The trend is capped at ±25% of the level.
 - **Safety bounds:** estimate ≤ MRC; goal clamped to 5–50%; Next ≤ 100 L. Every bound that applies adds a visible note.
-- **Output:** Next = estimate ÷ (1 − goal), goal runoff = Next × goal, plus the basis ("based on recent retained water of X and a 15% goal", or "none of your waterings has produced runoff yet, so the plant needs at least X") and notes.
+- **Output:** Next = estimate ÷ (1 − goal), goal runoff = Next × goal, plus the basis ("based on recent retained water of X and a 15% goal" (reworded 2026-10-22 to "Based on an expected retention of X…", review finding 1), or "none of your waterings has produced runoff yet, so the plant needs at least X") and notes.
 
 ### Why this model
 The candidates were compared in a closed loop: the simulated grower follows Next, and runoff is a function of the true, changing D. The scenarios covered 18 conditions (constant, bad first watering, growth of 3/6/10%, decline, sudden drop, noise ±20/30%, irregular intervals, top-ups, generous waterings, long gaps, step change, realistic grow cycles). Each candidate × scenario was run with 200 seeds.
