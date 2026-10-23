@@ -109,7 +109,7 @@ Confidence: **High** = clear on evidence; **Medium** = judgment call with good r
 - **Why ship it:** the big gain is v1.1 → revision 2 (zero runoff 34% → 10%; recovery from a bad watering in 5 waterings instead of 14–30; still works after a flush; explains itself).
 - **Why not tune it now:** `a_up` would move a further 1–4 points from under-goal to over-goal, a preference shift rather than a clear improvement. Changing it would also alter the expected values of about 30 tests before their first run, mixing a tuning change into the first compile.
 - **When to revisit:** after a few weeks of real 1.2 logs. If growers' plants rebound often (as in your Example Plant), adopt 0.6–0.7 with a fresh simulation.
-- **Required alongside:** the release notes must say that Next changes after updating (draft in §4). Revision 2's Insights already show the basis ("based on recent retained water of X…").
+- **Required alongside:** the release notes must say that Next changes after updating (draft in §4). Revision 2's Insights already show the basis. (Reworded on 2026-10-22, review finding 1, to "Based on an expected retention of X…", because the number is the engine's estimate, not a measured amount.)
 
 **A4. Goal runoff limited to 5–50%.** Confidence: Medium.
 - **Why:** below 5% means aiming for almost no runoff, which the protocol says to avoid; with normal measurement noise, many waterings would end with none. Plants saved with values outside the range are kept and clamped, with a visible note. No stored data changes.
