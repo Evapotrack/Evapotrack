@@ -31,6 +31,12 @@
 - `Evapotrack` is a **personal account**, not an organization. `Evapotrack/Evapotrack` is public: **0 forks, 0 stars**, and it has GitHub Pages on (evapotrack.com).
 - The account's only other public repository is `cantillon-crush`, which is unrelated and outside this audit. All other repositories, including `Evapotrack-Android`, are private.
 
+## Decision (2026-10-23)
+
+**Option C1 approved.** The website moves to a new public repository, then this repository becomes private. History is not rewritten. Steps: [`../plans/2026-10-23-website-move.md`](../plans/2026-10-23-website-move.md).
+- `cantillon-crush` also goes private (owner's choice).
+- Finding 10's name is probably a friend's (the laptop used early on). Going private covers it; nothing more is needed.
+
 ## Recommendation (2026-10-22)
 
 **Make `Evapotrack/Evapotrack` private, and keep evapotrack.com public. Don't rewrite history.**

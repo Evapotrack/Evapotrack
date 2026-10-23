@@ -23,7 +23,8 @@ EvapoTrack is an offline iOS/iPadOS app (SwiftUI + SwiftData, iOS 17+) that trac
 - Plan Phase 5 adds, **only after the build and tests are green**: text-size layout fixes, the launch screen re-timed to about 1.5 s, in-app guidance, the unit hint in the over-capacity alert, and "Leave out of Next" (an optional field added to the still-unreleased `SchemaV2`; see `engineering/plans/2026-10-07-plan.md`).
 
 ## Android and website timing
-- The Android app is a separate private repository, `Evapotrack/Evapotrack-Android` (Kotlin/Compose, v1.1 parity, paused since 2026-04-21 before real-device testing). The website says only "Android coming soon" until it is live on Google Play.
+- The Android app is a separate private repository, `Evapotrack/Evapotrack-Android` (Kotlin/Compose, v1.1 parity). Paused 2026-04-21 before real-device testing. **Reviewed 2026-10-23:** branch `claude/vibrant-noether-xzeec1` fixes 1 crash and 4 high-priority bugs (unmerged; needs a first Android Studio build). Plan: that repository's `engineering/2026-10-23-review-and-plan.md`; the recommended Android 1.0 ports this branch's `RecommendationEngine`. The website says only "Android coming soon" until it is live on Google Play.
+- **Website move (approved 2026-10-23, in progress):** the website moves to a new public repository, `Evapotrack/evapotrack-website`, and this repository then becomes private (`engineering/plans/2026-10-23-website-move.md`). Until that's done, `main`'s `docs/` is still the live site. Afterwards, release-day website text is copied there (runbook F4).
 - The website is updated only after the matching iOS version is live on the App Store. PR #1 is held for this, and `release/1.2`'s website text is published on 1.2's release day. The only exception is accuracy fixes for the app already live, made at the owner's request: PR #2, merged 2026-10-14 (Android coming soon, Next wording).
 
 ## Terms
